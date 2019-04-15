@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MainPacMan",
+            "request": "launch",
+            "mainClass": "MainPacMan"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MainPacman",
+            "request": "launch",
+            "mainClass": "MainPacman"
+        }
+    ]
+}
