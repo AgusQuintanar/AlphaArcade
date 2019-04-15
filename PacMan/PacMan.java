@@ -13,7 +13,7 @@ public class PacMan {
 		this.ancho = 40;
 	}
 
-	public void setPosicionInicial(int xPac, int yPac) { //Cuando se pierde una vida
+	public void setPosicion(int xPac, int yPac) { //Cuando se pierde una vida
 		this.xPac = xPac;
 		this.yPac = yPac;
 	}
