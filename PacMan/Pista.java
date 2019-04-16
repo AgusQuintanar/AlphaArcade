@@ -42,7 +42,6 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			try {
 				Thread.sleep(3);
 				contMiliSeg += 3;
-				System.out.println("Cont 1: "+contMiliSeg);
 				if(contMiliSeg % 147 == 0) this.abiertoCerrado = false;
 				if(this.direccionPacman == "der") this.pacman.xPac += velocidad;
 				else if(this.direccionPacman == "izq") this.pacman.xPac -= velocidad;
@@ -50,7 +49,6 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				else if(this.direccionPacman == "aba") this.pacman.yPac += velocidad;
 				Thread.sleep(3);
 				contMiliSeg += 3;
-				System.out.println("Cont 2: "+contMiliSeg);
 				if(contMiliSeg % 300 == 0){
 					this.abiertoCerrado = true;
 					contMiliSeg = 0; //Reinicia el contador
