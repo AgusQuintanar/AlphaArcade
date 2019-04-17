@@ -10,10 +10,10 @@ public class PacMan implements ImageObserver {
 	private Image pacManAbierto,
 				  pacManCerrado;
 				  
-	public PacMan(int xPac, int yPac) {
+	public PacMan(int xPac, int yPac, int ancho) {
 		this.xPac = xPac;
 		this.yPac = yPac;
-		this.ancho = 40;
+		this.ancho = ancho;
 		this.pacManAbierto = new ImageIcon("Imagenes/pac-man-3d-arr.png").getImage();
 		this.pacManCerrado = new ImageIcon("Imagenes/PacManIconCerrado-3d-arr.png").getImage();
 	}

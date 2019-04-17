@@ -18,10 +18,7 @@ public class MainPacMan extends JFrame{
 		puntuacion.setBackground(Color.BLACK);
 		this.add(puntuacion, BorderLayout.SOUTH);
 		this.add(new Pista(this.getToolkit().getScreenSize().width,this.getToolkit().getScreenSize().height));
-		this.setVisible(true);
-		System.out.println("width1: "+getToolkit().getScreenSize().width);
-		System.out.println("height1: "+getToolkit().getScreenSize().height);
-		
+		this.setVisible(true);	
 	}
 	public static void main(String[] args) {
 		
