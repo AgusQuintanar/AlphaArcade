@@ -1,8 +1,11 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class Pista extends JPanel implements Runnable, KeyListener {
@@ -11,16 +14,21 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	private String direccionPacman,
 									 direccionTmp = "arr";
 	private boolean abiertoCerrado;
+	private Image pista;
+	private double ancho,
+					alto;
 
-	public Pista() {
+	public Pista(int ancho, int alto) {
 		super();
-		int anchoPista = 680;
-		this.setPreferredSize(new Dimension(anchoPista,anchoPista));
-		this.setBackground(Color.BLACK);
-		this.pacman = new PacMan(anchoPista/2-anchoPista/34, anchoPista/2-anchoPista/34);
+		this.ancho = ancho;
+		this.alto = alto*.95;
+		this.setPreferredSize(new Dimension((int)this.ancho,(int)this.alto));
+		this.setBackground(Color.BLUE);
+		this.pacman = new PacMan((int)(this.ancho/2-this.ancho/34), (int)(this.ancho/2-this.ancho/34));
 		this.direccionPacman = "";
 		this.abiertoCerrado = true;
 		this.direccionTmp = "arr";
+		this.pista = new ImageIcon("Imagenes/PistaConPuntitos.png").getImage();
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		this.hilo = new Thread(this);
@@ -29,6 +37,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.drawImage(this.pista, (int)(this.ancho*.025/2), 0, (int)(this.ancho*.975), (int)(this.alto*.975), this);
 		this.pacman.pintaPacman(g,this.abiertoCerrado, this.direccionTmp);
     }
     
