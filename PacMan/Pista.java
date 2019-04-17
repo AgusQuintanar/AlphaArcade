@@ -33,7 +33,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.alto = alto*.95;
 		this.setPreferredSize(new Dimension((int)this.ancho,(int)this.alto));
 		this.setBackground(Color.BLACK);
-		this.pacman = new PacMan((int)(this.ancho/2-this.ancho/104), (int)(.95*this.alto/2-.95*this.alto/62), (int)(this.alto/31));
+		this.pacman = new PacMan((int)(this.ancho/2-this.ancho/104), (int)(.95*this.alto/2-.95*this.alto/62), (int)((this.ancho/52)*1.35));
 		this.direccionPacman = "";
 		this.abiertoCerrado = true;
 		this.direccionTmp = "arr";
@@ -77,32 +77,10 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		};
 		
 	}
-	
-	// public void generarMatrizPista(){
-	// 	this.matrizPista = new ArrayList<ArrayList<String>>();
-	// 	try {
-  //     BufferedReader br = new BufferedReader(new FileReader("Recursos/MatrizPista.csv"));
-	// 		String fila;
-  //     while((fila = br.readLine()) != null){
-	// 			fila = fila.replace("???","");
-	// 			System.out.println("Fila "+fila);
-	// 			System.out.println(fila);
-	// 			this.matrizPista.add(new ArrayList<String>(Arrays.asList(fila.split(","))));
-  //     }
-  //     br.close();
-  //   }
-  //   catch (FileNotFoundException ex){
-  //     System.out.println("No se localizo el archivo "+ex);
-  //   }
-  //   catch (IOException ex){
-  //     System.out.println("Ocurrio un error de I/O");
-  //   }
-  // System.out.println(this.matrizPista);
-	// }
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(this.pista, (int)(this.ancho*.025/2), 0, (int)(this.ancho*.975), (int)(this.alto*.975), this);
+		g.drawImage(this.pista, 0, 0, (int)(this.ancho), (int)(this.alto*.975), this);
 		this.pacman.pintaPacman(g,this.abiertoCerrado, this.direccionTmp);
     }
     
@@ -112,8 +90,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		int coorX = 0,
 				coorY = 0;
 		while(true){
-			coorX = (int) (((this.pacman.xPac+this.alto/62)*52)/this.ancho/.965-.5); 
-			coorY = (int) (((this.pacman.yPac+this.alto/62)/.95*31)/this.alto);
+			coorX = (int) (((this.pacman.xPac+(this.ancho/104)*1.35)*52)/this.ancho); 
+			coorY = (int) (((this.pacman.yPac*31)/this.alto)/.975) + (int)((((this.alto*.95)/62)*31)/this.alto);
 			if(direccionPacman != "") //Si esta parado se guarda su posicion y direccion
 				direccionTmp = direccionPacman;
 			this.repaint();
@@ -122,55 +100,11 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				contMiliSeg += 3;
 				if(contMiliSeg % 147 == 0) this.abiertoCerrado = false;
 
-				if(coorX == 1 && coorY != 1 && coorY != 30){
-					if(this.direccionPacman == "der") this.pacman.xPac += velocidad;
-					else if(this.direccionPacman == "arr") this.pacman.yPac -= velocidad;
-					else if(this.direccionPacman == "aba") this.pacman.yPac += velocidad;
-				}
-				else if(coorX == 51 && coorY != 1 && coorY != 30){
-					if(this.direccionPacman == "izq") this.pacman.xPac -= velocidad;
-					else if(this.direccionPacman == "arr") this.pacman.yPac -= velocidad;
-					else if(this.direccionPacman == "aba") this.pacman.yPac += velocidad;
-				}
-
-				else if(coorX == 1 && coorY == 1){
-					if(this.direccionPacman == "der") this.pacman.xPac += velocidad;
-					else if(this.direccionPacman == "aba") this.pacman.yPac += velocidad;
-				}
-
-				else if(coorX == 1 && coorY == 30){
-					if(this.direccionPacman == "der") this.pacman.xPac += velocidad;
-					else if(this.direccionPacman == "arr") this.pacman.yPac -= velocidad;
-				}
-
-				else if(coorY == 1 && coorX != 1 && coorX != 51){
-					if(this.direccionPacman == "der") this.pacman.xPac += velocidad;
-					else if(this.direccionPacman == "izq") this.pacman.xPac -= velocidad;
-					else if(this.direccionPacman == "aba") this.pacman.yPac += velocidad;
-				}
-
-				else if(coorY == 30 && coorX != 1 && coorX != 51){
-					if(this.direccionPacman == "der") this.pacman.xPac += velocidad;
-					else if(this.direccionPacman == "izq") this.pacman.xPac -= velocidad;
-					else if(this.direccionPacman == "arr") this.pacman.yPac -= velocidad;
-				}
-
-				else if(coorX == 51 && coorY == 30){
-					if(this.direccionPacman == "izq") this.pacman.xPac -= velocidad;
-					else if(this.direccionPacman == "arr") this.pacman.yPac -= velocidad;
-				}
-
-				else if(coorX == 51 && coorY == 1){
-					if(this.direccionPacman == "izq") this.pacman.xPac -= velocidad;
-					else if(this.direccionPacman == "aba") this.pacman.yPac += velocidad;
-				}
-
-				else {
-					if(this.direccionPacman == "der") this.pacman.xPac += velocidad;
-					else if(this.direccionPacman == "izq") this.pacman.xPac -= velocidad;
-					else if(this.direccionPacman == "arr") this.pacman.yPac -= velocidad;
-					else if(this.direccionPacman == "aba") this.pacman.yPac += velocidad;
-				}
+				
+				if(this.direccionPacman == "der" && this.matrizPista[coorY][coorX+1] != 1) this.pacman.xPac += velocidad;
+				else if(this.direccionPacman == "izq" && this.matrizPista[coorY][coorX-1] != 1) this.pacman.xPac -= velocidad;
+				else if(this.direccionPacman == "arr" && this.matrizPista[coorY-1][coorX] != 1) this.pacman.yPac -= velocidad;
+				else if(this.direccionPacman == "aba" && this.matrizPista[coorY+1][coorX] != 1) this.pacman.yPac += velocidad;
 				
 				System.out.println("Coordenadas: "+ coorX + ", " + coorY);
 				Thread.sleep(3);
