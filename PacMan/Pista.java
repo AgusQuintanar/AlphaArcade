@@ -4,14 +4,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -24,13 +16,19 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	private Image pista;
 	private double ancho,
 					alto;
-	public int[][] matrizPista;	
-	//ArrayList<ArrayList<String>> matrizPista;
+	private int[][] matrizPista;
+	private int contador;	
 	
-	public Pista(int ancho, int alto) {
+	public Pista(double ancho) {
 		super();
-		this.ancho = ancho;
-		this.alto = alto*.95;
+		int anchoOriginal = 1749,
+				altoOriginal = 1047;
+		double	proporcionAncho = ancho/anchoOriginal; //Considerando un ancho del 100%
+		System.out.println(ancho+" "+alto);
+		this.ancho = (int)(anchoOriginal*proporcionAncho);
+		this.alto = (int)(altoOriginal*proporcionAncho);
+		System.out.println(proporcionAncho);
+		System.out.println(("ancho: "+this.ancho)+" alto: "+this.alto);
 		this.setPreferredSize(new Dimension((int)this.ancho,(int)this.alto));
 		this.setBackground(Color.BLACK);
 		this.pacman = new PacMan((int)(this.ancho/2-this.ancho/104), (int)(.95*this.alto/2-.95*this.alto/62), (int)((this.ancho/52)*1.35));
@@ -40,6 +38,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.pista = new ImageIcon("Imagenes/PistaConPuntitos.png").getImage();
 		this.setFocusable(true);
 		this.addKeyListener(this);
+		this.contador = 0;
 		this.hilo = new Thread(this);
 		this.hilo.start();
 		this.matrizPista = new int[][] {
@@ -78,50 +77,78 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		
 	}
 
+	public int getAlto(){
+		return (int)this.alto;
+	}
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(this.pista, 0, 0, (int)(this.ancho), (int)(this.alto*.975), this);
+		g.drawImage(this.pista, 0, 0, (int)this.ancho, (int)this.alto, this);
 		this.pacman.pintaPacman(g,this.abiertoCerrado, this.direccionTmp);
     }
     
 	public void run(){
-		int velocidad = 4;
-		int contMiliSeg = 0;
+		long lastTime = System.nanoTime();
+		final double amountOfTicks = 60.0;
+		double ns = 1000000000 / amountOfTicks,
+					 delta = 0.0;
+		int fps = 0;
+		
+		long timer = System.currentTimeMillis();					 
+		
+		while(true){
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			while (delta >= 1){
+				tick();
+				render();
+				this.contador++;
+				fps++;
+				delta--;
+	
+			}
+			
+
+			if(System.currentTimeMillis() - timer > 1000){
+				timer += 1000;
+				System.out.println("Fps " + fps);
+				fps = 0;
+			}
+
+		}
+	}
+			
+
+	private void tick (){
+
+		int velocidad = 8;
+		
 		int coorX = 0,
 				coorY = 0;
-		while(true){
-			coorX = (int) (((this.pacman.xPac+(this.ancho/104)*1.35)*52)/this.ancho); 
+
+		coorX = (int) (((this.pacman.xPac)*52)/this.ancho); 
 			coorY = (int) (((this.pacman.yPac*31)/this.alto)/.975) + (int)((((this.alto*.95)/62)*31)/this.alto);
 			if(direccionPacman != "") //Si esta parado se guarda su posicion y direccion
 				direccionTmp = direccionPacman;
-			this.repaint();
-			try {
-				Thread.sleep(3);
-				contMiliSeg += 3;
-				if(contMiliSeg % 147 == 0) this.abiertoCerrado = false;
+	
+			if(this.contador % 17 == 0) this.abiertoCerrado = false;
+			if(this.direccionPacman == "der" && this.matrizPista[coorY][coorX+1] != 1) this.pacman.xPac += velocidad;
+			else if(this.direccionPacman == "izq" && this.matrizPista[coorY][coorX-1] != 1) this.pacman.xPac -= velocidad;
+			else if(this.direccionPacman == "arr" && this.matrizPista[coorY-1][coorX] != 1) this.pacman.yPac -= velocidad;
+			else if(this.direccionPacman == "aba" && this.matrizPista[coorY+1][coorX] != 1) this.pacman.yPac += velocidad;
+			//System.out.println("CooRealesP: "+this.pacman.xPac+", "+this.pacman.yPac);
+			//System.out.println("Coordenadas: "+ coorX + ", " + coorY);
 
-				
-				if(this.direccionPacman == "der" && this.matrizPista[coorY][coorX+1] != 1) this.pacman.xPac += velocidad;
-				else if(this.direccionPacman == "izq" && this.matrizPista[coorY][coorX-1] != 1) this.pacman.xPac -= velocidad;
-				else if(this.direccionPacman == "arr" && this.matrizPista[coorY-1][coorX] != 1) this.pacman.yPac -= velocidad;
-				else if(this.direccionPacman == "aba" && this.matrizPista[coorY+1][coorX] != 1) this.pacman.yPac += velocidad;
-				
-				System.out.println("Coordenadas: "+ coorX + ", " + coorY);
-				Thread.sleep(3);
-				contMiliSeg += 3;
-				if(contMiliSeg % 300 == 0){
-					this.abiertoCerrado = true;
-					contMiliSeg = 0; //Reinicia el contador
-				}
-				
-				this.repaint();
-
-		}catch(InterruptedException ex) {
-			System.out.println("No pude despertar!");
-		}
+			if(this.contador% 33 == 0){
+				this.abiertoCerrado = true;
+				this.contador = 1; //Reinicia el contador a 1 (Para no dibujar la imagen de la pista de nuevo)
+			}
 	}
-}
 
+	private void render(){
+		this.repaint();
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {

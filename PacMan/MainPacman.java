@@ -1,9 +1,11 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-
+import java.awt.Image;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 
 public class MainPacMan extends JFrame{
 	public MainPacMan() {
@@ -13,11 +15,8 @@ public class MainPacMan extends JFrame{
 		this.setUndecorated(true);
 		this.setResizable(false);
 		this.setBackground(Color.BLACK);
-		JPanel puntuacion = new JPanel();
-		puntuacion.setPreferredSize(new Dimension((int)this.getToolkit().getScreenSize().width,(int)(this.getToolkit().getScreenSize().height*.05)));
-		puntuacion.setBackground(Color.BLACK);
-		this.add(puntuacion, BorderLayout.SOUTH);
-		this.add(new Pista(this.getToolkit().getScreenSize().width,this.getToolkit().getScreenSize().height));
+		Pista pista = new Pista(this.getToolkit().getScreenSize().getWidth());
+		this.add(pista);
 		this.setVisible(true);	
 	}
 	public static void main(String[] args) {
