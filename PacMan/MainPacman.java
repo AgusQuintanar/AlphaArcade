@@ -16,8 +16,10 @@ public class MainPacMan extends JFrame{
 		this.setBounds(0, 0, (int)this.getToolkit().getScreenSize().getWidth(), (int)this.getToolkit().getScreenSize().getHeight());
 		this.setResizable(false);
 		this.setBackground(Color.BLACK);
+		System.out.println(this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight());
+		System.out.println("Pantalla: "+this.getToolkit().getScreenSize().getWidth() + ", " + this.getToolkit().getScreenSize().getHeight());
 		Pista pista;
-		if (this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight() == 16/10){ //Aspecto 16:10
+		if (this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight() == 1.6){ //Aspecto 16:10
 			System.out.println("Aspecto 16:10");
 			pista = new Pista(this.getToolkit().getScreenSize().getWidth());
 		}

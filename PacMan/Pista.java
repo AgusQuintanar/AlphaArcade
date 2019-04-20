@@ -81,8 +81,8 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 						1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 1, 0, 1, 1, 1,
 						1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
-				{ 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 0, 0, 0, 0,
-						1, 1, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2 },
+				{ 2, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 0, 0, 0, 0,
+						1, 1, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 2, 2 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 1, 1, 1, 1, 0,
 						1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 0,
@@ -228,15 +228,15 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 			this.avanzarIzquierdaDerecha = true;
 			this.pacman.setYPac((int)(((int)coorYTemp+1)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
 			coorY = (int)coorYTemp+1;
-			if(coorX < 51){
+			if(this.coorX < 51 && this.coorX > 0){
 				if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1){
 					this.pacman.xPac += 3;
 				}	
-			}
 		
-			else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1){
-				this.pacman.xPac -= 3;
-			}
+				else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1){
+					this.pacman.xPac -= 3;
+				}
+		}
 		}
 
 		else if (this.direccionPacman == "arr") {
@@ -253,19 +253,50 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 	}
 
 	public void escucharTeclas(int velocidad){
-		if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1 && this.avanzarIzquierdaDerecha && this.coorX < 51){
-			this.pacman.xPac += velocidad;
-		}	
-		else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1 && this.avanzarIzquierdaDerecha){
-			this.pacman.xPac -= 1.5*velocidad;
-		}
-		else if (this.direccionPacman == "arr" && this.matrizPista[this.coorY - 1][this.coorX] != 1 && this.subirBajar){
-			this.pacman.yPac -= velocidad;
-		}
+		if (this.coorX > 50){
 			
-		else if (this.direccionPacman == "aba" && this.matrizPista[this.coorY + 1][this.coorX] != 1 && this.subirBajar){
-			this.pacman.yPac += velocidad;
+			if (this.direccionPacman == "der"  && this.coorX < 52){
+				this.pacman.xPac += velocidad;
+			}
+			else if(this.direccionPacman == "der"){
+				this.pacman.setXPac(0);
+			}
+			else if (this.direccionPacman == "izq"){
+				this.pacman.xPac -= 1.5*velocidad;
+			}
+			
+	
 		}
+		else if (this.coorX < 1) {
+			if (this.direccionPacman == "izq" && this.coorX >= -1){
+				this.pacman.xPac -= 1.5*velocidad;
+			}
+			else if(this.direccionPacman == "izq"){
+				this.pacman.setXPac((int)(this.ancho-this.ancho/52));
+			}
+			else if (this.direccionPacman == "der"){
+				this.pacman.xPac += velocidad;
+			}
+
+		}
+					
+		
+		else {
+			if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1 && this.avanzarIzquierdaDerecha && this.coorX < 51){
+				this.pacman.xPac += velocidad;
+			}	
+			else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1 && this.avanzarIzquierdaDerecha){
+				this.pacman.xPac -= 1.5*velocidad;
+			}
+			else if (this.direccionPacman == "arr" && this.matrizPista[this.coorY - 1][this.coorX] != 1 && this.subirBajar){
+				this.pacman.yPac -= velocidad;
+			}
+				
+			else if (this.direccionPacman == "aba" && this.matrizPista[this.coorY + 1][this.coorX] != 1 && this.subirBajar){
+				this.pacman.yPac += velocidad;
+			}
+		}
+		
 			
 	}
 
