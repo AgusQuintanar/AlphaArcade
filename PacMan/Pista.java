@@ -15,8 +15,8 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 	private Thread hilo;
 	private String direccionPacman, direccionTmp = "arr";
 	private boolean abiertoCerrado,
-									sentidoX,
-									subirBajar;
+									subirBajar,
+									avanzarIzquierdaDerecha;
 	private Image pista;
 	private double ancho, alto;
 	private int[][] matrizPista;
@@ -41,9 +41,10 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 		this.abiertoCerrado = true;
 		this.direccionTmp = "arr";
 		this.subirBajar = true;
+		this.avanzarIzquierdaDerecha = true;
 		this.coorX = 0;
 		this.coorY = 0;
-		this.sentidoX = true; //Izquierda es false y derecha true
+		System.out.println(this.ancho + ", " + this.alto);
 		this.pista = new ImageIcon("Imagenes/PistaConPuntitos.png").getImage();
 		this.setFocusable(true);
 		this.addKeyListener(this);
@@ -125,8 +126,8 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(this.pista, 0, 0, (int) this.ancho, (int) this.alto, this);
-		//g.setColor(Color.RED);
-		//g.fillRect(this.pacman.xPac, this.pacman.yPac, (int)(this.ancho/52), (int)(this.ancho/52));
+		// g.setColor(Color.RED);
+		// g.fillRect(this.pacman.xPac, this.pacman.yPac, (int)(this.ancho/52), (int)(this.ancho/52));
 		this.pacman.pintaPacman(g, this.abiertoCerrado, this.direccionTmp);
 	}
 
@@ -161,11 +162,10 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 	}
 
 	private void tick() {
+		int velocidad = 7;
 
-		int velocidad = 6;
-
-		movimientoX(this.coorX, this.coorY);
 		movimientoY(this.coorX, this.coorY);
+		movimientoX(this.coorX, this.coorY);
 		
 		escucharTeclas(velocidad);
 		comportamientoPacman();
@@ -177,9 +177,9 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 
 	public void movimientoX(int coorX, int coorY){
 		double coorXTemp = (this.pacman.xPac + .3*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52));
-		System.out.println(coorXTemp);
 
-		if (Math.abs((int)coorXTemp - coorXTemp) < 0.5 && (this.direccionPacman == "arr" || this.direccionPacman == "aba")){
+
+		if (Math.abs((int)coorXTemp - coorXTemp) < 0.5 && (this.direccionPacman == "arr" || this.direccionPacman == "aba") && coorXTemp < 52){
 			this.subirBajar = true;
 			this.pacman.setXPac((int)(((int)coorXTemp)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
 			coorX = (int)coorXTemp;
@@ -187,7 +187,7 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 				this.pacman.yPac -= 3;
 			else if (this.direccionPacman == "aba" && this.matrizPista[coorY + 1][coorX] != 1 )
 				this.pacman.yPac += 3;
-			System.out.println("Caso 1");
+			
 		}
 		else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.5 && (this.direccionPacman == "arr" || this.direccionPacman == "aba")){
 			this.pacman.setXPac((int)(((int)coorXTemp+1)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
@@ -197,47 +197,84 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 				this.pacman.yPac -= 3;
 			else if (this.direccionPacman == "aba" && this.matrizPista[coorY + 1][coorX] != 1 )
 				this.pacman.yPac += 3;
-			System.out.println("Caso 2");
 		}  
-		else if (sentidoX || coorXTemp > 50.0) {
+		else if (this.direccionPacman == "der") {
 			this.subirBajar = false;
 			coorX = (int)coorXTemp;
-			System.out.println("Caso 3");
 		}
 		else{
 			coorX = (int)coorXTemp + 1;
 			this.subirBajar = false;
-			System.out.println("Caso 4");
 		}
 		this.coorX = coorX;
 	}
+	
 
 	public void movimientoY (int coorX, int coorY){
-		coorY = (int) (((this.pacman.yPac * 31) / this.alto) / .975) + (int) ((((this.alto * .95) / 62) * 31) / this.alto);
+		double coorYTemp = (this.pacman.yPac + .3*.9928*(this.alto/31) -.9928*this.alto/62) / (.9928*(this.alto/31));
+		if (Math.abs((int)coorYTemp - coorYTemp) < 0.5 && (this.direccionPacman == "izq" || this.direccionPacman == "der")){
+			this.avanzarIzquierdaDerecha = true;
+			this.pacman.setYPac((int)(((int)coorYTemp)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
+			coorY = (int)coorYTemp;
+			if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX+1] != 1 && coorX < 51){
+				this.pacman.xPac += 3;
+			}	
+			else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1){
+				this.pacman.xPac -= 3;
+			}
+		}
+
+		else if (Math.abs((int)coorYTemp+1 - coorYTemp) < 0.5 && (this.direccionPacman == "izq" || this.direccionPacman == "der")){
+			this.avanzarIzquierdaDerecha = true;
+			this.pacman.setYPac((int)(((int)coorYTemp+1)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
+			coorY = (int)coorYTemp+1;
+			if(coorX < 51){
+				if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1){
+					this.pacman.xPac += 3;
+				}	
+			}
+		
+			else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1){
+				this.pacman.xPac -= 3;
+			}
+		}
+
+		else if (this.direccionPacman == "arr") {
+			this.avanzarIzquierdaDerecha = false;
+			coorY = (int)coorYTemp + 1;
+		}
+
+		else{
+			coorY = (int)coorYTemp;
+			this.avanzarIzquierdaDerecha = false;
+		}
+	
 		this.coorY = coorY;
 	}
 
 	public void escucharTeclas(int velocidad){
-		if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1){
+		if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1 && this.avanzarIzquierdaDerecha && this.coorX < 51){
 			this.pacman.xPac += velocidad;
-			this.sentidoX = true;
 		}	
-		else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1){
-			this.pacman.xPac -= velocidad;
-			this.sentidoX = false;
+		else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1 && this.avanzarIzquierdaDerecha){
+			this.pacman.xPac -= 1.5*velocidad;
 		}
-		else if (this.direccionPacman == "arr" && this.matrizPista[this.coorY - 1][this.coorX] != 1 && subirBajar)
+		else if (this.direccionPacman == "arr" && this.matrizPista[this.coorY - 1][this.coorX] != 1 && this.subirBajar){
 			this.pacman.yPac -= velocidad;
-		else if (this.direccionPacman == "aba" && this.matrizPista[this.coorY + 1][this.coorX] != 1 && subirBajar)
+		}
+			
+		else if (this.direccionPacman == "aba" && this.matrizPista[this.coorY + 1][this.coorX] != 1 && this.subirBajar){
 			this.pacman.yPac += velocidad;
+		}
+			
 	}
 
 	public void comportamientoPacman(){
 		if (direccionPacman != "") direccionTmp = direccionPacman;
 
-		if (this.contador % 17 == 0) this.abiertoCerrado = false;
+		if (this.contador % 7 == 0) this.abiertoCerrado = false;
 
-		else if (this.contador % 33 == 0) {
+		else if (this.contador % 15 == 0) {
 			this.abiertoCerrado = true;
 			this.contador = 0; 
 		}

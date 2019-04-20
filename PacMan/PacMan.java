@@ -22,6 +22,10 @@ public class PacMan implements ImageObserver {
 		this.xPac = xPac;
 	}
 
+	public void setYPac(int yPac){
+		this.yPac = yPac;
+	}
+
 	public void pintaPacman(Graphics g, boolean abiertoCerrado, String direccionPacman) {
 		this.pacManAbierto = new ImageIcon("Imagenes/pac-man-3d-"+direccionPacman+".png").getImage();
 		this.pacManCerrado = new ImageIcon("Imagenes/PacManIconCerrado-3d-"+direccionPacman+".png").getImage();
