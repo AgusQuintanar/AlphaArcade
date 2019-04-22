@@ -6,14 +6,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class Pista extends JPanel implements Runnable, KeyListener, MouseListener {
+public class Pista extends JPanel implements Runnable, KeyListener {
 	private PacMan pacman;
+	private FantasmaRojo fantasmaRojo;
 	private Thread hilo;
-	private String direccionPacman, direccionTmp = "arr";
+	private String direccionPacman, 
+				   direccionTmp;
 	private boolean abiertoCerrado,
 									subirBajar,
 									avanzarIzquierdaDerecha;
@@ -23,6 +24,7 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 	private int contador,
 							coorX,
 							coorY;
+
 
 	public Pista(double ancho) {
 		super();
@@ -36,8 +38,10 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 		this.setPreferredSize(new Dimension((int) this.ancho, (int) this.alto));
 		this.setBackground(Color.BLACK);
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
-				(int) (.95 * this.alto / 2 - .95 * this.alto / 62), (int) (.9928*(this.ancho / 52)));
+		(int)((17)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62), (int) (.9928*(this.ancho / 52)));
 		this.direccionPacman = "";
+		this.fantasmaRojo = new FantasmaRojo((int) (this.ancho / 2 - this.ancho / 104),
+		(int) (.95 * this.alto / 2 - .95 * this.alto / 62), this.ancho, this.alto, this.matrizPista);
 		this.abiertoCerrado = true;
 		this.direccionTmp = "arr";
 		this.subirBajar = true;
@@ -51,7 +55,6 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 		this.contador = 0;
 		this.hilo = new Thread(this);
 		this.hilo.start();
-		this.addMouseListener(this);
 		this.matrizPista = new int[][] {
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 				{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
@@ -88,9 +91,6 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 
 	}
 
-	public int getAlto() {
-		return (int) this.alto;
-	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -107,6 +107,7 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 				}
 			}
 		}
+		this.fantasmaRojo.pintaFantasmaRojo(g);
 		this.pacman.pintaPacman(g, this.abiertoCerrado, this.direccionTmp);
 	}
 
@@ -141,7 +142,7 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 	}
 
 	private void tick() {
-		int velocidad = 7;
+		int velocidad = 4;
 		
 		movimientoY(this.coorX, this.coorY);
 		movimientoX(this.coorX, this.coorY);
@@ -155,8 +156,8 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 	}
 
 	public void comerPuntitos(int x, int y){
-		double coorXTemp = (this.pacman.xPac + .3*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52));
-		double coorYTemp = (this.pacman.yPac + .3*.9928*(this.alto/31) -.9928*this.alto/62) / (.9928*(this.alto/31));
+		// double coorXTemp = (this.pacman.xPac + .3*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52));
+		// double coorYTemp = (this.pacman.yPac + .3*.9928*(this.alto/31) -.9928*this.alto/62) / (.9928*(this.alto/31));
 		//&& (this.direccionPacman == "der" && coorXTemp%1 > .25) || (this.direccionPacman == "izq" && coorXTemp%1 < .75) || (this.direccionPacman == "aba" && coorYTemp%1 > .25) || (this.direccionPacman == "arr" && coorYTemp%1 < .75)
 		if (x > 0 && x < 51 && y > 0 && y < 30 ){
 			if (this.matrizPista[y][x] == 0){
@@ -328,30 +329,5 @@ public class Pista extends JPanel implements Runnable, KeyListener, MouseListene
 	public void keyTyped(KeyEvent e) {
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		System.out.println("Coordenadas: " + e.getX() + ", " + e.getY());
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-
-	}
 
 }
