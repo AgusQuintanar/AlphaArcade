@@ -35,6 +35,7 @@ public class MainPacMan extends JFrame{
 		this.add(pista, BorderLayout.CENTER);
 		this.setVisible(true);	
 	}
+	
 	public static void main(String[] args) {
 		
 		MainPacMan game =new MainPacMan();
