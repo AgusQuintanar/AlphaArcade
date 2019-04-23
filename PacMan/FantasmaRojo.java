@@ -35,8 +35,8 @@ public class FantasmaRojo {
     }
 
     public void modoPersecusion(int PacManXCoor, int PacManYCoor) {
-        this.coorXFRojo = (int) ((this.xFRojo + .3*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52)));
-        this.coorXFRojo = (int) ((this.yFrojo + .3*.9928*(this.alto/31) -.9928*this.alto/62) / (.9928*(this.alto/31)));
+        this.coorXFRojo = (int) ((this.xFRojo + .3*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)));
+        this.coorXFRojo = (int) ((this.yFrojo + .3*.9928*(this.altoPista/31) -.9928*this.altoPista/62) / (.9928*(this.altoPista/31)));
         if (this.coorXFRojo != PacManXCoor && this.coorYFRojo != PacManYCoor){
             if (PacManXCoor > this.coorXFRojo) {
 

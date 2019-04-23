@@ -292,6 +292,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 	public void comportamientoPacman(){
 		if (direccionPacman != "") direccionTmp = direccionPacman;
+		this.direccionPacman = direccionTmp;
 
 		if (this.contador % 7 == 0) this.abiertoCerrado = false;
 
