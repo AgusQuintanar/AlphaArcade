@@ -16,14 +16,14 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	private String direccionPacman, 
 				   direccionTmp;
 	private boolean abiertoCerrado,
-									subirBajar,
-									avanzarIzquierdaDerecha;
+					subirBajar,
+					avanzarIzquierdaDerecha;
 	private Image pista;
 	private double ancho, alto;
 	private int[][] matrizPista;
 	private int contador,
-							coorX,
-							coorY;
+				coorX,
+				coorY;
 
 
 	public Pista(double ancho) {
@@ -68,7 +68,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 1, 1, 3, 3, 1, 1, 1, 3, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
@@ -102,7 +102,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				if (this.matrizPista[y][x] == 0){
 					g.fillOval((int)((x+1)*.99*(this.ancho/52)-.33*.99*(this.ancho/52)), (int)((y+1)*.985*(this.alto/31)-.39*.985*(this.alto/31)), (int)(this.ancho/52/3.5),(int)(this.alto/31/3.5));
 				}
-				else if (this.matrizPista[y][x] == 2) {
+				else if (this.matrizPista[y][x] == 2 && this.contador < 7) {
 					g.fillOval((int)((x+1)*.99*(this.ancho/52)-.27*.99*(this.ancho/52)-this.ancho/104), (int)((y+1)*.99*(this.alto/31)-.39*.99*(this.alto/31)-this.alto/62), (int)(this.ancho/52*1.1), (int)(this.alto/31*1.1));
 				}
 			}
@@ -163,11 +163,13 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			if (this.matrizPista[y][x] == 0){
 				this.matrizPista[y][x] = 3;
 			}
+			if (this.matrizPista[y][x] == 2){
+				this.matrizPista[y][x] = 3;
+			}
 		}
 	}
 	public void movimientoX(int coorX, int coorY){
 		double coorXTemp = (this.pacman.xPac + .3*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52));
-
 
 		if (Math.abs((int)coorXTemp - coorXTemp) < 0.5 && (this.direccionPacman == "arr" || this.direccionPacman == "aba") && coorXTemp < 52){
 			this.subirBajar = true;
@@ -206,10 +208,10 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			this.avanzarIzquierdaDerecha = true;
 			this.pacman.setYPac((int)(((int)coorYTemp)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
 			coorY = (int)coorYTemp;
-			if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX+1] != 1 && coorX < 51){
+			if (this.direccionPacman == "der" && this.matrizPista[coorY][this.coorX+1] != 1 && coorX < 51){
 				this.pacman.xPac += 3;
 			}	
-			else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1){
+			else if (this.direccionPacman == "izq" && this.matrizPista[coorY][this.coorX - 1] != 1){
 				this.pacman.xPac -= 3;
 			}
 		}
@@ -219,11 +221,11 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			this.pacman.setYPac((int)(((int)coorYTemp+1)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
 			coorY = (int)coorYTemp+1;
 			if(this.coorX < 51 && this.coorX > 0){
-				if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1){
+				if (this.direccionPacman == "der" && this.matrizPista[coorY][coorX + 1] != 1){
 					this.pacman.xPac += 3;
 				}	
 		
-				else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1){
+				else if (this.direccionPacman == "izq" && this.matrizPista[coorY][coorX - 1] != 1){
 					this.pacman.xPac -= 3;
 				}
 		}
@@ -292,6 +294,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 	public void comportamientoPacman(){
 		if (direccionPacman != "") direccionTmp = direccionPacman;
+		
+		this.direccionPacman = direccionTmp;
 
 		if (this.contador % 7 == 0) this.abiertoCerrado = false;
 
