@@ -171,22 +171,30 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	public void movimientoX(int coorX, int coorY){
 		double coorXTemp = (this.pacman.xPac + .3*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52));
 
-		if (Math.abs((int)coorXTemp - coorXTemp) < 0.5 && (this.direccionPacman == "arr" || this.direccionPacman == "aba") && coorXTemp < 52){
+		if (Math.abs((int)coorXTemp - coorXTemp) < 0.5 && (this.direccionPacman == "arr" || this.direccionPacman == "aba") && coorXTemp < 51 && coorXTemp > 0){
 			this.subirBajar = true;
+			
 			this.pacman.setXPac((int)(((int)coorXTemp)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
 			coorX = (int)coorXTemp;
-			if (this.direccionPacman == "arr" && this.matrizPista[coorY - 1][coorX] != 1)
+			if (this.direccionPacman == "arr" && this.matrizPista[coorY - 1][coorX] != 1){
 				this.pacman.yPac -= 3;
+				System.out.println("Prueba 3");
+			}
+				
 			else if (this.direccionPacman == "aba" && this.matrizPista[coorY + 1][coorX] != 1 )
 				this.pacman.yPac += 3;
 			
 		}
-		else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.5 && (this.direccionPacman == "arr" || this.direccionPacman == "aba")){
+		else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.5 && (this.direccionPacman == "arr" || this.direccionPacman == "aba")&& coorXTemp < 51 && coorXTemp > 0){
 			this.pacman.setXPac((int)(((int)coorXTemp+1)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
 			coorX = (int)coorXTemp+1;
+			
 			this.subirBajar = true;
-			if (this.direccionPacman == "arr" && this.matrizPista[coorY - 1][coorX] != 1)
+			if (this.direccionPacman == "arr" && this.matrizPista[coorY - 1][coorX] != 1){
+				System.out.println("Prueba 4");
 				this.pacman.yPac -= 3;
+			}
+				
 			else if (this.direccionPacman == "aba" && this.matrizPista[coorY + 1][coorX] != 1 )
 				this.pacman.yPac += 3;
 		}  
@@ -204,7 +212,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 	public void movimientoY (int coorX, int coorY){
 		double coorYTemp = (this.pacman.yPac + .3*.9928*(this.alto/31) -.9928*this.alto/62) / (.9928*(this.alto/31));
-		if (Math.abs((int)coorYTemp - coorYTemp) < 0.5 && (this.direccionPacman == "izq" || this.direccionPacman == "der")){
+		if (Math.abs((int)coorYTemp - coorYTemp) < 0.5 && (this.direccionPacman == "izq" || this.direccionPacman == "der")&& coorX > 0  && coorX < 51){
 			this.avanzarIzquierdaDerecha = true;
 			this.pacman.setYPac((int)(((int)coorYTemp)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
 			coorY = (int)coorYTemp;
@@ -216,7 +224,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			}
 		}
 
-		else if (Math.abs((int)coorYTemp+1 - coorYTemp) < 0.5 && (this.direccionPacman == "izq" || this.direccionPacman == "der")){
+		else if (Math.abs((int)coorYTemp+1 - coorYTemp) < 0.5 && (this.direccionPacman == "izq" || this.direccionPacman == "der")&& coorX > 0  && coorX < 51){
 			this.avanzarIzquierdaDerecha = true;
 			this.pacman.setYPac((int)(((int)coorYTemp+1)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
 			coorY = (int)coorYTemp+1;
@@ -282,10 +290,12 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			}
 			else if (this.direccionPacman == "arr" && this.matrizPista[this.coorY - 1][this.coorX] != 1 && this.subirBajar){
 				this.pacman.yPac -= velocidad;
+				System.out.println("Prueba 1");
 			}
 				
 			else if (this.direccionPacman == "aba" && this.matrizPista[this.coorY + 1][this.coorX] != 1 && this.subirBajar){
 				this.pacman.yPac += velocidad;
+				System.out.println("Prueba 2");
 			}
 		}
 		
