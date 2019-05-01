@@ -44,7 +44,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.setPreferredSize(new Dimension((int) this.ancho, (int) this.alto));
 		this.setBackground(Color.BLACK);
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
-		(int)((17)*.99*(this.alto/31)-.3*.99*(this.alto/31)+.985*this.alto/62), (int) (.985*(this.ancho / 52)));
+		(int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (.985*(this.ancho / 52)));
 		this.direccionPacman = "";
 		this.fantasmaRojo = new FantasmaRojo((int) (this.ancho / 2 - this.ancho / 104),
 		(int) (.95 * this.alto / 2 - .95 * this.alto / 62), this.ancho, this.alto, this.matrizPista);
@@ -158,14 +158,15 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		System.out.println(coorX + ", " + coorY);
 
 		movimientoY(this.coorX, this.coorY);
+
 		movimientoX(this.coorX, this.coorY);
+
 		
-		System.out.println("DireccionPac: " + this.direccionPacman);
-		System.out.println("Direccion TEMP: " + this.direccionTmp);
-		
-		comerPuntitos(this.coorX, this.coorY);
+		//comerPuntitos(this.coorX, this.coorY);
 		escucharTeclas(velocidad);
+
 		comportamientoPacman();
+		System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
 	}
 
 	private void render() {
@@ -186,15 +187,15 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		}
 	}
 	public double redondear(double num){
-		if(num%1 > .9){
-			System.out.println("redondeo a: "+Double.toString(num + 1 - (num%1)));
-			return num + 1.05 - num%1;
+		if(num%1 > .95){
+			System.out.println("redondeo a: "+Double.toString((int)(num) + 1.05));
+			return (int)(num) + 1.0;
 		}
 		return num;
 	}
 
 	public void movimientoX(int coorX, int coorY){
-		double coorXTemp = redondear(this.pacman.xPac + .33*.99*(this.ancho/52) -.99*this.ancho/104) / (.99*(this.ancho/52));
+		this.coorXTemp = (this.pacman.xPac + .33*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52)) + .02;
 		
 		boolean direccionX = true; //derecha
 		coorX = (int) coorXTemp;
@@ -209,100 +210,103 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		
 
 
-		if(direccionX) System.out.println("Derecha");
-		else System.out.println("Izquierda");
 
 
 		if ((this.direccionPacman == "arr" || this.direccionPacman == "aba") && (this.direccionTmp == "der" || this.direccionTmp == "izq")){
 			this.peticionSubirBajar = true;
 			if (this.direccionPacman == "arr") this.peticionSubirBajarDir = true;  //Arriba
-			else this.peticionSubirBajarDir = false;
+			else this.peticionSubirBajarDir = false; //Abajo
+			
 			this.direccionPacman = this.direccionTmp;
 		}
+		
 
-		if (this.peticionSubirBajar && coorXTemp < 51 && coorXTemp > 0 && coorY > 0){
+		if (this.peticionSubirBajar && coorX< 51 && coorX > 0 && coorY > 0){
+			
 			if (this.peticionSubirBajarDir && this.matrizPista[coorY - 1][coorX] != 1 ){
+				this.pacman.setXPac((int)((coorX)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
 				this.direccionPacman = "arr";
 				this.peticionSubirBajar = false;
 			 }
 			 else if (!this.peticionSubirBajarDir && this.matrizPista[coorY + 1][coorX] != 1){
+				this.pacman.setXPac((int)((coorX)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
 				this.direccionPacman = "aba";
 				this.peticionSubirBajar = false;
 			 }	
 		}
+
 		this.coorX = coorX;
 	}
 	
 
 	public void movimientoY (int coorX, int coorY){
-		this.coorYTemp = (this.pacman.yPac + .39*.985*(this.alto/31) -.985*this.alto/62) / (.985*(this.alto/31));
+		this.coorYTemp = (this.pacman.yPac + .39*.9928*(this.alto/31) -.985*this.alto/62) / (.985*(this.alto/31));
 		coorY = (int) coorYTemp;
 
-		System.out.println("CoooYTempAntes: " + coorYTemp);
-		System.out.println("CoorYINTAntes: " + coorY);
 
 		if(this.direccionTmp == "arr"){
-			System.out.println("oHHHHHHHH Siii");
 			coorY += 1;
 		}
 		
 		System.out.println("CoooYTemp: " + coorYTemp);
 		System.out.println("CoorYINT: " + coorY);
 
+		
 		if ((this.direccionPacman == "izq" || this.direccionPacman == "der") && (this.direccionTmp == "arr" || this.direccionTmp == "aba")){
-			System.out.println("Pruebay 0");
-			System.out.println("Pruebay 1");
-			this.peticionIzqDer = true;
+			this.peticionIzqDer = true; 
 			if (this.direccionPacman == "der") this.peticionIzqDerDir = true;  //Derecha
-			else this.peticionIzqDerDir = false;
+			else this.peticionIzqDerDir = false; //Izquierda
 			this.direccionPacman = this.direccionTmp;
 		}
 
 
-		if (this.peticionIzqDer && coorX > 0  && coorX < 51){
-			
-			if (this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX+1] != 1 && coorX < 51){
+
+		if (this.peticionIzqDer && coorY > 0  && coorY < 30){
+			if (this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX +1] != 1 && coorX < 50){
+				this.pacman.setYPac((int)((coorY)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
 				this.direccionPacman = "der";
 				this.peticionIzqDer = false;
 			 }
 			 else if (!this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX-1] != 1 && coorX > 1){
+				this.pacman.setYPac((int)((coorY)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
 				this.direccionPacman = "izq";
 				this.peticionIzqDer = false;
 			 }
 		}
+		System.out.println("Paso segundo if de Y");
 		this.coorY = coorY;	
 	}
 
 	public void escucharTeclas(int velocidad){
-		if (this.coorX > 50){
+		// if (this.coorX > 50){
 			
-			if (this.direccionPacman == "der"  && this.coorX < 52){
-				this.pacman.xPac += velocidad;
-			}
-			else if(this.direccionPacman == "der"){
-				this.pacman.setXPac(0);
-			}
-			else if (this.direccionPacman == "izq"){
-				this.pacman.xPac -= velocidad;
-			}
+		// 	if (this.direccionPacman == "der"  && this.coorX < 52){
+		// 		this.pacman.xPac += velocidad;
+		// 	}
+		// 	else if(this.direccionPacman == "der"){
+		// 		this.pacman.setXPac(0);
+		// 	}
+		// 	else if (this.direccionPacman == "izq"){
+		// 		this.pacman.xPac -= velocidad;
+		// 	}
 			
 	
-		}
-		else if (this.coorX < 1) {
-			if (this.direccionPacman == "izq" && this.coorX >= -1){
-				this.pacman.xPac -= velocidad;
-			}
-			else if(this.direccionPacman == "izq"){
-				this.pacman.setXPac((int)(this.ancho-this.ancho/52));
-			}
-			else if (this.direccionPacman == "der"){
-				this.pacman.xPac += velocidad;
-			}
+		// }
+		// else if (this.coorX < 1) {
+		// 	if (this.direccionPacman == "izq" && this.coorX >= -1){
+		// 		this.pacman.xPac -= velocidad;
+		// 	}
+		// 	else if(this.direccionPacman == "izq"){
+		// 		this.pacman.setXPac((int)(this.ancho-this.ancho/52));
+		// 	}
+		// 	else if (this.direccionPacman == "der"){
+		// 		this.pacman.xPac += velocidad;
+		// 	}
 
-		}
+		// }
 					
-		
-		else {
+		// this.coorXTemp = (this.pacman.xPac + .33*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52));
+		// this.coorYTemp = (this.pacman.yPac + .39*.985*(this.alto/31) -.985*this.alto/62) / (.985*(this.alto/31));		else {
 			if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1  && this.coorX < 51){
 				this.pacman.xPac += velocidad;
 			}	
@@ -319,7 +323,12 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		}
 		
 			
-	}
+	
+
+		
+		
+			
+	
 
 	public void comportamientoPacman(){
 		if ((direccionPacman == "arr" || direccionPacman == "aba") && !this.peticionSubirBajar) direccionTmp = direccionPacman;
