@@ -125,7 +125,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 	public void run() {
 		long lastTime = System.nanoTime();
-		final double amountOfTicks = 60.0;
+		final double amountOfTicks = 30.0;
 		double ns = 1000000000 / amountOfTicks, delta = 0.0;
 		int fps = 0;
 
@@ -199,7 +199,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		
 		boolean direccionX = true; //derecha
 		coorX = (int) coorXTemp;
-		if(this.direccionTmp == "izq"){
+		if(this.direccionTmp == "izq" && this.coorXTemp%1 > .15){
 			coorX += 1;
 			direccionX = false;
 		}
@@ -224,14 +224,25 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		if (this.peticionSubirBajar && coorX< 51 && coorX > 0 && coorY > 0){
 			
 			if (this.peticionSubirBajarDir && this.matrizPista[coorY - 1][coorX] != 1 ){
-				this.pacman.setXPac((int)((coorX)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
-				this.direccionPacman = "arr";
-				this.peticionSubirBajar = false;
+                if (Math.abs((int)coorXTemp - coorXTemp) < 0.3){
+                    this.pacman.setXPac((int)(((int)coorXTemp)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
+                }
+                else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.3){
+                    this.pacman.setXPac((int)(((int)coorXTemp+1)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
+                }
+                this.direccionPacman = "arr";
+                this.peticionSubirBajar = false;
 			 }
 			 else if (!this.peticionSubirBajarDir && this.matrizPista[coorY + 1][coorX] != 1){
-				this.pacman.setXPac((int)((coorX)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
-				this.direccionPacman = "aba";
-				this.peticionSubirBajar = false;
+
+                if (Math.abs((int)coorXTemp - coorXTemp) < 0.3){
+                    this.pacman.setXPac((int)(((int)coorXTemp)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
+                }
+                else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.3){
+                    this.pacman.setXPac((int)(((int)coorXTemp+1)*.9928*(this.ancho/52)-.3*.9928*(this.ancho/52)+.9928*this.ancho/104));
+                }
+                this.direccionPacman = "aba";
+                this.peticionSubirBajar = false;
 			 }	
 		}
 
@@ -244,7 +255,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		coorY = (int) coorYTemp;
 
 
-		if(this.direccionTmp == "arr"){
+		if(this.direccionTmp == "arr"  && this.coorYTemp%1 > .15){
 			coorY += 1;
 		}
 		
@@ -263,12 +274,22 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 		if (this.peticionIzqDer && coorY > 0  && coorY < 30){
 			if (this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX +1] != 1 && coorX < 50){
-				this.pacman.setYPac((int)((coorY)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
+				if (Math.abs((int)coorYTemp - coorYTemp) < 0.3){
+					this.pacman.setYPac((int)(((int)coorYTemp)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
+				}
+				else if (Math.abs((int)coorYTemp+1 - coorYTemp) < 0.3){
+					this.pacman.setYPac((int)(((int)coorYTemp+1)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
+				}
 				this.direccionPacman = "der";
 				this.peticionIzqDer = false;
 			 }
 			 else if (!this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX-1] != 1 && coorX > 1){
-				this.pacman.setYPac((int)((coorY)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
+				if (Math.abs((int)coorYTemp - coorYTemp) < 0.3){
+					this.pacman.setYPac((int)(((int)coorYTemp)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
+				}
+				else if (Math.abs((int)coorYTemp+1 - coorYTemp) < 0.3){
+					this.pacman.setYPac((int)(((int)coorYTemp+1)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62));
+				}
 				this.direccionPacman = "izq";
 				this.peticionIzqDer = false;
 			 }
@@ -307,20 +328,73 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 					
 		// this.coorXTemp = (this.pacman.xPac + .33*.9928*(this.ancho/52) -.9928*this.ancho/104) / (.9928*(this.ancho/52));
 		// this.coorYTemp = (this.pacman.yPac + .39*.985*(this.alto/31) -.985*this.alto/62) / (.985*(this.alto/31));		else {
-			if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1  && this.coorX < 51){
-				this.pacman.xPac += velocidad;
-			}	
-			else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1 ){
-				this.pacman.xPac -= velocidad;
+		// else {
+			System.out.println("CoorXXXXXXXXXXXXYYYYYYYYYYY: "+ this.coorX + ", " + this.coorY);
+			if (this.direccionPacman == "der" && this.coorX < 51){
+				this.coorXTemp = (this.pacman.xPac + .33*.9925*(this.ancho/52) -.9925*this.ancho/104) / (.9925*(this.ancho/52) + .02);
+				if (this.matrizPista[this.coorY][(int)(this.coorXTemp) + 1] == 1){
+					if(this.coorXTemp <= this.coorX){
+						this.pacman.xPac += velocidad;
+						System.out.println("Prueba 1");
+					}
+				
+				}
+				else{
+					this.pacman.xPac += velocidad;
+					System.out.println("Prueba 2");
+					System.out.println("Movimiento de +4 a la derecha");
+				}
+				
 			}
+			else if (this.direccionPacman == "izq" && this.coorX > 0){
+				this.coorXTemp = (this.pacman.xPac - 1.1*velocidad + .33*.9925*(this.ancho/52) -.9925*this.ancho/104) / (.9925*(this.ancho/52)) + .02;	
+				if (this.matrizPista[this.coorY][(int)(this.coorXTemp) + 1 - 1] == 1){
+					if(this.coorXTemp >= this.coorX){
+						this.pacman.xPac -= velocidad;
+						System.out.println("Prueba 3");
+					}
+				}
+				else {
+					this.pacman.xPac -= velocidad;
+					System.out.println("Prueba 4");
+					System.out.println("Movimiento de +4 a la derecha");
+				}
+			}
+
 			else if (this.direccionPacman == "arr" && this.matrizPista[this.coorY - 1][this.coorX] != 1 ){
-				this.pacman.yPac -= velocidad;
+				this.coorYTemp = (this.pacman.yPac - 1.03*velocidad + .39*.985*(this.alto/31) -.985*this.alto/62) / (.985*(this.alto/31));
+				if (this.matrizPista[(int)(this.coorYTemp) + 1 - 1][this.coorX] == 1){
+					if(this.coorYTemp >= this.coorY){
+						this.pacman.yPac -= velocidad;
+						System.out.println("Prueba 3");
+					}
+				}
+				else {
+					this.pacman.yPac -= velocidad;
+					System.out.println("Prueba 4");
+					System.out.println("Movimiento de +4 a la derecha");
+				}
 			}
 				
 			else if (this.direccionPacman == "aba" && this.matrizPista[this.coorY + 1][this.coorX] != 1 ){
-				this.pacman.yPac += velocidad;
+				this.coorYTemp = (this.pacman.yPac + .39*.985*(this.alto/31) -.985*this.alto/62) / (.985*(this.alto/31));
+				if (this.matrizPista[(int)(this.coorYTemp) + 1][this.coorX] == 1){
+					if(this.coorYTemp < this.coorY){
+						this.pacman.yPac += velocidad;
+						System.out.println("Prueba 1");
+					}
+				
+				}
+				else{
+					this.pacman.yPac += velocidad;
+					System.out.println("Prueba 2");
+					System.out.println("Movimiento de +4 a la derecha");
+				}
 			}
+
+
 		}
+		
 		
 			
 	
