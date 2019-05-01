@@ -108,7 +108,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		super.paintComponent(g);
 		g.drawImage(this.pista, 0, 0, (int) this.ancho, (int) this.alto, this);
 		g.setColor(Color.WHITE);
-		// g.fillRect(this.pacman.xPac, this.pacman.yPac, (int)(this.ancho/52), (int)(this.ancho/52));
+		g.fillRect(this.pacman.xPac, this.pacman.yPac, (int)(this.ancho/52), (int)(this.ancho/52));
 		for (int y = 0; y < this.matrizPista.length-1; y++){
 			for (int x = 0; x < this.matrizPista[y].length-1; x++){
 				if (this.matrizPista[y][x] == 0){
@@ -156,11 +156,12 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	private void tick() {
 		int velocidad = 4;
 		System.out.println(coorX + ", " + coorY);
-		System.out.println("dir"+this.direccionPacman);
-		System.out.println("dirTem"+this.direccionTmp);
+
 		movimientoY(this.coorX, this.coorY);
 		movimientoX(this.coorX, this.coorY);
 		
+		System.out.println("DireccionPac: " + this.direccionPacman);
+		System.out.println("Direccion TEMP: " + this.direccionTmp);
 		
 		comerPuntitos(this.coorX, this.coorY);
 		escucharTeclas(velocidad);
@@ -184,121 +185,92 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			}
 		}
 	}
-
 	public double redondear(double num){
 		if(num%1 > .9){
-			System.out.println("redondeo a: "+Double.toString(num + 1 - num%1));
+			System.out.println("redondeo a: "+Double.toString(num + 1 - (num%1)));
 			return num + 1.05 - num%1;
 		}
 		return num;
 	}
 
 	public void movimientoX(int coorX, int coorY){
-		double coorXTemp = (this.pacman.xPac + .33*.99*(this.ancho/52) -.99*this.ancho/104) / (.99*(this.ancho/52));
+		double coorXTemp = redondear(this.pacman.xPac + .33*.99*(this.ancho/52) -.99*this.ancho/104) / (.99*(this.ancho/52));
 		
 		boolean direccionX = true; //derecha
-
-		if( this.direccionPacman == "izq" && this.direccionTmp == "izq" && coorXTemp%1 > .2){
-			coorXTemp += .67;
+		coorX = (int) coorXTemp;
+		if(this.direccionTmp == "izq"){
+			coorX += 1;
 			direccionX = false;
-		} 
+		}
+		//if(!direccionX && coorXTemp%1 > .2)
+		
 		System.out.println("CoooXTemp: " + coorXTemp);
+		System.out.println("CoorXINT: " + coorX);
 		
 
-		if(this.matrizPista[coorY - 1][coorX] == 1) System.out.println("Borde arriba");
 
 		if(direccionX) System.out.println("Derecha");
 		else System.out.println("Izquierda");
 
-		if (this.direccionPacman == "arr" && (this.direccionTmp == "der" || this.direccionTmp == "izq")){
-			System.out.println("Prueba 0");
-		    if(this.matrizPista[coorY - 1][coorX] == 1 ){
-				System.out.println("Prueba 1");
-				this.peticionSubirBajar = true;
-				this.peticionSubirBajarDir = true;  //Arriba
-				this.direccionPacman = this.direccionTmp;
-			}
-			else if(this.matrizPista[coorY - 1][coorX] != 1 && this.coorXTemp < .2 && this.coorXTemp > .35){
-				System.out.println("Prueba 2");
-				this.peticionSubirBajar = true;
-				this.peticionSubirBajarDir = true;  //Arriba
-				this.direccionPacman = this.direccionTmp;
-			}
-			else if(this.matrizPista[coorY - 1][coorX] != 1 && this.coorXTemp >= .2 && this.coorXTemp <= .35){
-				System.out.println("Prueba 3");
-				this.direccionPacman = "arr";
-			}
-		
-		}else if (this.direccionPacman == "aba" && (this.direccionTmp == "der" || this.direccionTmp == "izq")){
-			System.out.println("Prueba 01");
-			if(this.matrizPista[coorY - 1][coorX] == 1 ){
-				System.out.println("Prueba 4");
-				this.peticionSubirBajar = true;
-				this.peticionSubirBajarDir = false;  //Arriba
-				this.direccionPacman = this.direccionTmp;
-			}
-			else if(this.matrizPista[coorY - 1][coorX] != 1 && this.coorXTemp < .2 && this.coorXTemp > .35){
-				System.out.println("Prueba 5");
-				this.peticionSubirBajar = true;
-				this.peticionSubirBajarDir = false;  //Arriba
-				this.direccionPacman = this.direccionTmp;
-			}
-			else if(this.matrizPista[coorY - 1][coorX] != 1 && this.coorXTemp >= .2 && this.coorXTemp <= .35){
-				System.out.println("Prueba 6");
-				this.direccionPacman = "aba";
-			}
-			
+
+		if ((this.direccionPacman == "arr" || this.direccionPacman == "aba") && (this.direccionTmp == "der" || this.direccionTmp == "izq")){
+			this.peticionSubirBajar = true;
+			if (this.direccionPacman == "arr") this.peticionSubirBajarDir = true;  //Arriba
+			else this.peticionSubirBajarDir = false;
+			this.direccionPacman = this.direccionTmp;
 		}
-		// (coorXTemp%1 > .475) || coorXTemp%1 < .525)
+
 		if (this.peticionSubirBajar && coorXTemp < 51 && coorXTemp > 0 && coorY > 0){
 			if (this.peticionSubirBajarDir && this.matrizPista[coorY - 1][coorX] != 1 ){
 				this.direccionPacman = "arr";
-				//this.pacman.yPac -= 3;
 				this.peticionSubirBajar = false;
 			 }
 			 else if (!this.peticionSubirBajarDir && this.matrizPista[coorY + 1][coorX] != 1){
 				this.direccionPacman = "aba";
-				//this.pacman.yPac += 3;
 				this.peticionSubirBajar = false;
 			 }	
 		}
-		this.coorX = (int) coorXTemp;
-	
-		
+		this.coorX = coorX;
 	}
 	
 
 	public void movimientoY (int coorX, int coorY){
-		
 		this.coorYTemp = (this.pacman.yPac + .39*.985*(this.alto/31) -.985*this.alto/62) / (.985*(this.alto/31));
-		
-		System.out.println(coorYTemp);
-		if( this.direccionPacman == "arr" && this.direccionTmp == "arr") coorYTemp += .67;
+		coorY = (int) coorYTemp;
 
-		if (this.direccionPacman == "der" && (this.direccionTmp == "arr" || this.direccionTmp == "aba")){
+		System.out.println("CoooYTempAntes: " + coorYTemp);
+		System.out.println("CoorYINTAntes: " + coorY);
+
+		if(this.direccionTmp == "arr"){
+			System.out.println("oHHHHHHHH Siii");
+			coorY += 1;
+		}
+		
+		System.out.println("CoooYTemp: " + coorYTemp);
+		System.out.println("CoorYINT: " + coorY);
+
+		if ((this.direccionPacman == "izq" || this.direccionPacman == "der") && (this.direccionTmp == "arr" || this.direccionTmp == "aba")){
+			System.out.println("Pruebay 0");
+			System.out.println("Pruebay 1");
 			this.peticionIzqDer = true;
-			this.peticionIzqDerDir = true;  //Arriba
-			this.direccionPacman = this.direccionTmp;
-		}else if (this.direccionPacman == "izq" && (this.direccionTmp == "arr" || this.direccionTmp == "aba")){
-			this.peticionIzqDer = true;
-			this.peticionIzqDerDir = false;  //Arriba
+			if (this.direccionPacman == "der") this.peticionIzqDerDir = true;  //Derecha
+			else this.peticionIzqDerDir = false;
 			this.direccionPacman = this.direccionTmp;
 		}
+
 
 		if (this.peticionIzqDer && coorX > 0  && coorX < 51){
 			
 			if (this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX+1] != 1 && coorX < 51){
 				this.direccionPacman = "der";
-				//this.pacman.xPac += 3;
 				this.peticionIzqDer = false;
 			 }
 			 else if (!this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX-1] != 1 && coorX > 1){
 				this.direccionPacman = "izq";
-				//this.pacman.xPac -= 3;
 				this.peticionIzqDer = false;
 			 }
 		}
-		this.coorY = (int) coorYTemp;	
+		this.coorY = coorY;	
 	}
 
 	public void escucharTeclas(int velocidad){
