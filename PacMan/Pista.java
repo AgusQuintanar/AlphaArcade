@@ -45,8 +45,6 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
 		(int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (.985*(this.ancho / 52)));
 		this.direccionPacman = "";
-		this.fantasmaRojo = new FantasmaRojo((int) (this.ancho / 2 - this.ancho / 104),
-		(int) (.95 * this.alto / 2 - .95 * this.alto / 62), this.ancho, this.alto, this.matrizPista);
 		this.abiertoCerrado = true;
 		this.direccionTmp = "der";
 		this.coorX = 0;
@@ -97,6 +95,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } 
 			};
+		this.fantasmaRojo = new FantasmaRojo((int) (this.ancho / 2 - this.ancho / 104),
+		(int)((11)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
 
 	}
 
@@ -142,14 +142,12 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				this.contador++;
 				fps++;
 				delta--;
-
 			}
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				fps = 0;
 			}
-
 		}
 	}
 
@@ -161,6 +159,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		comerPuntitos(this.coorX, this.coorY);
 		escucharTeclas(velocidad);
 		comportamientoPacman();
+		fantasmaRojo.modoPersecusion(this.coorX, this.coorY);
 	}
 
 	private void render() {
@@ -263,7 +262,6 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				}
 			 }
 		}
-		//System.out.println("Paso segundo if de Y");
 		this.coorY = coorY;	
 	}
 
