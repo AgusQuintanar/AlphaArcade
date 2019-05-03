@@ -4,20 +4,26 @@ import java.awt.Graphics;
 public class FantasmaRojo {
 
     private int xFRojo,
-            yFrojo,
+            yFRojo,
             coorXFRojo,
             coorYFRojo;
+            
     private double anchoPista,
-                   altoPista;
+                   altoPista,
+                   coorXFRojoTemp,
+                   coorYFRojoTemp;
     private int[][] matrizPista;
 
     public FantasmaRojo (int xFRojo, int yFRojo, double anchoPista, double altoPista, int[][] matrizPista){
+        System.out.println("xFROJO Y YFROJO: " + xFRojo +", " +yFRojo);
         this.xFRojo = xFRojo;
-        this.yFrojo = yFRojo;
+        this.yFRojo = yFRojo;
         this.anchoPista = anchoPista;
         this.altoPista = altoPista;
-        this.coorXFRojo = 0;
-        this.coorYFRojo = 0;
+        this.coorXFRojo = 25;
+        this.coorYFRojo = 15;
+        this.coorXFRojoTemp = 25;
+        this.coorYFRojoTemp = 15;
         this.matrizPista = matrizPista;
     }
 
@@ -26,30 +32,58 @@ public class FantasmaRojo {
     }
 
     public void setYFRojo (int yFRojo){
-        this.yFrojo = yFRojo;
+        this.yFRojo = yFRojo;
     }
 
     public void pintaFantasmaRojo(Graphics g){
         g.setColor(Color.RED);
-        g.drawRect(this.xFRojo, this.yFrojo,(int)(this.anchoPista/52), (int)(this.anchoPista/52));
+        g.drawRect(this.xFRojo, this.yFRojo,(int)(this.anchoPista/52), (int)(this.anchoPista/52));
     }
 
-    public void modoPersecusion(double PacManXCoor, double PacManYCoor) {
-        int velocidad = 3;
-        this.coorXFRojo = (int) ((this.xFRojo + .3*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)));
-        this.coorYFRojo = (int) ((this.yFrojo + .3*.9928*(this.altoPista/31) -.9928*this.altoPista/62) / (.9928*(this.altoPista/31)));
-        if (this.coorXFRojo != PacManXCoor && this.coorYFRojo != PacManYCoor){
-            if (PacManXCoor > this.coorXFRojo && PacManYCoor > this.coorYFRojo) { //Si PacMan esta arriba a la derecha
-                if(this.matrizPista[this.yFrojo-1][this.xFRojo] != 1){
-                    this.yFrojo -= velocidad;
-                }
-                if(this.matrizPista[this.yFrojo][this.xFRojo-1] != 1){
-                    this.xFRojo -= velocidad;
-                }
+    public void modoPersecusion(int PacManXCoor, int PacManYCoor) {
+        System.out.println("double: " + this.coorXFRojoTemp +", " +this.coorYFRojoTemp);
+        System.out.println("int: " + this.coorXFRojo +", " +this.coorYFRojo);
+        int velocidad = 2;
+        this.coorXFRojoTemp = (this.xFRojo + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
+        this.coorYFRojoTemp = (this.yFRojo + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31));
+
+        this.coorXFRojo = (int) this.coorXFRojoTemp;
+        this.coorYFRojo = (int) this.coorYFRojoTemp;
+
+        if (PacManXCoor < this.coorXFRojo) this.coorXFRojo += 1;
+        if (PacManYCoor < this.coorYFRojo) this.coorYFRojo += 1;
+      
+        // System.out.println("Coor X: "+ this.coorXFRojo + ", Y: " + this.coorYFRojo);
+        // System.out.println("Int X: "+ this.xFRojo + ", Y: " + this.yFRojo);
+        //Si PacMan esta arriba a la derecha
+        
+        //Arriba derehca
+        //Arriba Izquierda
+        //Arriba
+        //Derecha
+        //Izquierda
+        //Abajo derecha
+        // Abajo izquierda
+        //Abajo
+
+        if (!(this.coorXFRojo == PacManXCoor && this.coorYFRojo == PacManYCoor)){ //Mientras no sean iguales
+           
+            if(this.matrizPista[this.coorYFRojo][this.coorXFRojo+1] != 1 && PacManXCoor > this.coorXFRojo){
+                this.xFRojo += velocidad;
             }
-        }
+            else if(this.matrizPista[this.coorYFRojo-1][this.coorXFRojo] != 1 && PacManYCoor < this.coorYFRojo){
+                this.yFRojo -= velocidad;
+            }
+            else if(this.matrizPista[this.coorYFRojo][this.coorXFRojo-1] != 1 && PacManXCoor < this.coorXFRojo){
+                this.xFRojo -= velocidad;
+            }
+            else if(this.matrizPista[this.coorYFRojo+1][this.coorXFRojo] != 1 && PacManYCoor > this.coorYFRojo){
+                this.yFRojo += velocidad;
+            }
+            
+            }
         else{
             System.out.println("Game Over");
         }
-    }
+     }
 }
