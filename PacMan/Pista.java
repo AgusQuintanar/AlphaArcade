@@ -44,7 +44,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.setPreferredSize(new Dimension((int) this.ancho, (int) this.alto));
 		this.setBackground(Color.BLACK);
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
-		(int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (.985*(this.ancho / 52)));
+		(int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (1.5*(this.ancho / 52)));
 		this.direccionPacman = "";
 		this.abiertoCerrado = true;
 		this.direccionTmp = "der";
@@ -98,7 +98,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } 
 			};
 		this.fantasmaRojo = new FantasmaRojo((int) (this.ancho / 2 - this.ancho / 104),
-		(int)((11)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62), this.ancho, this.alto, this.matrizPista);
+		(int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
 
 	}
 
@@ -107,10 +107,11 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		super.paintComponent(g);
 		g.drawImage(this.pista, 0, 0, (int) this.ancho, (int) this.alto, this);
 		g.setColor(Color.WHITE);
+		this.pacman.pintaPacman(g, this.abiertoCerrado, this.direccionTmp);
 		//g.fillRect(this.pacman.xPac, this.pacman.yPac, (int)(this.ancho/52), (int)(this.ancho/52));
 		pintarPuntitos(g);
 		this.fantasmaRojo.pintaFantasmaRojo(g);
-		this.pacman.pintaPacman(g, this.abiertoCerrado, this.direccionTmp);
+		
 	}
 
 	public void pintarPuntitos(Graphics g){
@@ -154,7 +155,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	}
 
 	private void tick() {
-		int velocidad = 3;
+		double velocidad = 3;
 
 		movimientoY(this.coorX, this.coorY);
 		movimientoX(this.coorX, this.coorY);
@@ -268,7 +269,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.coorY = coorY;	
 	}
 
-	public void escucharTeclas(int velocidad){
+	public void escucharTeclas(double velocidad){
 
 		if (this.coorX > 50){
 			if (this.direccionPacman == "der"  && this.coorX < 52){

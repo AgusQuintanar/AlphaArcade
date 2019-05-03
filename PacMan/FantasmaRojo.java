@@ -21,7 +21,7 @@ public class FantasmaRojo {
                     peticionIzquierda;
 
     public FantasmaRojo (int xFRojo, int yFRojo, double anchoPista, double altoPista, int[][] matrizPista){
-        System.out.println("xFROJO Y YFROJO: " + xFRojo +", " +yFRojo);
+        //System.out.println("xFROJO Y YFROJO: " + xFRojo +", " +yFRojo);
         this.xFRojo = xFRojo;
         this.yFRojo = yFRojo;
         this.anchoPista = anchoPista;
@@ -52,10 +52,9 @@ public class FantasmaRojo {
     }
 
     public void modoPersecusion(int PacManXCoor, int PacManYCoor) {
-        // System.out.println("double: " + this.coorXFRojoTemp +", " +this.coorYFRojoTemp);
-        // System.out.println("int: " + this.coorXFRojo +", " +this.coorYFRojo);
-        int velocidad = 3;
-        int distanciaCasillas = 0;
+        // //System.out.println("double: " + this.coorXFRojoTemp +", " +this.coorYFRojoTemp);
+        // //System.out.println("int: " + this.coorXFRojo +", " +this.coorYFRojo);
+        double velocidad = 2;
         this.coorXFRojoTemp = (this.xFRojo + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
         this.coorYFRojoTemp = (this.yFRojo + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31));
 
@@ -65,22 +64,23 @@ public class FantasmaRojo {
         if (this.direccionFantasmaRojo == "izq" && this.coorXFRojoTemp%1 > .15) this.coorXFRojo += 1;
         if (this.direccionFantasmaRojo == "arr" && this.coorYFRojoTemp%1 > .15) this.coorYFRojo += 1;
       
-        System.out.println("Coor X: "+ this.coorXFRojoTemp + ", Y: " + this.coorYFRojoTemp);
-        System.out.println("Int X: "+ this.coorXFRojo + ", Y: " + this.coorYFRojo);
+        //System.out.println("Coor X: "+ this.coorXFRojoTemp + ", Y: " + this.coorYFRojoTemp);
+        //System.out.println("Int X: "+ this.coorXFRojo + ", Y: " + this.coorYFRojo);
 
 
         if (!(this.coorXFRojo == PacManXCoor && this.coorYFRojo == PacManYCoor)){ //Mientras no sean iguales
            
-            if (this.coorXFRojo < 50 && this.coorXFRojo > 0 && this.coorYFRojoTemp > 1 && this.coorYFRojoTemp < 30) {
-                System.out.println("o vaya: " + Math.abs(this.coorYFRojo - PacManYCoor));
-                System.out.println("o vaya x: " + Math.abs(this.coorXFRojo - PacManXCoor));
+            if (this.coorXFRojo <= 50 && this.coorXFRojo > 0 && this.coorYFRojoTemp > 1 && this.coorYFRojoTemp < 30) {
+                //System.out.println("o vaya: " + Math.abs(this.coorYFRojo - PacManYCoor));
+                //System.out.println("o vaya x: " + Math.abs(this.coorXFRojo - PacManXCoor));
+
 
                 int caminoX = Math.abs(this.coorXFRojo - PacManXCoor),
                     caminoY = Math.abs(this.coorYFRojo - PacManYCoor);
 
 
-                if (PacManYCoor <= this.coorYFRojo && PacManXCoor >= this.coorXFRojo){ //pACmAN ARRIBA A LA DERECHA
-                    System.out.println("Arriba a la derecha");
+                if (PacManYCoor < this.coorYFRojo && PacManXCoor >= this.coorXFRojo){ //pACmAN ARRIBA A LA DERECHA
+                    //System.out.println("Arriba a la derecha");
                     if (caminoX >= caminoY){
                         if (this.matrizPista[this.coorYFRojo][this.coorXFRojo+1] != 1 && !this.peticionArriba){
                             this.direccionFantasmaRojo = "der";
@@ -120,8 +120,8 @@ public class FantasmaRojo {
                     }
                 }
 
-                else if (PacManYCoor <= this.coorYFRojo && PacManXCoor < this.coorXFRojo){ //pACmAN ARRIBA A LA Izquierda
-                    System.out.println("Arriba a la izquierda");
+                else if (PacManYCoor <= this.coorYFRojo && PacManXCoor <= this.coorXFRojo){ //pACmAN ARRIBA A LA Izquierda
+                    //System.out.println("Arriba a la izquierda");
                     if (caminoX >= caminoY){
                         if (this.matrizPista[this.coorYFRojo][this.coorXFRojo-1] != 1 && !this.peticionArriba){
                             this.direccionFantasmaRojo = "izq";
@@ -161,8 +161,8 @@ public class FantasmaRojo {
                     }
                 }
 
-                else if (PacManYCoor > this.coorYFRojo && PacManXCoor >= this.coorXFRojo){ //pACmAN Abajo A LA DERECHA
-                    System.out.println("Abajo a la derecha");
+                else if (PacManYCoor >= this.coorYFRojo && PacManXCoor >= this.coorXFRojo){ //pACmAN Abajo A LA DERECHA
+                    //System.out.println("Abajo a la derecha");
                     if (caminoX >= caminoY){
                         if (this.matrizPista[this.coorYFRojo][this.coorXFRojo+1] != 1 && !this.peticionAbajo){
                             this.direccionFantasmaRojo = "der";
@@ -192,7 +192,7 @@ public class FantasmaRojo {
                         }
                    
                         else if (this.direccionFantasmaRojo == "der"){
-                            this.direccionFantasmaRojo = "aba";
+                            this.direccionFantasmaRojo = "arr";
                             this.peticionDerecha = true;
                         }
                         else if (this.direccionFantasmaRojo == "aba"){
@@ -202,8 +202,8 @@ public class FantasmaRojo {
                     }
                 }
 
-                else if (PacManYCoor > this.coorYFRojo && PacManXCoor < this.coorXFRojo){ //pACmAN abajo a la izquierda
-                    System.out.println("Abajo a la izquierda");
+                else if (PacManYCoor >= this.coorYFRojo && PacManXCoor <= this.coorXFRojo){ //pACmAN abajo a la izquierda
+                    //System.out.println("Abajo a la izquierda");
                     if (caminoX >= caminoY){
                         if (this.matrizPista[this.coorYFRojo][this.coorXFRojo-1] != 1 && !this.peticionAbajo){
                             this.direccionFantasmaRojo = "izq";
@@ -252,15 +252,15 @@ public class FantasmaRojo {
           
         }
         else{
-            System.out.println("Game Over");
+            //System.out.println("Game Over");
         }
         escucharTeclas(velocidad);
      }
 
 
-     public void escucharTeclas(int velocidad){
+     public void escucharTeclas(double velocidad){
 
-		if (this.coorXFRojo >= 50){
+		if (this.coorXFRojo > 50){
 			if (this.direccionFantasmaRojo == "der"  && this.coorXFRojo < 52){
 				xFRojo += velocidad;
 			}
@@ -289,18 +289,22 @@ public class FantasmaRojo {
 			// else if (this.matrizPista[this.coorYFRojo-1][this.coorXFRojo] == 1 && this.direccionTmp == "arr") this.pared = true;
 			// else this.pared = false;
 
-			if (this.direccionFantasmaRojo == "der" && this.matrizPista[this.coorYFRojo][this.coorXFRojo + 1] != 1  && this.coorXFRojo < 51){
-				xFRojo += velocidad;
+			if (this.direccionFantasmaRojo == "der" && this.matrizPista[this.coorYFRojo][this.coorXFRojo + 1] != 1  && this.coorXFRojoTemp < 49.98){
+                xFRojo += velocidad;
+                //this.setYFRojo((int)(this.coorYFRojo*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62));
 			}	
-			else if (this.direccionFantasmaRojo == "izq" && this.matrizPista[this.coorYFRojo][this.coorXFRojo - 1] != 1 ){
-				xFRojo -= velocidad;
+			else if (this.direccionFantasmaRojo == "izq" && this.matrizPista[this.coorYFRojo][this.coorXFRojo - 1] != 1 && this.coorXFRojoTemp > 1){
+                xFRojo -= velocidad;
+                //this.setYFRojo((int)(this.coorYFRojo*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62));
 			}
 			else if (this.direccionFantasmaRojo == "arr" && this.matrizPista[this.coorYFRojo - 1][this.coorXFRojo] != 1 ){
-				yFRojo -= velocidad;
+                yFRojo -= velocidad;
+                //this.setXFRojo((int)(this.coorXFRojo*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104));
 			}
 				
 			else if (this.direccionFantasmaRojo == "aba" && this.matrizPista[this.coorYFRojo + 1][this.coorXFRojo] != 1 ){
-				yFRojo += velocidad;
+                yFRojo += velocidad;
+                //this.setXFRojo((int)(this.coorXFRojo*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104));
 			}
 		}
 			
