@@ -11,8 +11,8 @@ public class PacMan implements ImageObserver {
 				  pacManCerrado;
 				  
 	public PacMan(int xPac, int yPac, int ancho) {
-		this.xPac = xPac;
-		this.yPac = yPac;
+		this.xPac = xPac - (int)(.2*this.ancho);
+		this.yPac = yPac - (int)(.2*this.ancho);
 		this.ancho = ancho;
 		this.pacManAbierto = new ImageIcon("Imagenes/pac-man-3d-arr.png").getImage();
 		this.pacManCerrado = new ImageIcon("Imagenes/PacManIconCerrado-3d-arr.png").getImage();
@@ -27,14 +27,15 @@ public class PacMan implements ImageObserver {
 	}
 
 	public void pintaPacman(Graphics g, boolean abiertoCerrado, String direccionPacman) {
+		System.out.println(this.ancho);
 		this.pacManAbierto = new ImageIcon("Imagenes/pac-man-3d-"+direccionPacman+".png").getImage();
 		this.pacManCerrado = new ImageIcon("Imagenes/PacManIconCerrado-3d-"+direccionPacman+".png").getImage();
 
 		if(abiertoCerrado){
-			g.drawImage(this.pacManAbierto, xPac, yPac, this.ancho, this.ancho, this);
+			g.drawImage(this.pacManAbierto, xPac - (int)(.2*this.ancho), yPac - (int)(.2*this.ancho), this.ancho, this.ancho, this);
 		}
 		else{
-			g.drawImage(this.pacManCerrado, xPac, yPac, this.ancho, this.ancho, this);
+			g.drawImage(this.pacManCerrado, xPac - (int)(.2*this.ancho), yPac - (int)(.2*this.ancho), this.ancho, this.ancho, this);
 		}
 	}
 

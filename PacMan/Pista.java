@@ -19,7 +19,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 					peticionSubirBajar,
 					peticionIzqDer,
 					peticionIzqDerDir,
-					peticionSubirBajarDir;
+					peticionSubirBajarDir,
+					pared;
 	private Image pista;
 	private double ancho, 
 					alto,
@@ -43,18 +44,19 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.setPreferredSize(new Dimension((int) this.ancho, (int) this.alto));
 		this.setBackground(Color.BLACK);
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
-		(int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (.985*(this.ancho / 52)));
+		(int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (1.5*(this.ancho / 52)));
 		this.direccionPacman = "";
 		this.abiertoCerrado = true;
 		this.direccionTmp = "der";
-		this.coorX = 0;
+		this.coorX = 1;
 		this.peticionIzqDer = false;
 		this.peticionIzqDerDir = false;
 		this.peticionSubirBajar = false;
 		this.peticionSubirBajarDir = false;
-		this.coorXTemp = 0.0;
-		this.coorYTemp = 0.0;
-		this.coorY = 0;
+		this.pared = false;
+		this.coorXTemp = 1.0;
+		this.coorYTemp = 1.0;
+		this.coorY = 1;
 		System.out.println(this.ancho + ", " + this.alto);
 		this.pista = new ImageIcon("Imagenes/PistaPacMan.png").getImage();
 		this.setFocusable(true);
@@ -96,7 +98,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } 
 			};
 		this.fantasmaRojo = new FantasmaRojo((int) (this.ancho / 2 - this.ancho / 104),
-		(int)((11)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
+		(int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
 
 	}
 
@@ -105,10 +107,11 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		super.paintComponent(g);
 		g.drawImage(this.pista, 0, 0, (int) this.ancho, (int) this.alto, this);
 		g.setColor(Color.WHITE);
+		this.pacman.pintaPacman(g, this.abiertoCerrado, this.direccionTmp);
 		//g.fillRect(this.pacman.xPac, this.pacman.yPac, (int)(this.ancho/52), (int)(this.ancho/52));
 		pintarPuntitos(g);
 		this.fantasmaRojo.pintaFantasmaRojo(g);
-		this.pacman.pintaPacman(g, this.abiertoCerrado, this.direccionTmp);
+		
 	}
 
 	public void pintarPuntitos(Graphics g){
@@ -152,7 +155,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	}
 
 	private void tick() {
-		int velocidad = 3;
+		double velocidad = 3;
 
 		movimientoY(this.coorX, this.coorY);
 		movimientoX(this.coorX, this.coorY);
@@ -221,6 +224,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 		this.coorX = coorX;
 	}
+
 	
 
 	public void movimientoY (int coorX, int coorY){
@@ -265,7 +269,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.coorY = coorY;	
 	}
 
-	public void escucharTeclas(int velocidad){
+	public void escucharTeclas(double velocidad){
+
 		if (this.coorX > 50){
 			if (this.direccionPacman == "der"  && this.coorX < 52){
 				this.pacman.xPac += velocidad;
@@ -289,6 +294,12 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			}
 		}			
 		else {
+			// if (this.matrizPista[this.coorY][this.coorX+1] == 1 && this.direccionTmp == "der") this.pared = true;
+			// else if (this.matrizPista[this.coorY][this.coorX-1] == 1 && this.direccionTmp == "izq") this.pared = true;
+			// else if (this.matrizPista[this.coorY+1][this.coorX] == 1 && this.direccionTmp == "aba") this.pared = true;
+			// else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionTmp == "arr") this.pared = true;
+			// else this.pared = false;
+
 			if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1  && this.coorX < 51){
 				this.pacman.xPac += velocidad;
 			}	
@@ -311,7 +322,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		else if ((direccionPacman == "der" || direccionPacman == "izq") && !this.peticionIzqDer) direccionTmp = direccionPacman;
 		this.direccionPacman = direccionTmp;
 
-		if (this.contador % 12 == 0) this.abiertoCerrado = false;
+		if (this.contador % 12 == 0 && !this.pared) this.abiertoCerrado = false;
 
 		else if (this.contador % 25 == 0) {
 			this.abiertoCerrado = true;
