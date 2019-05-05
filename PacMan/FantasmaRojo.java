@@ -91,7 +91,7 @@ public class FantasmaRojo implements ImageObserver {
 
         //System.out.println("Direccion: " + this.direccionFantasmaRojo);
 
-        if (!(this.coorXFRojo == PacManXCoor && this.coorYFRojo == PacManYCoor)){ //Mientras no sean iguales
+        if (!(this.coorXFRojo == PacManXCoor && this.coorYFRojo == PacManYCoor) && (this.coorXFRojo <= 50 && this.coorXFRojo > 0 && this.coorYFRojoTemp > 1 && this.coorYFRojoTemp < 30)){ //Mientras no sean iguales
            
             if ((this.matrizPista[this.coorYFRojo][this.coorXFRojo - 1] != 1 || this.matrizPista[this.coorYFRojo][this.coorXFRojo + 1] != 1) && (this.peticionAbajo || this.peticionArriba) && (this.coorYFRojo != this.coorYPeticionPasada)){
               //System.out.println("Peticion arriba abajo desactivada");
