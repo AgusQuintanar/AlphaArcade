@@ -62,8 +62,6 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		this.contador = 0;
-		this.hilo = new Thread(this);
-		this.hilo.start();
 		this.matrizPista = new int[][] {
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 				{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
@@ -99,7 +97,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			};
 		this.fantasmaRojo = new FantasmaRojo((int) (this.ancho / 2 - this.ancho / 104),
 		(int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
-
+		this.hilo = new Thread(this);
+		this.hilo.start();
 	}
 
 
@@ -162,11 +161,14 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		comerPuntitos(this.coorX, this.coorY);
 		escucharTeclas(velocidad);
 		comportamientoPacman();
-		fantasmaRojo.modoPersecusion(this.coorX, this.coorY);
+		this.fantasmaRojo.modoPersecusion(this.coorX, this.coorY);
+		
+		
 	}
 
 	private void render() {
 		this.repaint();
+	
 	}
 
 	public void comerPuntitos(int x, int y){
