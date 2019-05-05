@@ -14,6 +14,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	private PacMan pacman;
 	private FantasmaBlinky fantasmaBlinky;
 	private FantasmaPinky fantasmaPinky;
+	private FantasmaClyde fantasmaClyde;
+	private FantasmaInky fantasmaInky;
 	private Thread hilo;
 	private String direccionPacman, 
 				   direccionTmp;
@@ -98,9 +100,11 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } 
 			};
-		this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-		
+		this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2);
 		this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2);
+		this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2);
+		this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2);
+
 
 		this.tiempoDeInicio = System.currentTimeMillis();
 
@@ -118,6 +122,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		//g.fillRect(this.pacman.xPac, this.pacman.yPac, (int)(this.ancho/52), (int)(this.ancho/52));
 		this.fantasmaBlinky.pintaFantasma(g);
 		this.fantasmaPinky.pintaFantasma(g);
+		this.fantasmaClyde.pintaFantasma(g);
+		this.fantasmaInky.pintaFantasma(g);
 		
 	}
 
@@ -136,7 +142,6 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 	public void run() {
 		
-
 		long lastTime = System.nanoTime();
 		final double amountOfTicks = 60.0;
 		double ns = 1000000000 / amountOfTicks, delta = 0.0;
@@ -164,13 +169,11 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				timer += 1000;
 				fps = 0;
 			}
-		
 		}
 	}
 
 	private void tick() {
 		double velocidad = 3;
-
 		movimientoY(this.coorX, this.coorY);
 		movimientoX(this.coorX, this.coorY);
 		comerPuntitos(this.coorX, this.coorY);
@@ -178,7 +181,10 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		comportamientoPacman();
 		this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
 		this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+		this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+		this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
 		//this.fantasmaPinky.modoDispersion();
+	
 		
 		
 	}

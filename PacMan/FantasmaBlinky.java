@@ -15,4 +15,5 @@ public class FantasmaBlinky extends Fantasma {
     public void modoDispersion() {
         super.modoDispersion(51,0);
      }
+
 }

@@ -76,13 +76,20 @@ public class Fantasma implements ImageObserver {
     public void setYF (int yF){
         this.yF = yF;
     }
+    public int getCoorXF() {
+        return this.coorXF;
+    }
+
+    public int getCoorYF() {
+        return this.coorYF;
+    }
 
     public void setVelocidad (double velocidad){
         this.velocidad = velocidad;
     }
 
     public void pintaFantasma(Graphics g){
-        g.fillOval((int)(this.PacManXCoor*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104), (int)((this.PacManYCoor*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62)), 25, 25);
+        //g.fillOval((int)(this.PacManXCoor*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104), (int)((this.PacManYCoor*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62)), 25, 25);
         g.setColor(Color.BLUE);
         g.drawImage(this.fantasmaImg, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
         g.drawRect(this.xF, this.yF,(int)(this.anchoPista/52), (int)(this.anchoPista/52));
@@ -113,9 +120,11 @@ public class Fantasma implements ImageObserver {
 }
 
     public void generarRuta(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
+
         this.PacManXCoor = PacManXCoor + this.agregarACaminoX;
         this.PacManYCoor = PacManYCoor + this.agregarACaminoY;
         this.direccionPacMan = direccionPacMan;
+
         //System.out.println("Modo Persecucion Activado");
         this.coorXPeticionPasada = this.coorXF;
         this.coorYPeticionPasada = this.coorYF;
@@ -125,6 +134,10 @@ public class Fantasma implements ImageObserver {
 
         this.coorXF = (int) this.coorXFTemp;
         this.coorYF = (int) this.coorYFTemp;
+
+        this.caminoX = Math.abs(this.coorXF - this.PacManXCoor);
+        this.caminoY = Math.abs(this.coorYF - this.PacManYCoor);
+
 
         if (this.direccionFantasma == "izq" && this.coorXFTemp%1 > .15) this.coorXF += 1;
         if (this.direccionFantasma == "arr" && this.coorYFTemp%1 > .15) this.coorYF += 1;
@@ -145,8 +158,7 @@ public class Fantasma implements ImageObserver {
           
 
             if (this.coorXF <= 50 && this.coorXF > 0 && this.coorYFTemp > 1 && this.coorYFTemp < 30 && (!this.peticionAbajo && !this.peticionArriba && !this.peticionDerecha && !this.peticionIzquierda)) {
-                this.caminoX = Math.abs(this.coorXF - PacManXCoor);
-                this.caminoY = Math.abs(this.coorYF - PacManYCoor);
+               
 
                 if (caminoX == caminoY){
                     if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba")  this.peticionArriba = true;
