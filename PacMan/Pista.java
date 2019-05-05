@@ -143,9 +143,10 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				render();
 				this.contador++;
 				fps++;
-				delta--;
+                delta--;	
 			}
-
+			
+			//System.out.println("fps: " + fps);
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				fps = 0;
@@ -301,6 +302,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			// else if (this.matrizPista[this.coorY+1][this.coorX] == 1 && this.direccionTmp == "aba") this.pared = true;
 			// else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionTmp == "arr") this.pared = true;
 			// else this.pared = false;
+		
+
 
 			if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1  && this.coorX < 51){
 				this.pacman.xPac += velocidad;
