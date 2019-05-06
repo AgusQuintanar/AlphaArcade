@@ -1,3 +1,6 @@
+// Agustin Quintanar y Julio Arath Rosales
+// A01636142 y A01630738
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -20,7 +23,8 @@ public class Fantasma implements ImageObserver {
             agregarACaminoX,
             agregarACaminoY,
             PacManXCoor,
-            PacManYCoor;
+            PacManYCoor,
+            contador;
             
     protected double anchoPista,
                    altoPista,
@@ -35,21 +39,26 @@ public class Fantasma implements ImageObserver {
     protected boolean peticionAbajo,
                     peticionArriba,
                     peticionDerecha,
-                    peticionIzquierda;
-    protected Image fantasmaImg;
+                    peticionIzquierda,
+                    paredArribaAbajo,
+                    modoHuidaActivado;
+    protected Image fantasmaImg,
+                    fantasmaHuidaAzul,
+                    fantasmaHuidaBlanco;
+    protected long tiempoHuida;
 
     public Fantasma (int xF, int yF, double anchoPista, double altoPista, int[][] matrizPista, Image fantasmaImg, String direccionPacMan, double velocidad){
-        //System.out.println("xFROJO Y YFROJO: " + xF +", " +yF);
+        ////System.out.println("xFROJO Y YFROJO: " + xF +", " +yF);
         this.xF = xF;
         this.yF = yF;
         this.anchoPista = anchoPista;
         this.altoPista = altoPista;
-        this.coorXF = 0;
-        this.coorYF = 0;
+        this.coorXF = 1;
+        this.coorYF = 1;
         this.coorXFTemp = 0;
         this.coorYFTemp = 0;
-        this.caminoX = 0;
-        this.caminoY = 0;
+        this.caminoX = 5;
+        this.caminoY = 4;
         this.PacManXCoor = 0;
         this.PacManYCoor = 0;
         this.matrizPista = matrizPista;
@@ -65,8 +74,14 @@ public class Fantasma implements ImageObserver {
         this.velocidad = velocidad;
         this.puntoXHuida = 0;
         this.puntoYHuida = 0;
+        this.modoHuidaActivado = false;
         this.agregarACaminoX = 0;
         this.agregarACaminoY = 0;
+        this.paredArribaAbajo = true;
+        this.tiempoHuida = 0;
+        this.contador = 0;
+        this.fantasmaHuidaAzul = new ImageIcon("fantasmaHuida1Img.png").getImage();
+        this.fantasmaHuidaBlanco = new ImageIcon("fantasmaHuida2Img.png").getImage();
     }
 
     public void setXF (int xF){
@@ -91,8 +106,13 @@ public class Fantasma implements ImageObserver {
     public void pintaFantasma(Graphics g){
         //g.fillOval((int)(this.PacManXCoor*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104), (int)((this.PacManYCoor*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62)), 25, 25);
         g.setColor(Color.BLUE);
-        g.drawImage(this.fantasmaImg, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
-        g.drawRect(this.xF, this.yF,(int)(this.anchoPista/52), (int)(this.anchoPista/52));
+        if (!this.modoHuidaActivado) g.drawImage(this.fantasmaImg, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
+        else if (this.modoHuidaActivado) g.drawImage(this.fantasmaHuidaAzul, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
+        // else {
+        //     if(this.contador % 12 == 0) g.drawImage(this.fantasmaHuidaBlanco, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
+        //     else if (this.contador % 25 == 0) g.drawImage(this.fantasmaHuidaAzul, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
+        // }
+        //g.drawRect(this.xF, this.yF,(int)(this.anchoPista/52), (int)(this.anchoPista/52));
         pintarOjos(g);
 
     }
@@ -125,7 +145,7 @@ public class Fantasma implements ImageObserver {
         this.PacManYCoor = PacManYCoor + this.agregarACaminoY;
         this.direccionPacMan = direccionPacMan;
 
-        //System.out.println("Modo Persecucion Activado");
+        ////System.out.println("Modo Persecucion Activado");
         this.coorXPeticionPasada = this.coorXF;
         this.coorYPeticionPasada = this.coorYF;
 
@@ -157,56 +177,62 @@ public class Fantasma implements ImageObserver {
             else if (this.coorXF < 5 && this.coorYF == 14) this.peticionIzquierda = true;
           
 
-            if (this.coorXF <= 50 && this.coorXF > 0 && this.coorYFTemp > 1 && this.coorYFTemp < 30 && (!this.peticionAbajo && !this.peticionArriba && !this.peticionDerecha && !this.peticionIzquierda)) {
-               
+            if (this.coorXF <= 50 && this.coorXF > 0 && this.coorYFTemp >= 1 && this.coorYFTemp < 30 && (!this.peticionAbajo && !this.peticionArriba && !this.peticionDerecha && !this.peticionIzquierda)) {
+                
 
                 if (caminoX == caminoY){
-                    if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba")  this.peticionArriba = true;
+                    ////System.out.println("Camino igual");
+                    if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && this.matrizPista[this.coorYF-1][this.coorXF] != 4)  this.peticionArriba = true;
                     else if (this.matrizPista[this.coorYF][this.coorXF-1] != 1 && this.direccionFantasma != "der")  this.peticionIzquierda = true;
-                    else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr")   this.peticionAbajo = true;
+                    else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr"  && this.matrizPista[this.coorYF+1][this.coorXF] != 5)  this.peticionAbajo = true;
                     else if (this.matrizPista[this.coorYF][this.coorXF+1] != 1 && this.direccionFantasma != "izq")  this.peticionDerecha = true;
                 }
                 else {  
+                    
                     if (PacManYCoor < this.coorYF && PacManXCoor > this.coorXF){ //pACmAN ARRIBA A LA DERECHA
+                        ////System.out.println("Pacman arriba a la derecha");
                         if (this.matrizPista[this.coorYF][this.coorXF+1] != 1 && this.direccionFantasma != "izq" && caminoX > caminoY)  this.peticionDerecha = true;
-                        else if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && caminoX > caminoY)  this.peticionArriba = true;
-                        else if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && caminoX < caminoY)  this.peticionArriba = true;
+                        else if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && caminoX > caminoY && this.matrizPista[this.coorYF-1][this.coorXF] != 4)  this.peticionArriba = true;
+                        else if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && caminoX < caminoY && this.matrizPista[this.coorYF-1][this.coorXF] != 4)  this.peticionArriba = true;
                         else if (this.matrizPista[this.coorYF][this.coorXF+1] != 1 && this.direccionFantasma != "izq" && caminoX < caminoY)  this.peticionDerecha = true;
-                        else if (this.direccionFantasma == "der" || this.direccionFantasma == "izq" ) this.peticionAbajo = true;
+                        else if (this.direccionFantasma == "der" || this.direccionFantasma == "izq" && this.matrizPista[this.coorYF+1][this.coorXF] != 5) this.peticionAbajo = true;
                         else if (this.direccionFantasma == "aba" || this.direccionFantasma == "arr")  this.peticionIzquierda = true; 
                     }
 
                     else if (PacManYCoor < this.coorYF && PacManXCoor <= this.coorXF){ //pACmAN ARRIBA A LA Izquierda
+                        //System.out.println("Pacman Arriba a la izquierda");
                         if (this.matrizPista[this.coorYF][this.coorXF-1] != 1 && this.direccionFantasma != "der" && caminoX > caminoY)  this.peticionIzquierda = true;
-                        else if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && caminoX > caminoY)  this.peticionArriba = true;
-                        else if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && caminoX < caminoY)  this.peticionArriba = true;
+                        else if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && caminoX > caminoY && this.matrizPista[this.coorYF-1][this.coorXF] != 4)  this.peticionArriba = true;
+                        else if (this.matrizPista[this.coorYF-1][this.coorXF] != 1 && this.direccionFantasma != "aba" && caminoX < caminoY && this.matrizPista[this.coorYF-1][this.coorXF] != 4)  this.peticionArriba = true;
                         else if (this.matrizPista[this.coorYF][this.coorXF-1] != 1 && this.direccionFantasma != "der" && caminoX < caminoY)  this.peticionIzquierda = true;
-                        else if (this.direccionFantasma == "der" || this.direccionFantasma == "izq" ) this.peticionAbajo = true;
+                        else if (this.direccionFantasma == "der" || this.direccionFantasma == "izq" && this.matrizPista[this.coorYF+1][this.coorXF] != 5) this.peticionAbajo = true;
                         else if (this.direccionFantasma == "aba" || this.direccionFantasma == "arr")this.peticionDerecha = true;
                     }
 
                     else if (PacManYCoor >= this.coorYF && PacManXCoor > this.coorXF){ //pACmAN Abajo A LA DERECHA
+                        //System.out.println("Pacman abajo a la derecha");
                         if (this.matrizPista[this.coorYF][this.coorXF+1] != 1 && this.direccionFantasma != "izq" && caminoX > caminoY)  this.peticionDerecha = true;
-                        else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr" && caminoX > caminoY) this.peticionAbajo = true;
-                        else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr" && caminoX < caminoY) this.peticionAbajo = true;
+                        else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr" && caminoX > caminoY && this.matrizPista[this.coorYF+1][this.coorXF] != 5) this.peticionAbajo = true;
+                        else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr" && caminoX < caminoY && this.matrizPista[this.coorYF+1][this.coorXF] != 5) this.peticionAbajo = true;
                         else if (this.matrizPista[this.coorYF][this.coorXF+1] != 1 && this.direccionFantasma != "izq" && caminoX < caminoY) this.peticionDerecha = true;
-                        else if (this.direccionFantasma == "der" || this.direccionFantasma == "izq" )  this.peticionArriba = true;
+                        else if (this.direccionFantasma == "der" || this.direccionFantasma == "izq" && this.matrizPista[this.coorYF-1][this.coorXF] != 4)  this.peticionArriba = true;
                         else if (this.direccionFantasma == "aba" || this.direccionFantasma == "arr")  this.peticionIzquierda = true;
                     }
 
                     else if (PacManYCoor >= this.coorYF && PacManXCoor <= this.coorXF){ //pACmAN abajo a la izquierda
+                        //System.out.println("Pacman abajo a la izquierda");
                         if (this.matrizPista[this.coorYF][this.coorXF-1] != 1 && this.direccionFantasma != "der" && caminoX > caminoY)  this.peticionIzquierda = true;
-                        else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr" && caminoX > caminoY) this.peticionAbajo = true;
-                        else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr" && caminoX < caminoY) this.peticionAbajo = true;
+                        else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr" && caminoX > caminoY && this.matrizPista[this.coorYF+1][this.coorXF] != 5) this.peticionAbajo = true;
+                        else if (this.matrizPista[this.coorYF+1][this.coorXF] != 1 && this.direccionFantasma != "arr" && caminoX < caminoY && this.matrizPista[this.coorYF+1][this.coorXF] != 5) this.peticionAbajo = true;
                         else if (this.matrizPista[this.coorYF][this.coorXF-1] != 1 && this.direccionFantasma != "der" && caminoX < caminoY)  this.peticionIzquierda = true;
-                        else if (this.direccionFantasma == "der" || this.direccionFantasma == "izq" )  this.peticionArriba = true;
+                        else if (this.direccionFantasma == "der" || this.direccionFantasma == "izq" && this.matrizPista[this.coorYF-1][this.coorXF] != 4)  this.peticionArriba = true;
                         else if (this.direccionFantasma == "aba" || this.direccionFantasma == "arr")  this.peticionDerecha = true;
                     }
                 }
             }    
         }
         else{
-          //System.out.println("Game Over");
+          ////System.out.println("Game Over");
         }
         if (peticionAbajo) this.direccionFantasma = "aba";
         else if (peticionArriba) this.direccionFantasma = "arr";
@@ -214,25 +240,75 @@ public class Fantasma implements ImageObserver {
         else if (peticionIzquierda) this.direccionFantasma = "izq";
 
      }
-     public void modoPersecusion(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
+     public boolean modoPersecusion(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
+        this.modoHuidaActivado = false;
         generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);
         movimientoXY();
+        if (this.coorXF == PacManXCoor && this.coorYF == PacManYCoor) return true;
+        else return false;
      }
-     public void modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
+     
+     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, long tiempoHuida, int contador) {
+        this.modoHuidaActivado = true;
+        this.tiempoHuida = tiempoHuida;
+        this.contador = contador; 
         if (this.coorXF <= PacManXCoor) this.puntoXHuida = this.coorXF - this.caminoX;
         else if (this.coorXF > PacManXCoor) this.puntoXHuida = this.coorXF + this.caminoX;
         if (this.coorYF < PacManYCoor) this.puntoYHuida = this.coorYF - this.caminoY;
         else if (this.coorYF >= PacManYCoor) this.puntoYHuida = this.coorYF + this.caminoY;
         generarRuta(this.puntoXHuida, this.puntoYHuida, direccionPacMan);
         movimientoXY();
+        if (this.coorXF == PacManXCoor && this.coorYF == PacManYCoor) return true;
+        else return false;
      }
 
-     public void modoDispersion(int esquinaX, int esquinaY) {
-        generarRuta(esquinaX, esquinaY, "");
+     public boolean modoDispersion(int esquinaX, int esquinaY) {
+        this.modoHuidaActivado = false;
+        generarRuta(esquinaX, esquinaY, this.direccionPacMan);
         movimientoXY();
-     }
+        if (this.coorXF == PacManXCoor && this.coorYF == PacManYCoor) return true;
+        else return false;
+    }
+
+    public boolean salirDeLaCasa(boolean salir){
+        this.coorXFTemp = (this.xF + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
+        this.coorYFTemp = (this.yF + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31)) + .02;
+        this.coorXF = (int) this.coorXFTemp;
+        this.coorYF = (int) this.coorYFTemp;
+        if (this.direccionFantasma == "izq" && this.coorXFTemp%1 > .15) this.coorXF += 1;
+        if (this.direccionFantasma == "arr" && this.coorYFTemp%1 > .15) this.coorYF += 1;
+
+        if (!salir){
+            if (this.matrizPista[this.coorYF - 1][this.coorXF] == 1) this.paredArribaAbajo = true;
+            else if (this.matrizPista[this.coorYF + 1][this.coorXF] == 1) this.paredArribaAbajo = false;
+
+            if (this.paredArribaAbajo) this.direccionFantasma = "aba";
+            else this.direccionFantasma = "arr";
+          
+        }
+        else {
+            if (this.coorYF == 11) return true;  // Sale el fantasma
+            if (this.coorXFTemp > 25.3 && this.coorXFTemp < 25.75){
+                if (this.coorYF != 11) this.direccionFantasma = "arr";
+                else  {
+                    this.setYF((int)((11)*.9928*(this.altoPista/31)-.3*.985*(this.altoPista/31)+.985*this.altoPista/62));
+                }
+            }
+            else if (this.coorXFTemp <= 25.3 && this.matrizPista[this.coorYF ][this.coorXF] == 6) this.direccionFantasma = "der";
+            else if (this.coorXFTemp >= 25.75 && this.matrizPista[this.coorYF ][this.coorXF] == 6)this.direccionFantasma = "izq";
+        }
+
+        if (this.direccionFantasma == "der") this.xF += this.velocidad;
+		else if ( this.direccionFantasma == "izq") this.xF -= this.velocidad;
+        else if (this.direccionFantasma == "arr") this.yF -= this.velocidad;
+        else if (this.direccionFantasma == "aba") this.yF += this.velocidad;
+        
+        return false;
+    }
 
      public void movimientoXY(){
+
+        
 		if (this.coorXF > 45 && this.coorYF == 14){
 			if (this.direccionFantasma == "der"  && this.coorXF < 52){
 				xF += this.velocidad;
@@ -256,13 +332,13 @@ public class Fantasma implements ImageObserver {
 			}
 		}			
 		else {
-			if (this.direccionFantasma == "der" && this.matrizPista[this.coorYF][this.coorXF + 1] != 1) xF += this.velocidad;
+			if (this.direccionFantasma == "der" && this.matrizPista[this.coorYF][this.coorXF + 1] != 1) this.xF += this.velocidad;
 
-			else if ( this.direccionFantasma == "izq" && this.matrizPista[this.coorYF][this.coorXF - 1] != 1) xF -= this.velocidad;
+			else if ( this.direccionFantasma == "izq" && this.matrizPista[this.coorYF][this.coorXF - 1] != 1) this.xF -= this.velocidad;
                
-			else if (this.direccionFantasma == "arr" && this.matrizPista[this.coorYF - 1][this.coorXF] != 1 ) yF -= this.velocidad;
+			else if (this.direccionFantasma == "arr" && this.matrizPista[this.coorYF - 1][this.coorXF] != 1 ) this.yF -= this.velocidad;
                 
-			else if (this.direccionFantasma == "aba" && this.matrizPista[this.coorYF + 1][this.coorXF] != 1 ) yF += this.velocidad;
+			else if (this.direccionFantasma == "aba" && this.matrizPista[this.coorYF + 1][this.coorXF] != 1 ) this.yF += this.velocidad;
 		}
 			
     }

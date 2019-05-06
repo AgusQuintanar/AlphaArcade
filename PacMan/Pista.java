@@ -1,3 +1,6 @@
+// Agustin Quintanar y Julio Arath Rosales
+// A01636142 y A01630738
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -24,7 +27,13 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 					peticionIzqDer,
 					peticionIzqDerDir,
 					peticionSubirBajarDir,
-					pared;
+					pared,
+					salioPinky,
+					salioBlinky,
+					salioClyde,
+					salioInky,
+					modoHuidaActivado,
+					jugar;
 	private Image pista;
 	private double ancho, 
 					alto,
@@ -33,19 +42,30 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 	private int[][] matrizPista;
 	private int contador,
 				coorX,
-				coorY;
-	private long tiempoDeInicio;
+				coorY,
+				vidas;
+	private long tiempoDeInicio,
+				 cronometro, 
+				 tiempoBlinky,
+				 tiempoPinky,
+				 tiempoInky,
+				 tiempoClyde,
+				 tiempoInicioBlinky,
+				 tiempoInicioPinky,
+				 tiempoInicioInky,
+				 tiempoInicioClyde,
+				 tiempoModoHuida;
 
 
 	public Pista(double ancho) {
 		super();
 		int anchoOriginal = 1890, altoOriginal = 1131;
 		double proporcionAncho = ancho / anchoOriginal; // Considerando un ancho del 100%
-		System.out.println(ancho + " " + alto);
+		//System.out.println(ancho + " " + alto);
 		this.ancho = (int) (anchoOriginal * proporcionAncho);
 		this.alto = (int) (altoOriginal * proporcionAncho);
-		System.out.println(proporcionAncho);
-		System.out.println(("ancho: " + this.ancho) + " alto: " + this.alto);
+		//System.out.println(proporcionAncho);
+		//System.out.println(("ancho: " + this.ancho) + " alto: " + this.alto);
 		this.setPreferredSize(new Dimension((int) this.ancho, (int) this.alto));
 		this.setBackground(Color.BLACK);
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
@@ -62,8 +82,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.coorXTemp = 1.0;
 		this.coorYTemp = 1.0;
 		this.coorY = 1;
-		System.out.println(this.ancho + ", " + this.alto);
-		this.pista = new ImageIcon("Imagenes/PistaPacMan.png").getImage();
+		//System.out.println(this.ancho + ", " + this.alto);
+		this.pista = new ImageIcon("PistaPacMan.png").getImage();
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		this.contador = 0;
@@ -77,17 +97,17 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
 				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
 				{ 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1 },
-				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
-				{ 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 },
-				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 6, 6, 6, 6, 6, 6, 1, 3, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+				{ 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 3, 3, 3, 1, 6, 6, 6, 6, 6, 6, 1, 3, 3, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 },
+				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 3, 1, 6, 6, 6, 6, 6, 6, 1, 3, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
 				{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
 				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
@@ -100,13 +120,44 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 				{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } 
 			};
-		this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2);
-		this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2);
-		this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2);
-		this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2);
 
+			//Simbologia:
+			//
+			// 0 - Espacio hueco con puntito
+			// 1 - Espacio con pared
+			// 2 - Espacio con pellet
+			// 3 - Espacio hueco sin puntito
+			// 4 - Espacio hueco donde los fantasmas pueden bajar pero no subir
+			// 5 - Espacio hueco donde los fantasmas pueden subir pero no bajar
+			// 6- Adentro de la casa de los fantasmas
+
+		this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+		this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+		this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+		this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
 
 		this.tiempoDeInicio = System.currentTimeMillis();
+
+		this.tiempoBlinky = 0;
+		this.tiempoClyde = 0;
+		this.tiempoInky = 0;
+		this.tiempoPinky = 0;
+		this.tiempoInicioBlinky = 0;
+		this.tiempoInicioClyde = 0;
+		this.tiempoInicioPinky = 0;
+		this.tiempoInicioInky = 0;
+
+		this.salioPinky = false;
+		this.salioInky = false;
+		this.salioBlinky = true;
+		this.salioClyde = false;
+
+		this.cronometro = 0;
+
+		this.modoHuidaActivado = false;
+
+		this.vidas = 3;
+		this.jugar = false;
 
 		this.hilo = new Thread(this);
 		this.hilo.start();
@@ -123,8 +174,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		this.fantasmaBlinky.pintaFantasma(g);
 		this.fantasmaPinky.pintaFantasma(g);
 		this.fantasmaClyde.pintaFantasma(g);
-		this.fantasmaInky.pintaFantasma(g);
-		
+		this.fantasmaInky.pintaFantasma(g);		
 	}
 
 	public void pintarPuntitos(Graphics g){
@@ -149,10 +199,10 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 		long timer = System.currentTimeMillis();
 
-		while (true) {
-			long cronometro = (timer - this.tiempoDeInicio)/1000;
-			//System.out.println("crono: " + cronometro);
-
+		while (vidas >= 0) {
+			this.cronometro = (timer - this.tiempoDeInicio)/1000;
+			////System.out.println("crono: " + cronometro);
+			////System.out.println(this.cronometro);
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
@@ -164,12 +214,13 @@ public class Pista extends JPanel implements Runnable, KeyListener {
                 delta--;	
 			}
 			
-			//System.out.println("fps: " + fps);
+			////System.out.println("fps: " + fps);
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				fps = 0;
 			}
 		}
+		//System.out.println("Game Over");
 	}
 
 	private void tick() {
@@ -179,14 +230,168 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		comerPuntitos(this.coorX, this.coorY);
 		escucharTeclas(velocidad);
 		comportamientoPacman();
-		this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
-		this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
-		this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
-		this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
-		//this.fantasmaPinky.modoDispersion();
+		
+		////System.out.println("Tiempo blinky: " + this.tiempoBlinky);
+
+		this.tiempoBlinky = this.cronometro - this.tiempoInicioBlinky;
+		this.tiempoPinky = this.cronometro - this.tiempoInicioPinky;
+		this.tiempoInky = this.cronometro - this.tiempoInicioInky;
+		this.tiempoClyde = this.cronometro - this.tiempoInicioClyde;
+
+		if (this.cronometro < 13){
+			if(this.tiempoPinky < 3) this.salioPinky = this.fantasmaPinky.salirDeLaCasa(false);
+			if(!this.salioPinky && this.tiempoPinky >= 3) salioPinky = this.fantasmaPinky.salirDeLaCasa(true);
 	
+			if(this.tiempoInky < 7) this.salioInky = this.fantasmaInky.salirDeLaCasa(false);
+			if(!this.salioInky && this.tiempoInky >= 7) salioInky = this.fantasmaInky.salirDeLaCasa(true);
+	
+			if(this.tiempoClyde < 11) this.salioClyde = this.fantasmaClyde.salirDeLaCasa(false);
+			if(!this.salioClyde && this.tiempoClyde >= 11) salioClyde = this.fantasmaClyde.salirDeLaCasa(true);
+		}
+		else {
+			if(this.tiempoBlinky < 2) this.salioBlinky = this.fantasmaBlinky.salirDeLaCasa(false);
+			if(!this.salioBlinky && this.tiempoBlinky >= 2) salioBlinky = this.fantasmaBlinky.salirDeLaCasa(true);
+	
+			if(this.tiempoPinky < 2) this.salioPinky = this.fantasmaPinky.salirDeLaCasa(false);
+			if(!this.salioPinky && this.tiempoPinky >= 2) salioPinky = this.fantasmaPinky.salirDeLaCasa(true);
+	
+			if(this.tiempoInky < 2) this.salioInky = this.fantasmaInky.salirDeLaCasa(false);
+			if(!this.salioInky && this.tiempoInky >= 2) salioInky = this.fantasmaInky.salirDeLaCasa(true);
+	
+			if(this.tiempoClyde < 2) this.salioClyde = this.fantasmaClyde.salirDeLaCasa(false);
+			if(!this.salioClyde && this.tiempoClyde >= 2) salioClyde = this.fantasmaClyde.salirDeLaCasa(true);
+
+		}
+
+		if (!this.modoHuidaActivado){
+			boolean blinky = false,
+			        pinky = false,
+			        inky = false,
+			        clyde = false;
+			if (cronometro < 7){
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
+				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
+				if (salioInky) inky = this.fantasmaInky.modoDispersion();
+				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
+			}
+			else if (cronometro < 27){
+				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+			}
+			else if (cronometro < 34){
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
+				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
+				if (salioInky) inky = this.fantasmaInky.modoDispersion();
+				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
+			}
+			else if (cronometro < 54){
+				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+			}
+			else if (cronometro < 61){
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
+				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
+				if (salioInky) inky = this.fantasmaInky.modoDispersion();
+				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
+			}
+			else {
+				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+			}
+
+			if (blinky || pinky || inky || clyde) {
+				this.vidas -= 1;
+				this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+				this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.tiempoDeInicio = System.currentTimeMillis();
+
+				this.tiempoBlinky = 0;
+				this.tiempoClyde = 0;
+				this.tiempoInky = 0;
+				this.tiempoPinky = 0;
+				this.tiempoInicioBlinky = 0;
+				this.tiempoInicioClyde = 0;
+				this.tiempoInicioPinky = 0;
+				this.tiempoInicioInky = 0;
+
+				this.cronometro = 0;
+
+				this.salioPinky = false;
+				this.salioInky = false;
+				this.salioBlinky = true;
+				this.salioClyde = false;
+
+				this.jugar = false;
+
+				this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (1.5*(this.ancho / 52)));
+
+				//System.out.println("Vidas restantes: " + this.vidas);
+
+				try {
+					Thread.sleep(2000);
+				}
+				catch (InterruptedException e){
+
+				}
+				
+
+			}
+
+		}
+		else {
+			boolean blinky = false,
+			        pinky = false,
+			        inky = false,
+			        clyde = false;
+			       
+			if (salioBlinky) blinky = this.fantasmaBlinky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
+			if (salioPinky) pinky = this.fantasmaPinky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
+			if (salioInky) inky = this.fantasmaInky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+			if (salioClyde) clyde = this.fantasmaClyde.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
+
+			if (blinky) {
+				//anmacion va aqui
+				this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+				this.tiempoInicioBlinky = this.cronometro;
+				this.tiempoBlinky = 0;
+				this.salioBlinky = false;
+			}
+			
+			if (pinky) {
+				//anmacion va aqui
+				this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.tiempoInicioPinky = this.cronometro;
+				this.tiempoPinky = 0;
+				this.salioPinky = false;
+			} 
+			
+			if (clyde) {
+				//anmacion va aqui
+				this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.tiempoInicioClyde = this.cronometro;
+				this.tiempoClyde = 0;
+				this.salioClyde = false;
+			} 
+			
+			if (inky) {
+				//anmacion va aqui
+				this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.tiempoInicioInky = this.cronometro;
+				this.tiempoInky = 0;
+				this.salioInky = false;
+			}  
+			if (this.cronometro - this.tiempoModoHuida == 15) this.modoHuidaActivado = false; //temporizador de 15 segundos
+		}
 		
-		
+			
 	}
 
 	private void render() {
@@ -201,6 +406,8 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			}
 			if (this.matrizPista[y][x] == 2){
 				this.matrizPista[y][x] = 3;
+				this.modoHuidaActivado = true;
+				this.tiempoModoHuida = this.cronometro;
 			}
 		}
 	}
@@ -324,8 +531,6 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			// else if (this.matrizPista[this.coorY+1][this.coorX] == 1 && this.direccionTmp == "aba") this.pared = true;
 			// else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionTmp == "arr") this.pared = true;
 			// else this.pared = false;
-		
-
 
 			if (this.direccionPacman == "der" && this.matrizPista[this.coorY][this.coorX + 1] != 1  && this.coorX < 51){
 				this.pacman.xPac += velocidad;
@@ -359,6 +564,7 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+	
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
 			this.direccionPacman = "der";
 		else if (e.getKeyCode() == KeyEvent.VK_LEFT)

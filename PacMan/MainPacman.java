@@ -1,3 +1,6 @@
+// Agustin Quintanar y Julio Arath Rosales
+// A01636142 y A01630738
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
