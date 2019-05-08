@@ -1,3 +1,6 @@
+// Agustin Quintanar y Julio Arath Rosales
+// A01636142 y A01630738
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
@@ -14,8 +17,8 @@ public class PacMan implements ImageObserver {
 		this.xPac = xPac - (int)(.2*this.ancho);
 		this.yPac = yPac - (int)(.2*this.ancho);
 		this.ancho = ancho;
-		this.pacManAbierto = new ImageIcon("Imagenes/pac-man-3d-arr.png").getImage();
-		this.pacManCerrado = new ImageIcon("Imagenes/PacManIconCerrado-3d-arr.png").getImage();
+		this.pacManAbierto = new ImageIcon("pac-man-3d-arr.png").getImage();
+		this.pacManCerrado = new ImageIcon("PacManIconCerrado-3d-arr.png").getImage();
 	}
 
 	public void setXPac(int xPac){
@@ -28,8 +31,8 @@ public class PacMan implements ImageObserver {
 
 	public void pintaPacman(Graphics g, boolean abiertoCerrado, String direccionPacman) {
 
-		this.pacManAbierto = new ImageIcon("Imagenes/pac-man-3d-"+direccionPacman+".png").getImage();
-		this.pacManCerrado = new ImageIcon("Imagenes/PacManIconCerrado-3d-"+direccionPacman+".png").getImage();
+		this.pacManAbierto = new ImageIcon("pac-man-3d-"+direccionPacman+".png").getImage();
+		this.pacManCerrado = new ImageIcon("PacManIconCerrado-3d-"+direccionPacman+".png").getImage();
 
 		if(abiertoCerrado){
 			g.drawImage(this.pacManAbierto, xPac - (int)(.2*this.ancho), yPac - (int)(.2*this.ancho), this.ancho, this.ancho, this);
