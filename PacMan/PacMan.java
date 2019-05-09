@@ -76,9 +76,9 @@ public class PacMan implements ImageObserver {
 		this.pacManAbierto = new ImageIcon("pac-man-3d-"+direccionTmp+".png").getImage();
 		this.pacManCerrado = new ImageIcon("PacManIconCerrado-3d-"+direccionTmp+".png").getImage();
 
-		if(contador/60.0%.5 < .25) this.pacManTemp = this.pacManAbierto;
+		if(contador/60.0%.4 < .2) this.pacManTemp = this.pacManAbierto;
 		else this.pacManTemp = this.pacManCerrado;
-		g.drawImage(this.pacManTemp, xPac - (int)(.25*this.anchoPista/52), yPac - (int)(.25*this.anchoPista/52), (int)(1.5*this.anchoPista/52), (int)(1.5*this.anchoPista/52), this);
+		g.drawImage(this.pacManTemp, xPac - (int)(.25*this.anchoPista/52), yPac - (int)(.3*this.anchoPista/52), (int)(1.5*this.anchoPista/52), (int)(1.5*this.anchoPista/52), this);
 	
 	}
 

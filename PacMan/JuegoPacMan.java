@@ -13,14 +13,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.util.Timer;
 
-public class JuegoPacMan extends JPanel implements Runnable, KeyListener {
+public class JuegoPacMan extends JPanel implements KeyListener {
 	private Pista pista;
 	private PacMan pacman;
 	private FantasmaBlinky fantasmaBlinky;
 	private FantasmaPinky fantasmaPinky;
 	private FantasmaClyde fantasmaClyde;
 	private FantasmaInky fantasmaInky;
-	private Thread hilo;
+	private Thread hiloTick,
+				   hiloRender;
 
 	private boolean salioPinky,
 					salioBlinky,
@@ -111,8 +112,79 @@ public class JuegoPacMan extends JPanel implements Runnable, KeyListener {
 		this.vidas = 3;
 		this.jugar = false;
 
-		this.hilo = new Thread(this);
-		this.hilo.start();
+		this.hiloTick = new Thread(new Runnable(){
+		
+			@Override
+			public void run() {
+				long lastTime = System.nanoTime();
+				final double amountOfTicks = 60.0;
+				double ns = 1000000000 / amountOfTicks, 
+					delta = 0.0;
+				int fps = 0;
+
+				long timer = System.currentTimeMillis();
+
+				while (vidas >= 0) {
+					cronometro = (timer - tiempoDeInicio)/1000;
+					////System.out.println("crono: " + cronometro);
+					////System.out.println(this.cronometro);
+					long now = System.nanoTime();
+					delta += (now - lastTime) / ns;
+					lastTime = now;
+					while (delta >= 1) {
+						tick();
+						fps++;
+						delta--;	
+					}
+					
+					////System.out.println("fps: " + fps);
+					if (System.currentTimeMillis() - timer > 1000) {
+						timer += 1000;
+						fps = 0;
+					}
+				}
+				//System.out.println("Game Over");
+					}
+		});
+
+		this.hiloRender = new Thread(new Runnable(){
+		
+			@Override
+			public void run() {
+				long lastTime = System.nanoTime();
+				final double amountOfTicks = 60.0;
+				double ns = 1000000000 / amountOfTicks, 
+					delta = 0.0;
+				int fps = 0;
+
+				long timer = System.currentTimeMillis();
+
+				while (vidas >= 0) {
+					cronometro = (timer - tiempoDeInicio)/1000;
+					////System.out.println("crono: " + cronometro);
+					////System.out.println(this.cronometro);
+					long now = System.nanoTime();
+					delta += (now - lastTime) / ns;
+					lastTime = now;
+					while (delta >= 1) {
+						render();
+						fps++;
+						delta--;	
+					}
+					
+					////System.out.println("fps: " + fps);
+					if (System.currentTimeMillis() - timer > 1000) {
+						timer += 1000;
+						fps = 0;
+					}
+				}
+				//System.out.println("Game Over");
+					}
+			
+		});
+
+		this.hiloTick.start();
+		this.hiloRender.start();
 	}
 
 
@@ -125,42 +197,6 @@ public class JuegoPacMan extends JPanel implements Runnable, KeyListener {
 		this.fantasmaPinky.pintaFantasma(g);
 		this.fantasmaClyde.pintaFantasma(g);
 		this.fantasmaInky.pintaFantasma(g);		
-	}
-
-	public void run() {
-		
-		long lastTime = System.nanoTime();
-		final double amountOfTicks = 60.0;
-		double ns = 1000000000 / amountOfTicks, 
-			   delta = 0.0;
-		int fps = 0;
-
-		long timer = System.currentTimeMillis();
-
-		while (vidas >= 0) {
-		
-
-			
-			this.cronometro = (timer - this.tiempoDeInicio)/1000;
-			////System.out.println("crono: " + cronometro);
-			////System.out.println(this.cronometro);
-			long now = System.nanoTime();
-			delta += (now - lastTime) / ns;
-			lastTime = now;
-			while (delta >= 1) {
-				tick();
-				render();
-				fps++;
-                delta--;	
-			}
-			
-			////System.out.println("fps: " + fps);
-			if (System.currentTimeMillis() - timer > 1000) {
-				timer += 1000;
-				fps = 0;
-			}
-		}
-		//System.out.println("Game Over");
 	}
 
 	private void tick() {
