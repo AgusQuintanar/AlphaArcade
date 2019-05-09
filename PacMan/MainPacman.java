@@ -21,10 +21,10 @@ public class MainPacMan extends JFrame{
 		this.setBackground(Color.BLACK);
 		System.out.println(this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight());
 		System.out.println("Pantalla: "+this.getToolkit().getScreenSize().getWidth() + ", " + this.getToolkit().getScreenSize().getHeight());
-		Pista pista;
+		JuegoPacMan juegoPacMan;
 		if (this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight() == 1.6){ //Aspecto 16:10
 			System.out.println("Aspecto 16:10");
-			pista = new Pista(this.getToolkit().getScreenSize().getWidth());
+			juegoPacMan = new JuegoPacMan(this.getToolkit().getScreenSize().getWidth());
 		}
 		else {
 			System.out.println("Aspecto 16:9");
@@ -32,10 +32,10 @@ public class MainPacMan extends JFrame{
 			lateral.setPreferredSize(new Dimension((int)(.05*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
 			lateral.setBackground(Color.BLACK);
 			this.add(lateral, BorderLayout.WEST);
-			pista = new Pista(.9*this.getToolkit().getScreenSize().getWidth()); //Aspecto 16:9
+			juegoPacMan = new JuegoPacMan(.9*this.getToolkit().getScreenSize().getWidth()); //Aspecto 16:9
 		}
 		
-		this.add(pista, BorderLayout.CENTER);
+		this.add(juegoPacMan, BorderLayout.CENTER);
 		this.setVisible(true);	
 	}
 	
