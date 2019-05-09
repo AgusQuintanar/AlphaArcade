@@ -1,3 +1,5 @@
+// Agustin Quintanar y Julio Arath Rosales
+// A01636142 y A01630738
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -130,9 +132,9 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 			// 6- Adentro de la casa de los fantasmas
 
 		this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
-		this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-		this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-		this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+		this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+		this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+		this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
 
 		this.tiempoDeInicio = System.currentTimeMillis();
 
@@ -221,20 +223,6 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		//System.out.println("Game Over");
 	}
 
-	// public void modoPersecusionFantasmas (){
-	// 	if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
-	// 	if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
-	// 	if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
-	// 	if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
-	// }
-
-	// public void modoDispersionFantasmas (){
-	// 	if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
-	// 	if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
-	// 	if (salioInky) inky = this.fantasmaInky.modoDispersion();
-	// 	if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
-	// }
-
 	private void tick() {
 		double velocidad = 3;
 		movimientoY(this.coorX, this.coorY);
@@ -242,149 +230,165 @@ public class Pista extends JPanel implements Runnable, KeyListener {
 		comerPuntitos(this.coorX, this.coorY);
 		escucharTeclas(velocidad);
 		comportamientoPacman();
-		this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
 		
 		////System.out.println("Tiempo blinky: " + this.tiempoBlinky);
 
-	// 	this.tiempoBlinky = this.cronometro - this.tiempoInicioBlinky;
-	// 	this.tiempoPinky = this.cronometro - this.tiempoInicioPinky;
-	// 	this.tiempoInky = this.cronometro - this.tiempoInicioInky;
-	// 	this.tiempoClyde = this.cronometro - this.tiempoInicioClyde;
+		this.tiempoBlinky = this.cronometro - this.tiempoInicioBlinky;
+		this.tiempoPinky = this.cronometro - this.tiempoInicioPinky;
+		this.tiempoInky = this.cronometro - this.tiempoInicioInky;
+		this.tiempoClyde = this.cronometro - this.tiempoInicioClyde;
 
-	// 	if (this.cronometro < 13){
-	// 		if(this.tiempoPinky < 3) this.salioPinky = this.fantasmaPinky.salirDeLaCasa(false);
-	// 		if(!this.salioPinky && this.tiempoPinky >= 3) salioPinky = this.fantasmaPinky.salirDeLaCasa(true);
+		if (this.cronometro < 13){
+			if(this.tiempoPinky < 3) this.salioPinky = this.fantasmaPinky.salirDeLaCasa(false);
+			if(!this.salioPinky && this.tiempoPinky >= 3) salioPinky = this.fantasmaPinky.salirDeLaCasa(true);
 	
-	// 		if(this.tiempoInky < 7) this.salioInky = this.fantasmaInky.salirDeLaCasa(false);
-	// 		if(!this.salioInky && this.tiempoInky >= 7) salioInky = this.fantasmaInky.salirDeLaCasa(true);
+			if(this.tiempoInky < 7) this.salioInky = this.fantasmaInky.salirDeLaCasa(false);
+			if(!this.salioInky && this.tiempoInky >= 7) salioInky = this.fantasmaInky.salirDeLaCasa(true);
 	
-	// 		if(this.tiempoClyde < 11) this.salioClyde = this.fantasmaClyde.salirDeLaCasa(false);
-	// 		if(!this.salioClyde && this.tiempoClyde >= 11) salioClyde = this.fantasmaClyde.salirDeLaCasa(true);
-	// 	}
-	// 	else {
-	// 		if(this.tiempoBlinky < 2) this.salioBlinky = this.fantasmaBlinky.salirDeLaCasa(false);
-	// 		if(!this.salioBlinky && this.tiempoBlinky >= 2) salioBlinky = this.fantasmaBlinky.salirDeLaCasa(true);
+			if(this.tiempoClyde < 4) this.salioClyde = this.fantasmaClyde.salirDeLaCasa(false);
+			if(!this.salioClyde && this.tiempoClyde >= 4) salioClyde = this.fantasmaClyde.salirDeLaCasa(true);
+		}
+		else {
+			if(this.tiempoBlinky < 2) this.salioBlinky = this.fantasmaBlinky.salirDeLaCasa(false);
+			if(!this.salioBlinky && this.tiempoBlinky >= 2) salioBlinky = this.fantasmaBlinky.salirDeLaCasa(true);
 	
-	// 		if(this.tiempoPinky < 2) this.salioPinky = this.fantasmaPinky.salirDeLaCasa(false);
-	// 		if(!this.salioPinky && this.tiempoPinky >= 2) salioPinky = this.fantasmaPinky.salirDeLaCasa(true);
+			if(this.tiempoPinky < 2) this.salioPinky = this.fantasmaPinky.salirDeLaCasa(false);
+			if(!this.salioPinky && this.tiempoPinky >= 2) salioPinky = this.fantasmaPinky.salirDeLaCasa(true);
 	
-	// 		if(this.tiempoInky < 2) this.salioInky = this.fantasmaInky.salirDeLaCasa(false);
-	// 		if(!this.salioInky && this.tiempoInky >= 2) salioInky = this.fantasmaInky.salirDeLaCasa(true);
+			if(this.tiempoInky < 2) this.salioInky = this.fantasmaInky.salirDeLaCasa(false);
+			if(!this.salioInky && this.tiempoInky >= 2) salioInky = this.fantasmaInky.salirDeLaCasa(true);
 	
-	// 		if(this.tiempoClyde < 2) this.salioClyde = this.fantasmaClyde.salirDeLaCasa(false);
-	// 		if(!this.salioClyde && this.tiempoClyde >= 2) salioClyde = this.fantasmaClyde.salirDeLaCasa(true);
+			if(this.tiempoClyde < 2) this.salioClyde = this.fantasmaClyde.salirDeLaCasa(false);
+			if(!this.salioClyde && this.tiempoClyde >= 2) salioClyde = this.fantasmaClyde.salirDeLaCasa(true);
 
-	// 	}
+		}
 
-	// 	if (!this.modoHuidaActivado){
-	// 		boolean blinky = false,
-	// 		        pinky = false,
-	// 		        inky = false,
-	// 		        clyde = false;
-	// 		if (cronometro < 7){
-			
-	// 		}
-	// 		else if (cronometro < 27){
-	// 			modoPersecusionFantasmas();
-	// 		}
-	// 		else if (cronometro < 34){
-	// 			modoDispersionFantasmas();
-	// 		}
-	// 		else if (cronometro < 54){
-	// 			modoPersecusionFantasmas();
-	// 		}
-	// 		else if (cronometro < 61){
-	// 			modoDispersionFantasmas();
-	// 		}
-	// 		else {
-	// 			modoPersecusionFantasmas();
-	// 		}
+		boolean blinky = false,
+				pinky = false,
+				inky = false,
+				clyde = false;
 
-	// 		if (blinky || pinky || inky || clyde) {
-	// 			this.vidas -= 1;
-	// 			this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
-	// 			this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-	// 			this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-	// 			this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-	// 			this.tiempoDeInicio = System.currentTimeMillis();
+		if (!this.modoHuidaActivado){
+		
+			if (cronometro < 7){
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
+				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
+				if (salioInky) inky = this.fantasmaInky.modoDispersion();
+				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
+			}
+			else if (cronometro < 27){
+				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+			}
+			else if (cronometro < 34){
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
+				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
+				if (salioInky) inky = this.fantasmaInky.modoDispersion();
+				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
+			}
+			else if (cronometro < 54){
+				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+			}
+			else if (cronometro < 61){
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
+				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
+				if (salioInky) inky = this.fantasmaInky.modoDispersion();
+				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
+			}
+			else {
+				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorX, this.coorY, this.direccionTmp);
+			}
 
-	// 			this.tiempoBlinky = 0;
-	// 			this.tiempoClyde = 0;
-	// 			this.tiempoInky = 0;
-	// 			this.tiempoPinky = 0;
-	// 			this.tiempoInicioBlinky = 0;
-	// 			this.tiempoInicioClyde = 0;
-	// 			this.tiempoInicioPinky = 0;
-	// 			this.tiempoInicioInky = 0;
+			if (blinky || pinky || inky || clyde) {
+				System.out.println("Alcanzado por fantasma");
+				this.vidas -= 1;
+				this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+				this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
+				this.tiempoDeInicio = System.currentTimeMillis();
 
-	// 			this.cronometro = 0;
+				this.tiempoBlinky = 0;
+				this.tiempoClyde = 0;
+				this.tiempoInky = 0;
+				this.tiempoPinky = 0;
+				this.tiempoInicioBlinky = 0;
+				this.tiempoInicioClyde = 0;
+				this.tiempoInicioPinky = 0;
+				this.tiempoInicioInky = 0;
 
-	// 			this.salioPinky = false;
-	// 			this.salioInky = false;
-	// 			this.salioBlinky = true;
-	// 			this.salioClyde = false;
+				this.cronometro = 0;
 
-	// 			this.jugar = false;
+				this.salioPinky = false;
+				this.salioInky = false;
+				this.salioBlinky = true;
+				this.salioClyde = false;
 
-	// 			this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (1.5*(this.ancho / 52)));
+				this.jugar = false;
 
-	// 			//System.out.println("Vidas restantes: " + this.vidas);
+				this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), (int) (1.5*(this.ancho / 52)));
 
-	// 			try {
-	// 				Thread.sleep(2000);
-	// 			}
-	// 			catch (InterruptedException e){
+				//System.out.println("Vidas restantes: " + this.vidas);
 
-	// 			}
+				try {
+					Thread.sleep(2000);
+				}
+				catch (InterruptedException e){
+
+				}
 				
 
-	// 		}
+			}
 
-	// 	}
-	// 	else {
-	// 		boolean blinky = false,
-	// 		        pinky = false,
-	// 		        inky = false,
-	// 		        clyde = false;
+		}
+		else {
 			       
-	// 		if (salioBlinky) blinky = this.fantasmaBlinky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
-	// 		if (salioPinky) pinky = this.fantasmaPinky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
-	// 		if (salioInky) inky = this.fantasmaInky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
-	// 		if (salioClyde) clyde = this.fantasmaClyde.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
+			if (salioBlinky) blinky = this.fantasmaBlinky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
+			if (salioPinky) pinky = this.fantasmaPinky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
+			if (salioInky) inky = this.fantasmaInky.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+			if (salioClyde) clyde = this.fantasmaClyde.modoHuida(this.coorX, this.coorY, this.direccionTmp, this.tiempoModoHuida, this.contador);
 
-	// 		if (blinky) {
-	// 			//anmacion va aqui
-	// 			this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
-	// 			this.tiempoInicioBlinky = this.cronometro;
-	// 			this.tiempoBlinky = 0;
-	// 			this.salioBlinky = false;
-	// 		}
+			if (blinky) {
+				//anmacion va aqui
+				this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+				this.tiempoInicioBlinky = this.cronometro;
+				this.tiempoBlinky = 0;
+				this.salioBlinky = false;
+			}
 			
-	// 		if (pinky) {
-	// 			//anmacion va aqui
-	// 			this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-	// 			this.tiempoInicioPinky = this.cronometro;
-	// 			this.tiempoPinky = 0;
-	// 			this.salioPinky = false;
-	// 		} 
+			if (pinky) {
+				//anmacion va aqui
+				this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+				this.tiempoInicioPinky = this.cronometro;
+				this.tiempoPinky = 0;
+				this.salioPinky = false;
+			} 
 			
-	// 		if (clyde) {
-	// 			//anmacion va aqui
-	// 			this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-	// 			this.tiempoInicioClyde = this.cronometro;
-	// 			this.tiempoClyde = 0;
-	// 			this.salioClyde = false;
-	// 		} 
+			if (clyde) {
+				//anmacion va aqui
+				this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+				this.tiempoInicioClyde = this.cronometro;
+				this.tiempoClyde = 0;
+				this.salioClyde = false;
+			} 
 			
-	// 		if (inky) {
-	// 			//anmacion va aqui
-	// 			this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 2.5);
-	// 			this.tiempoInicioInky = this.cronometro;
-	// 			this.tiempoInky = 0;
-	// 			this.salioInky = false;
-	// 		}  
-	// 		if (this.cronometro - this.tiempoModoHuida == 15) this.modoHuidaActivado = false; //temporizador de 15 segundos
-	// 	}
+			if (inky) {
+				//anmacion va aqui
+				this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionTmp, 3);
+				this.tiempoInicioInky = this.cronometro;
+				this.tiempoInky = 0;
+				this.salioInky = false;
+			}  
+			if (this.cronometro - this.tiempoModoHuida == 15) this.modoHuidaActivado = false; //temporizador de 15 segundos
+		}
 		
 			
 	}

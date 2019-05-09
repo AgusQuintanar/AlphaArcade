@@ -36,7 +36,7 @@ public class FantasmaPinky extends Fantasma {
     }
 
     public boolean modoDispersion() {
-        return super.modoDispersion(1,1);
+        return super.modoDispersion(0,0);
      }
 
      public void movimientoXY (){
