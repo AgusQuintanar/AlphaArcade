@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import java.util.Timer;
+
 
 public class JuegoPacMan extends JPanel implements KeyListener{
 	private Pista pista;
@@ -24,11 +24,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 				   hiloRender,
 				   hiloJuego;
 
-	private boolean salioPinky,
-					salioBlinky,
-					salioClyde,
-					salioInky,
-					modoHuidaActivado,
+	private boolean pellet,
 					jugar,
 					pausa;
 	
@@ -40,17 +36,8 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 				coorXPacMan,
 				coorYPacMan;
 	private long tiempoDeInicio,
-				 cronometro, 
-				 tiempoBlinky,
-				 tiempoPinky,
-				 tiempoInky,
-				 tiempoClyde,
-				 tiempoInicioBlinky,
-				 tiempoInicioPinky,
-				 tiempoInicioInky,
-				 tiempoInicioClyde,
-				 tiempoModoHuida,
-				 tiempoModoHuidaInicial;
+				 cronometro;
+				
 	private String direccionPresionada,
 				   direccionPacMan;
 	private int[][] matrizPista;
@@ -71,7 +58,6 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.pista = new Pista(this.ancho, this.alto);
 		this.matrizPista = pista.getPista();
 
-
 		this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
 
 		this.coorXPacMan = this.pacman.getCoorX();
@@ -86,33 +72,14 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 
 		this.direccionPresionada = "";
 		
-
 		this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
 		this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
 		this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
 		this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
 
-		this.tiempoDeInicio = System.currentTimeMillis();
-		this.tiempoModoHuidaInicial = 0;
-		this.tiempoModoHuida = 0;
-
-		this.tiempoBlinky = 0;
-		this.tiempoClyde = 0;
-		this.tiempoInky = 0;
-		this.tiempoPinky = 0;
-		this.tiempoInicioBlinky = 0;
-		this.tiempoInicioClyde = 0;
-		this.tiempoInicioPinky = 0;
-		this.tiempoInicioInky = 0;
-
-		this.salioPinky = false;
-		this.salioInky = false;
-		this.salioBlinky = true;
-		this.salioClyde = false;
-
 		this.cronometro = 0;
 
-		this.modoHuidaActivado = false;
+		this.pellet = false;
 
 		this.vidas = 3;
 		this.jugar = false;
@@ -127,9 +94,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 					delta = 0.0;
 				int fps = 0;
 				long timer = System.currentTimeMillis();
-
-
-					
+	
 				while (vidas >= 0) {
 					cronometro = (timer - tiempoDeInicio)/1000;
 					long now = System.nanoTime();
@@ -158,21 +123,23 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 				int fps = 0;
 				long timer = System.currentTimeMillis();
 
-				while (vidas >= 0) {		
-					cronometro = (timer - tiempoDeInicio)/1000;
+				while (vidas >= 0) {
+					synchronized (hiloTick) {
+						cronometro = (timer - tiempoDeInicio)/1000;
 
-					long now = System.nanoTime();
-					delta += (now - lastTime) / ns;
-					lastTime = now;
-					while (delta >= 1) {
-						if(!pausa) render();
-						fps++;
-						delta--;	
-					}
-					if (System.currentTimeMillis() - timer > 1000) {
-						timer += 1000;
-						fps = 0;
-					}
+						long now = System.nanoTime();
+						delta += (now - lastTime) / ns;
+						lastTime = now;
+						while (delta >= 1) {
+							if(!pausa) render();
+							fps++;
+							delta--;	
+						}
+						if (System.currentTimeMillis() - timer > 1000) {
+							timer += 1000;
+							fps = 0;
+						}
+					}		
 				}
 			}	
 		});
@@ -185,10 +152,32 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.pista.pintaPista(g);
 		this.pista.pintarPuntitos(g, this.contador, this.matrizPista);
 		this.pacman.pintaPacman(g, this.contador);
-		this.fantasmaBlinky.pintaFantasma(g, this.contador, this.tiempoModoHuida);
-		this.fantasmaPinky.pintaFantasma(g, this.contador, this.tiempoModoHuida);
-		this.fantasmaClyde.pintaFantasma(g, this.contador, this.tiempoModoHuida);
-		this.fantasmaInky.pintaFantasma(g, this.contador, this.tiempoModoHuida);		
+		this.fantasmaBlinky.pintaFantasma(g, this.contador);
+		this.fantasmaPinky.pintaFantasma(g, this.contador);
+		this.fantasmaClyde.pintaFantasma(g, this.contador);
+		this.fantasmaInky.pintaFantasma(g, this.contador);		
+	}
+
+	// public void activarModoHuida() {
+	// 	this.fantasmaBlinky.setModoHuidaActivado(true);
+	// 	this.fantasmaClyde.setModoHuidaActivado(true);
+	// 	this.fantasmaPinky.setModoHuidaActivado(true);
+	// 	this.fantasmaInky.setModoHuidaActivado(true);
+	// }
+
+	public void reinicioDePosiciones(boolean muerte) {
+		if (muerte) this.vidas -= 1;
+		System.out.println("Alcanzado por fantasma");
+				this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
+				this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
+				this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
+				this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
+				this.tiempoDeInicio = System.currentTimeMillis();
+
+				this.jugar = false;
+
+				this.direccionPacMan = "der"; //ver si poner un setter mejor
+				this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
 	}
 
 	private void tick() {
@@ -200,172 +189,20 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 
 		String puntoComido = this.pacman.comerPuntitos(this.matrizPista);
 		if (puntoComido == "pellet"){
-			this.modoHuidaActivado = true;
-			this.tiempoModoHuidaInicial = this.cronometro;	
+			this.pellet = true;
 		}
 		
-
-		this.tiempoBlinky = this.cronometro - this.tiempoInicioBlinky;
-		this.tiempoPinky = this.cronometro - this.tiempoInicioPinky;
-		this.tiempoInky = this.cronometro - this.tiempoInicioInky;
-		this.tiempoClyde = this.cronometro - this.tiempoInicioClyde;
-
-		if (this.cronometro < 13){
-			if(this.tiempoPinky < 3) this.salioPinky = this.fantasmaPinky.salirDeLaCasa(false);
-			if(!this.salioPinky && this.tiempoPinky >= 3) salioPinky = this.fantasmaPinky.salirDeLaCasa(true);
-	
-			if(this.tiempoInky < 7) this.salioInky = this.fantasmaInky.salirDeLaCasa(false);
-			if(!this.salioInky && this.tiempoInky >= 7) salioInky = this.fantasmaInky.salirDeLaCasa(true);
-	
-			if(this.tiempoClyde < 4) this.salioClyde = this.fantasmaClyde.salirDeLaCasa(false);
-			if(!this.salioClyde && this.tiempoClyde >= 4) salioClyde = this.fantasmaClyde.salirDeLaCasa(true);
-		}
-		else {
-			if(this.tiempoBlinky < 2) this.salioBlinky = this.fantasmaBlinky.salirDeLaCasa(false);
-			if(!this.salioBlinky && this.tiempoBlinky >= 2) salioBlinky = this.fantasmaBlinky.salirDeLaCasa(true);
-	
-			if(this.tiempoPinky < 2) this.salioPinky = this.fantasmaPinky.salirDeLaCasa(false);
-			if(!this.salioPinky && this.tiempoPinky >= 2) salioPinky = this.fantasmaPinky.salirDeLaCasa(true);
-	
-			if(this.tiempoInky < 2) this.salioInky = this.fantasmaInky.salirDeLaCasa(false);
-			if(!this.salioInky && this.tiempoInky >= 2) salioInky = this.fantasmaInky.salirDeLaCasa(true);
-	
-			if(this.tiempoClyde < 2) this.salioClyde = this.fantasmaClyde.salirDeLaCasa(false);
-			if(!this.salioClyde && this.tiempoClyde >= 2) salioClyde = this.fantasmaClyde.salirDeLaCasa(true);
-
-		}
-
 		boolean blinky = false,
 				pinky = false,
 				inky = false,
 				clyde = false;
 
-		if (!this.modoHuidaActivado){
-		
-			if (cronometro < 7){
-				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
-				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
-				if (salioInky) inky = this.fantasmaInky.modoDispersion();
-				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
-			}
-			else if (cronometro < 27){
-				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
-				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-			}
-			else if (cronometro < 34){
-				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
-				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
-				if (salioInky) inky = this.fantasmaInky.modoDispersion();
-				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
-			}
-			else if (cronometro < 54){
-				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
-				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-			}
-			else if (cronometro < 61){
-				if (salioBlinky) blinky = this.fantasmaBlinky.modoDispersion();
-				if (salioPinky) pinky = this.fantasmaPinky.modoDispersion();
-				if (salioInky) inky = this.fantasmaInky.modoDispersion();
-				if (salioClyde) clyde = this.fantasmaClyde.modoDispersion();
-			}
-			else {
-				if (salioPinky) pinky = this.fantasmaPinky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-				if (salioInky) inky = this.fantasmaInky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
-				if (salioBlinky) blinky = this.fantasmaBlinky.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-				if (salioClyde) clyde = this.fantasmaClyde.modoPersecusion(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan);
-			}
+		blinky = this.fantasmaBlinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet);
+		pinky = this.fantasmaPinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet);
+		inky = this.fantasmaInky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet);
+		clyde = this.fantasmaClyde.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet);
 
-			if (blinky || pinky || inky || clyde) {
-				System.out.println("Alcanzado por fantasma");
-				this.vidas -= 1;
-				this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-				this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
-				this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
-				this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
-				this.tiempoDeInicio = System.currentTimeMillis();
-
-				this.tiempoBlinky = 0;
-				this.tiempoClyde = 0;
-				this.tiempoInky = 0;
-				this.tiempoPinky = 0;
-				this.tiempoInicioBlinky = 0;
-				this.tiempoInicioClyde = 0;
-				this.tiempoInicioPinky = 0;
-				this.tiempoInicioInky = 0;
-
-				this.cronometro = 0;
-
-				this.salioPinky = false;
-				this.salioInky = false;
-				this.salioBlinky = true;
-				this.salioClyde = false;
-
-				this.jugar = false;
-
-				this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
-
-				//System.out.println("Vidas restantes: " + this.vidas);
-
-				try {
-					Thread.sleep(2000);
-				}
-				catch (InterruptedException e){
-
-				}
-				
-
-			}
-
-		}
-		else {
-			this.tiempoModoHuida = this.cronometro - this.tiempoModoHuidaInicial;
-			
-			if (salioBlinky) blinky = this.fantasmaBlinky.modoHuida(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.tiempoModoHuida, this.contador);
-			if (salioPinky) pinky = this.fantasmaPinky.modoHuida(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.tiempoModoHuida, this.contador);
-			if (salioInky) inky = this.fantasmaInky.modoHuida(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.tiempoModoHuida, this.contador);
-			if (salioClyde) clyde = this.fantasmaClyde.modoHuida(this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.tiempoModoHuida, this.contador);
-
-			if (blinky) {
-				//anmacion va aqui
-				this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-				this.tiempoInicioBlinky = this.cronometro;
-				this.tiempoBlinky = 0;
-				this.salioBlinky = false;
-			}
-			
-			if (pinky) {
-				//anmacion va aqui
-				this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-				this.tiempoInicioPinky = this.cronometro;
-				this.tiempoPinky = 0;
-				this.salioPinky = false;
-			} 
-			
-			if (clyde) {
-				//anmacion va aqui
-				this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-				this.tiempoInicioClyde = this.cronometro;
-				this.tiempoClyde = 0;
-				this.salioClyde = false;
-			} 
-			
-			if (inky) {
-				//anmacion va aqui
-				this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-				this.tiempoInicioInky = this.cronometro;
-				this.tiempoInky = 0;
-				this.salioInky = false;
-			}  
-			if (this.tiempoModoHuida == 15){
-				this.modoHuidaActivado = false; //temporizador de 15 segundos
-				this.tiempoModoHuida = 0;
-			}
-		}
-		
+		if (blinky || pinky || inky || clyde) reinicioDePosiciones(true);
 			
 	}
 
@@ -391,6 +228,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		else if (e.getKeyCode() == KeyEvent.VK_ENTER && !this.jugar){
 			this.jugar = true;
 			System.out.println("Jugar activado");
+			this.tiempoDeInicio = System.currentTimeMillis();
 			this.hiloTick.start();
 			this.hiloRender.start();
 		}

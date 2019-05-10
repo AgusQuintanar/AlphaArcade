@@ -30,13 +30,9 @@ public class FantasmaPinky extends Fantasma {
         super.generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);  
     }
 
-    public boolean modoDispersion() {
-        return super.modoDispersion(0,0);
-     }
-
-     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, long tiempoHuida, int contador) {
+     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, int contador) {
         super.generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);
-        return super.modoHuida(PacManXCoor, PacManYCoor, direccionPacMan, tiempoHuida, contador);
+        return super.modoHuida(PacManXCoor, PacManYCoor, direccionPacMan, contador);
     }
 
      public void movimientoXY (){

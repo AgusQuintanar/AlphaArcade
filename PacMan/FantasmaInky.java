@@ -5,10 +5,13 @@ import javax.swing.ImageIcon;
 import java.awt.Graphics;
 import java.awt.Color;
 public class FantasmaInky extends Fantasma {
+    
 
     public FantasmaInky(int xF, int yF, double anchoPista, double altoPista, int[][] matrizPista, String direccionPacMan, double velocidad) {
         super(xF, yF, anchoPista, altoPista, matrizPista, "fantasmaAzul", direccionPacMan, velocidad);
         this.direccionFantasma = "der";
+        this.esquinaXDispersion = 51;
+        this.esquinaYDispersion = 30;
     }
 
     public void generarRuta(int PacManXCoor, int PacManYCoor, String direccionPacMan, int coorXFBlinky, int coorYFBlinky) {
@@ -38,14 +41,10 @@ public class FantasmaInky extends Fantasma {
         return super.modoPersecusion(PacManXCoor, PacManYCoor, direccionPacMan);
      }
 
-     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, long tiempoHuida, int contador) {
+     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, int contador) {
         super.generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);
-        return super.modoHuida(PacManXCoor, PacManYCoor, direccionPacMan, tiempoHuida, contador);
+        return super.modoHuida(PacManXCoor, PacManYCoor, direccionPacMan, contador);
      }
-
-    public boolean modoDispersion() {
-        return super.modoDispersion(51,30);
-    }
 
     public void movimientoXY (){
         super.movimientoXY();
