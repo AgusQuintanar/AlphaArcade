@@ -7,13 +7,8 @@ import java.awt.Color;
 public class FantasmaInky extends Fantasma {
 
     public FantasmaInky(int xF, int yF, double anchoPista, double altoPista, int[][] matrizPista, String direccionPacMan, double velocidad) {
-        super(xF, yF, anchoPista, altoPista, matrizPista, new ImageIcon("fantasmaAzulImg.png").getImage(), direccionPacMan, velocidad);
+        super(xF, yF, anchoPista, altoPista, matrizPista, "fantasmaAzul", direccionPacMan, velocidad);
         this.direccionFantasma = "der";
-    }
-
-    public void pintaFantasma(Graphics g){
-        g.setColor(Color.BLUE);
-        super.pintaFantasma(g);
     }
 
     public void generarRuta(int PacManXCoor, int PacManYCoor, String direccionPacMan, int coorXFBlinky, int coorYFBlinky) {
@@ -43,8 +38,8 @@ public class FantasmaInky extends Fantasma {
         return super.modoPersecusion(PacManXCoor, PacManYCoor, direccionPacMan);
      }
 
-     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, long tiempoHuida, int contador, int coorXFBlinky, int coorYFBlinky) {
-        generarRuta(PacManXCoor, PacManYCoor, direccionPacMan, coorXFBlinky, coorYFBlinky);
+     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, long tiempoHuida, int contador) {
+        super.generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);
         return super.modoHuida(PacManXCoor, PacManYCoor, direccionPacMan, tiempoHuida, contador);
      }
 

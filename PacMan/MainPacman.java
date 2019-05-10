@@ -23,16 +23,23 @@ public class MainPacMan extends JFrame{
 		System.out.println("Pantalla: "+this.getToolkit().getScreenSize().getWidth() + ", " + this.getToolkit().getScreenSize().getHeight());
 		JuegoPacMan juegoPacMan;
 		if (this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight() == 1.6){ //Aspecto 16:10
+			juegoPacMan = new JuegoPacMan(.95*this.getToolkit().getScreenSize().getWidth());
 			System.out.println("Aspecto 16:10");
-			juegoPacMan = new JuegoPacMan(this.getToolkit().getScreenSize().getWidth());
+			JPanel lateral = new JPanel();
+			lateral.setPreferredSize(new Dimension((int)(.025*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
+			lateral.setBackground(Color.BLACK);
+			this.add(lateral, BorderLayout.WEST);
+			
 		}
 		else {
 			System.out.println("Aspecto 16:9");
+			juegoPacMan = new JuegoPacMan(.85*this.getToolkit().getScreenSize().getWidth());
 			JPanel lateral = new JPanel();
-			lateral.setPreferredSize(new Dimension((int)(.05*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
+
+			lateral.setPreferredSize(new Dimension((int)(.075*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
 			lateral.setBackground(Color.BLACK);
 			this.add(lateral, BorderLayout.WEST);
-			juegoPacMan = new JuegoPacMan(.9*this.getToolkit().getScreenSize().getWidth()); //Aspecto 16:9
+
 		}
 		
 		this.add(juegoPacMan, BorderLayout.CENTER);

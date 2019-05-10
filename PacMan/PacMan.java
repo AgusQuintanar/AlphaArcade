@@ -86,20 +86,19 @@ public class PacMan implements ImageObserver {
 		this.direccionPacman = direccionPresionada;
 		movimientoY(this.coorX, this.coorY);
 		movimientoX(this.coorX, this.coorY);
-		comerPuntitos();
 		escucharTeclas();
 		if ((direccionPacman == "arr" || direccionPacman == "aba") && !this.peticionSubirBajar) direccionTmp = direccionPacman;
 		else if ((direccionPacman == "der" || direccionPacman == "izq") && !this.peticionIzqDer) direccionTmp = direccionPacman;
 		this.direccionPacman = direccionTmp;
 	}
 
-	public String comerPuntitos(){
+	public String comerPuntitos(int[][] matrizPista){
 		if (this.coorX > 0 && this.coorX < 51 && this.coorY > 0 && this.coorY < 30 ){
-			if (this.matrizPista[this.coorY][this.coorX] == 0){
-				this.matrizPista[this.coorY][this.coorX] = 3;
+			if (matrizPista[this.coorY][this.coorX] == 0){
+				matrizPista[this.coorY][this.coorX] = 3;
 			}
-			else if (this.matrizPista[this.coorY][this.coorX] == 2){
-				this.matrizPista[this.coorY][this.coorX] = 3;
+			else if (matrizPista[this.coorY][this.coorX] == 2){
+				matrizPista[this.coorY][this.coorX] = 3;
 				return "pellet"; //Si come un pellet
 			}
 		}
@@ -198,7 +197,7 @@ public class PacMan implements ImageObserver {
 	public void escucharTeclas(){
 
 		if (this.coorX > 50){
-			if (this.direccionPacman == "der"  && this.coorX < 52){
+			if (this.direccionPacman == "der"  && this.coorX < 51){
 				this.xPac += this.velocidad;
 			}
 			else if(this.direccionPacman == "der"){

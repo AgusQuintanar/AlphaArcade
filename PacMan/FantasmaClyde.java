@@ -7,13 +7,8 @@ import java.awt.Color;
 public class FantasmaClyde extends Fantasma {
 
     public FantasmaClyde(int xF, int yF, double anchoPista, double altoPista, int[][] matrizPista, String direccionPacMan, double velocidad) {
-        super(xF, yF, anchoPista, altoPista, matrizPista, new ImageIcon("fantasmaNaranjaImg.png").getImage(), direccionPacMan, velocidad);
+        super(xF, yF, anchoPista, altoPista, matrizPista, "fantasmaNaranja", direccionPacMan, velocidad);
         this.direccionFantasma = "aba";
-    }
-
-    public void pintaFantasma(Graphics g){
-        g.setColor(Color.ORANGE);
-        super.pintaFantasma(g);
     }
 
     public boolean modoPersecusion(int PacManXCoor, int PacManYCoor, String direccionPacMan, long tiempoHuida, int contador) {
