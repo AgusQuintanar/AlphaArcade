@@ -19,23 +19,33 @@ public class MainPacMan extends JFrame{
 		this.setBounds(0, 0, (int)this.getToolkit().getScreenSize().getWidth(), (int)this.getToolkit().getScreenSize().getHeight());
 		this.setResizable(false);
 		this.setBackground(Color.BLACK);
+		
 		System.out.println(this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight());
 		System.out.println("Pantalla: "+this.getToolkit().getScreenSize().getWidth() + ", " + this.getToolkit().getScreenSize().getHeight());
-		Pista pista;
+		
+		JuegoPacMan juegoPacMan;
+		TableroPacMan tableroPacMan;
+		JPanel lateral = new JPanel();
+
 		if (this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight() == 1.6){ //Aspecto 16:10
+			tableroPacMan = new TableroPacMan(.95*this.getToolkit().getScreenSize().getWidth(), .060*this.getToolkit().getScreenSize().getHeight());
+			juegoPacMan = new JuegoPacMan(.95*this.getToolkit().getScreenSize().getWidth(), tableroPacMan);
 			System.out.println("Aspecto 16:10");
-			pista = new Pista(this.getToolkit().getScreenSize().getWidth());
+			lateral.setPreferredSize(new Dimension((int)(.025*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
+			
 		}
 		else {
 			System.out.println("Aspecto 16:9");
-			JPanel lateral = new JPanel();
-			lateral.setPreferredSize(new Dimension((int)(.05*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
-			lateral.setBackground(Color.BLACK);
-			this.add(lateral, BorderLayout.WEST);
-			pista = new Pista(.9*this.getToolkit().getScreenSize().getWidth()); //Aspecto 16:9
+			tableroPacMan = new TableroPacMan(.95*this.getToolkit().getScreenSize().getWidth(), .070*this.getToolkit().getScreenSize().getHeight());
+			juegoPacMan = new JuegoPacMan(.85*this.getToolkit().getScreenSize().getWidth(), tableroPacMan);
+			lateral.setPreferredSize(new Dimension((int)(.075*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
+
 		}
-		
-		this.add(pista, BorderLayout.CENTER);
+		lateral.setBackground(Color.BLACK);
+		tableroPacMan.setBackground(Color.BLACK);
+		this.add(lateral, BorderLayout.WEST);
+		this.add(tableroPacMan, BorderLayout.SOUTH);
+		this.add(juegoPacMan, BorderLayout.CENTER);
 		this.setVisible(true);	
 	}
 	

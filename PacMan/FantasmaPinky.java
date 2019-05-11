@@ -7,12 +7,8 @@ import java.awt.Color;
 public class FantasmaPinky extends Fantasma {
 
     public FantasmaPinky(int xF, int yF, double anchoPista, double altoPista, int[][] matrizPista, String direccionPacMan, double velocidad) {
-        super(xF, yF, anchoPista, altoPista, matrizPista, new ImageIcon("fantasmaRosaImg.png").getImage(), direccionPacMan, velocidad);
-    }
-
-    public void pintaFantasma(Graphics g){
-        g.setColor(Color.PINK);
-        super.pintaFantasma(g);
+        super(xF, yF, anchoPista, altoPista, matrizPista, "fantasmaRosa", direccionPacMan, velocidad);
+        this.tiempoInicialSalidaCasa = 3;
     }
 
     public void generarRuta(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
@@ -35,11 +31,4 @@ public class FantasmaPinky extends Fantasma {
         super.generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);  
     }
 
-    public boolean modoDispersion() {
-        return super.modoDispersion(1,1);
-     }
-
-     public void movimientoXY (){
-        super.movimientoXY();
-    }
 }
