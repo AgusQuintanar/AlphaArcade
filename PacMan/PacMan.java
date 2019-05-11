@@ -68,6 +68,14 @@ public class PacMan implements ImageObserver {
 		return this.coorY;
 	}
 
+	public double getCoorXTemp() {
+		return this.coorXTemp;
+	}
+
+	public double getCoorYTemp() {
+		return this.coorYTemp;
+	}
+
 	public String getDireccionPacMan() {
 		return this.direccionPacman;
 	}
@@ -96,13 +104,14 @@ public class PacMan implements ImageObserver {
 		if (this.coorX > 0 && this.coorX < 51 && this.coorY > 0 && this.coorY < 30 ){
 			if (matrizPista[this.coorY][this.coorX] == 0){
 				matrizPista[this.coorY][this.coorX] = 3;
+				return "punto";
 			}
 			else if (matrizPista[this.coorY][this.coorX] == 2){
 				matrizPista[this.coorY][this.coorX] = 3;
 				return "pellet"; //Si come un pellet
 			}
 		}
-		return "punto";
+		return "";
 	}
 
 	public void movimientoX(int coorX, int coorY){

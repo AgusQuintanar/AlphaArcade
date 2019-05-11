@@ -11,9 +11,10 @@ public class FantasmaClyde extends Fantasma {
         this.direccionFantasma = "aba";
         this.esquinaXDispersion = 0;
         this.esquinaYDispersion = 30;
+        this.tiempoInicialSalidaCasa = 9;
     }
 
-    public boolean modoPersecusion(int PacManXCoor, int PacManYCoor, String direccionPacMan , int contador) {
+    public void modoPersecusion(int PacManXCoor, int PacManYCoor, String direccionPacMan , int contador) {
         if (Math.sqrt(Math.pow(this.coorXF - PacManXCoor,2) + Math.pow(this.coorYF - PacManYCoor,2)) > 8){ //Si esta fuera de un radio de 8 casillas
             generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);
             movimientoXY();
@@ -21,11 +22,7 @@ public class FantasmaClyde extends Fantasma {
         else {
             modoHuida(PacManXCoor, PacManYCoor, direccionPacMan, contador);
         }
-        if (this.coorXF == PacManXCoor && this.coorYF == PacManYCoor) return true;
-        else return false;
+       
      }
 
-    public void movimientoXY (){
-        super.movimientoXY();
-    }
 }

@@ -20,9 +20,9 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 	private FantasmaPinky fantasmaPinky;
 	private FantasmaClyde fantasmaClyde;
 	private FantasmaInky fantasmaInky;
+	private TableroPacMan tableroPacMan;
 	private Thread hiloTick,
-				   hiloRender,
-				   hiloJuego;
+				   hiloRender;
 
 	private boolean pellet,
 					jugar,
@@ -34,7 +34,9 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 	private int contador,
 				vidas,
 				coorXPacMan,
-				coorYPacMan;
+				coorYPacMan,
+				puntaje,
+				puntosRestantes;
 	private long tiempoDeInicio,
 				 cronometro;
 				
@@ -43,7 +45,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 	private int[][] matrizPista;
 
 
-	public JuegoPacMan(double ancho) {
+	public JuegoPacMan(double ancho, TableroPacMan tableroPacMan) {
 		super();
 		int anchoOriginal = 1890, altoOriginal = 1131;
 		double proporcionAncho = ancho / anchoOriginal; // Considerando un ancho del 100%
@@ -64,11 +66,16 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.coorYPacMan = this.pacman.getCoorY();
 		this.direccionPacMan = this.pacman.getDireccionPacMan();
 
+		this.tableroPacMan = tableroPacMan;
+		this.tableroPacMan.setBackground(Color.BLACK);
+
 		//System.out.println(this.ancho + ", " + this.alto);
 		
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		this.contador = 0;
+		this.puntaje = 0;
+		this.puntosRestantes = 1;
 
 		this.direccionPresionada = "";
 		
@@ -95,7 +102,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 				int fps = 0;
 				long timer = System.currentTimeMillis();
 	
-				while (vidas >= 0) {
+				while (vidas >= 0 && puntosRestantes > 0) {
 					cronometro = (timer - tiempoDeInicio)/1000;
 					long now = System.nanoTime();
 					delta += (now - lastTime) / ns;
@@ -123,7 +130,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 				int fps = 0;
 				long timer = System.currentTimeMillis();
 
-				while (vidas >= 0) {
+				while (vidas >= 0 && puntosRestantes > 0) {
 					synchronized (hiloTick) {
 						cronometro = (timer - tiempoDeInicio)/1000;
 
@@ -141,8 +148,16 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 						}
 					}		
 				}
+				if (puntosRestantes <= 0){
+					System.out.println("Haz ganado");
+				}
+				if (vidas == 0){
+					System.out.println("Haz perdido");
+				}
+				
 			}	
 		});
+	
 
 	}
 
@@ -158,12 +173,17 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.fantasmaInky.pintaFantasma(g, this.contador);		
 	}
 
-	// public void activarModoHuida() {
-	// 	this.fantasmaBlinky.setModoHuidaActivado(true);
-	// 	this.fantasmaClyde.setModoHuidaActivado(true);
-	// 	this.fantasmaPinky.setModoHuidaActivado(true);
-	// 	this.fantasmaInky.setModoHuidaActivado(true);
-	// }
+	public void contarPuntosRestantes(){
+		this.puntosRestantes = 1;
+		for (int i=0; i<this.matrizPista.length - 1; i++){
+			for (int j=0; j<this.matrizPista[i].length - 1; j++){
+				if (this.matrizPista[i][j] == 0){
+					this.puntosRestantes += 1;
+				}
+			}
+		}
+		this.puntosRestantes -= 1;
+	}
 
 	public void reinicioDePosiciones(boolean muerte) {
 		if (muerte) this.vidas -= 1;
@@ -186,10 +206,18 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.coorXPacMan = this.pacman.getCoorX();
 		this.coorYPacMan = this.pacman.getCoorY();
 		this.direccionPacMan = this.pacman.getDireccionPacMan();
+		contarPuntosRestantes();
+
+		this.tableroPacMan.setPuntaje(this.puntaje);
+		this.tableroPacMan.setVidasRestantes(this.vidas);
 
 		String puntoComido = this.pacman.comerPuntitos(this.matrizPista);
 		if (puntoComido == "pellet"){
 			this.pellet = true;
+			this.puntaje += 50;
+		}
+		else if (puntoComido == "punto"){
+			this.puntaje += 10;
 		}
 		
 		boolean blinky = false,
@@ -197,10 +225,11 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 				inky = false,
 				clyde = false;
 
-		blinky = this.fantasmaBlinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet);
-		pinky = this.fantasmaPinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet);
-		inky = this.fantasmaInky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet);
-		clyde = this.fantasmaClyde.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet);
+		blinky = this.fantasmaBlinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+		pinky = this.fantasmaPinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+		inky = this.fantasmaInky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp(), this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+		clyde = this.fantasmaClyde.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+		this.pellet = false;
 
 		if (blinky || pinky || inky || clyde) reinicioDePosiciones(true);
 			
@@ -208,6 +237,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 
 	private void render() {
 		this.repaint();
+		this.tableroPacMan.repaint();
 	}
 
 	

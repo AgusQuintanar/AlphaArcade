@@ -19,29 +19,32 @@ public class MainPacMan extends JFrame{
 		this.setBounds(0, 0, (int)this.getToolkit().getScreenSize().getWidth(), (int)this.getToolkit().getScreenSize().getHeight());
 		this.setResizable(false);
 		this.setBackground(Color.BLACK);
+		
 		System.out.println(this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight());
 		System.out.println("Pantalla: "+this.getToolkit().getScreenSize().getWidth() + ", " + this.getToolkit().getScreenSize().getHeight());
+		
 		JuegoPacMan juegoPacMan;
+		TableroPacMan tableroPacMan;
+		JPanel lateral = new JPanel();
+
 		if (this.getToolkit().getScreenSize().getWidth() / this.getToolkit().getScreenSize().getHeight() == 1.6){ //Aspecto 16:10
-			juegoPacMan = new JuegoPacMan(.95*this.getToolkit().getScreenSize().getWidth());
+			tableroPacMan = new TableroPacMan(.95*this.getToolkit().getScreenSize().getWidth(), .060*this.getToolkit().getScreenSize().getHeight());
+			juegoPacMan = new JuegoPacMan(.95*this.getToolkit().getScreenSize().getWidth(), tableroPacMan);
 			System.out.println("Aspecto 16:10");
-			JPanel lateral = new JPanel();
 			lateral.setPreferredSize(new Dimension((int)(.025*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
-			lateral.setBackground(Color.BLACK);
-			this.add(lateral, BorderLayout.WEST);
 			
 		}
 		else {
 			System.out.println("Aspecto 16:9");
-			juegoPacMan = new JuegoPacMan(.85*this.getToolkit().getScreenSize().getWidth());
-			JPanel lateral = new JPanel();
-
+			tableroPacMan = new TableroPacMan(.95*this.getToolkit().getScreenSize().getWidth(), .070*this.getToolkit().getScreenSize().getHeight());
+			juegoPacMan = new JuegoPacMan(.85*this.getToolkit().getScreenSize().getWidth(), tableroPacMan);
 			lateral.setPreferredSize(new Dimension((int)(.075*this.getToolkit().getScreenSize().getWidth()),(int)(this.getToolkit().getScreenSize().getHeight())));
-			lateral.setBackground(Color.BLACK);
-			this.add(lateral, BorderLayout.WEST);
 
 		}
-		
+		lateral.setBackground(Color.BLACK);
+		tableroPacMan.setBackground(Color.BLACK);
+		this.add(lateral, BorderLayout.WEST);
+		this.add(tableroPacMan, BorderLayout.SOUTH);
 		this.add(juegoPacMan, BorderLayout.CENTER);
 		this.setVisible(true);	
 	}

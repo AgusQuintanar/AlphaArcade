@@ -12,9 +12,6 @@ public class FantasmaBlinky extends Fantasma {
         this.esquinaXDispersion = 51;
         this.esquinaYDispersion = 0;
         this.salioFantasma = true;
-    }
-
-    public void movimientoXY (){
-        super.movimientoXY();
+        this.tiempoInicialSalidaCasa = 0;
     }
 }

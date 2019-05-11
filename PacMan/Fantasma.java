@@ -28,7 +28,8 @@ public class Fantasma implements ImageObserver {
                     PacManYCoor,
                     contador,
                     esquinaXDispersion,
-                    esquinaYDispersion;
+                    esquinaYDispersion,
+                    tiempoInicialSalidaCasa;
             
     protected double anchoPista,
                    altoPista,
@@ -98,7 +99,7 @@ public class Fantasma implements ImageObserver {
         this.salioFantasma = false;
         this.esquinaXDispersion = 0;
         this.esquinaYDispersion = 0;
-
+        this.tiempoInicialSalidaCasa = 6;
     }
 
     public void setXF (int xF){
@@ -311,15 +312,15 @@ public class Fantasma implements ImageObserver {
         else if (peticionIzquierda) this.direccionFantasma = "izq";
 
      }
-     public boolean modoPersecusion(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
+     public void modoPersecusion(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
+        this.velocidad = 3;
         this.modoHuidaActivado = false;
         generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);
         movimientoXY();
-        if (this.coorXF == PacManXCoor && this.coorYF == PacManYCoor) return true;
-        else return false;
      }
      
-     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, int contador) {
+     public void modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, int contador) {
+        this.velocidad = 3/2;
         this.modoHuidaActivado = true;
         this.contador = contador; 
         if (this.coorXF <= PacManXCoor) this.puntoXHuida = this.coorXF - this.caminoX;
@@ -328,19 +329,17 @@ public class Fantasma implements ImageObserver {
         else if (this.coorYF >= PacManYCoor) this.puntoYHuida = this.coorYF + this.caminoY;
         generarRuta(this.puntoXHuida, this.puntoYHuida, direccionPacMan);
         movimientoXY();
-        if (this.coorXF == PacManXCoor && this.coorYF == PacManYCoor) return true;
-        else return false;
      }
 
-     public boolean modoDispersion() {
+     public void modoDispersion() {
+        this.velocidad = 3;
         this.modoHuidaActivado = false;
         generarRuta(this.esquinaXDispersion, this.esquinaYDispersion, this.direccionPacMan);
         movimientoXY();
-        if (this.coorXF == PacManXCoor && this.coorYF == PacManYCoor) return true;
-        else return false;
     }
 
     public boolean salirDeLaCasa(boolean salir){
+        this.velocidad = 3;
         this.coorXFTemp = (this.xF + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
         this.coorYFTemp = (this.yF + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31)) + .02;
         this.coorXF = (int) this.coorXFTemp;
@@ -377,6 +376,7 @@ public class Fantasma implements ImageObserver {
     }
 
     public boolean volverALaCasa() {
+        this.velocidad = 3;
         this.modoHuidaActivado = false;
         this.volverALaCasa = false;
 
@@ -393,6 +393,10 @@ public class Fantasma implements ImageObserver {
         else {
             this.agregarACaminoX = 0;
             this.agregarACaminoY = 0;
+            generarRuta(25, 13, "arr");
+            movimientoXY();
+            generarRuta(25, 13, "arr");
+            movimientoXY();
             generarRuta(25, 13, "arr");
             movimientoXY();
         }
@@ -439,54 +443,73 @@ public class Fantasma implements ImageObserver {
     }
 
 
-    public boolean comportamientoFantasma(long cronometro, int PacManXCoor, int PacManYCoor, String direccionPacMan, boolean pellet) {
+    public boolean comportamientoFantasma(long cronometro, int PacManXCoor, int PacManYCoor, String direccionPacMan, boolean pellet, double PacManXCoorTemp, double PacManYCoorTemp) {
         this.PacManXCoor = PacManXCoor;
         this.PacManYCoor = PacManYCoor;
         this.direccionPacMan = direccionPacMan;
         this.tiempoFantasma = cronometro - this.tiempoInicialFantasma;
 
-        if (pellet) this.tiempoInicialHuida = cronometro;	
+        if (pellet){
+            this.tiempoInicialHuida = cronometro;	
+            this.modoHuidaActivado = true;
+          
+        } 
 
+        if (cronometro < 13){
+			if(this.tiempoFantasma < this.tiempoInicialSalidaCasa) this.salioFantasma = this.salirDeLaCasa(false);
+			if(!this.salioFantasma && this.tiempoFantasma >= this.tiempoInicialSalidaCasa) salioFantasma = this.salirDeLaCasa(true);
+		}
+		else {
+			if(tiempoFantasma < 2 && this.volverALaCasa) this.salioFantasma = this.salirDeLaCasa(false);
+            if(!this.salioFantasma && tiempoFantasma >= 2) this.salioFantasma = this.salirDeLaCasa(true);
+		}
 
-		if(tiempoFantasma < 2 && this.volverALaCasa) this.salioFantasma = this.salirDeLaCasa(false);
-		if(!this.salioFantasma && tiempoFantasma >= 2) this.salioFantasma = this.salirDeLaCasa(true);
 		boolean fantasma = false;
 		if (!this.modoHuidaActivado && this.volverALaCasa){
 			if (cronometro < 7){
-				if (this.salioFantasma && this.volverALaCasa) fantasma = this.modoDispersion();
+				if (this.salioFantasma && this.volverALaCasa) this.modoDispersion();
 			}
 			else if (cronometro < 27){
-				if (this.salioFantasma && this.volverALaCasa) fantasma = this.modoPersecusion(this.PacManXCoor, this.PacManYCoor, this.direccionPacMan);
+				if (this.salioFantasma && this.volverALaCasa) this.modoPersecusion(this.PacManXCoor, this.PacManYCoor, this.direccionPacMan);
 			}
 			else if (cronometro < 34){
-				if (this.salioFantasma && this.volverALaCasa) fantasma = this.modoDispersion();
+				if (this.salioFantasma && this.volverALaCasa) this.modoDispersion();
 			}
 			else if (cronometro < 54){
-				if (this.salioFantasma && this.volverALaCasa) fantasma = this.modoPersecusion(this.PacManXCoor, this.PacManYCoor, this.direccionPacMan);
+				if (this.salioFantasma && this.volverALaCasa) this.modoPersecusion(this.PacManXCoor, this.PacManYCoor, this.direccionPacMan);
 			}
 			else if (cronometro < 61){
-				if (this.salioFantasma && this.volverALaCasa) fantasma = this.modoDispersion();
+				if (this.salioFantasma && this.volverALaCasa) this.modoDispersion();
 			}
 			else {
-				if (this.salioFantasma && this.volverALaCasa) fantasma = this.modoPersecusion(this.PacManXCoor, this.PacManYCoor, this.direccionPacMan);
+				if (this.salioFantasma && this.volverALaCasa) this.modoPersecusion(this.PacManXCoor, this.PacManYCoor, this.direccionPacMan);
             }
-            
+            if (Math.abs(this.coorXFTemp - PacManXCoorTemp) < .3 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < .3 ) fantasma = true;
             if(fantasma) return true;
 
 		} else {
-			if (this.salioFantasma) fantasma = this.modoHuida(this.PacManXCoor, this.PacManXCoor, this.direccionPacMan, this.contador);
+            
+            if (this.modoHuidaActivado) this.tiempoHuida = cronometro - this.tiempoInicialHuida;
+
+			if (this.salioFantasma && this.volverALaCasa) this.modoHuida(this.PacManXCoor, this.PacManXCoor, this.direccionPacMan, this.contador);
+
+            if (Math.abs(this.coorXFTemp - PacManXCoorTemp) < .3 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < .3 ) fantasma = true;
 
 			if (fantasma || !this.volverALaCasa) {
-				System.out.println("Blinky asustado");
-				boolean volvioACasa = this.volverALaCasa();
+                boolean volvioACasa = this.volverALaCasa();
+               
 				if (volvioACasa){
                     this.xF = xFInicial;
                     this.yF = yFInicial;
 					this.tiempoInicialFantasma = cronometro;
 					this.tiempoFantasma = 0;
-					this.salioFantasma = false;
+                    this.salioFantasma = false;
+                    this.tiempoHuida = 0;
 				}	
-			}
+            }
+            if (this.tiempoHuida == 15 && this.volverALaCasa){
+                this.modoHuidaActivado = false;
+            }
         }
         return false;
     }

@@ -8,6 +8,7 @@ public class FantasmaPinky extends Fantasma {
 
     public FantasmaPinky(int xF, int yF, double anchoPista, double altoPista, int[][] matrizPista, String direccionPacMan, double velocidad) {
         super(xF, yF, anchoPista, altoPista, matrizPista, "fantasmaRosa", direccionPacMan, velocidad);
+        this.tiempoInicialSalidaCasa = 3;
     }
 
     public void generarRuta(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
@@ -30,12 +31,4 @@ public class FantasmaPinky extends Fantasma {
         super.generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);  
     }
 
-     public boolean modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, int contador) {
-        super.generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);
-        return super.modoHuida(PacManXCoor, PacManYCoor, direccionPacMan, contador);
-    }
-
-     public void movimientoXY (){
-        super.movimientoXY();
-    }
 }
