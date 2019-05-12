@@ -41,7 +41,10 @@ public class TableroPacMan extends JPanel {
         g.setColor(Color.LIGHT_GRAY);
         g.setFont(this.fuenteTablero); 
     
-        g.drawString("Puntaje: " + Integer.toString(this.puntaje), (int)(this.getWidth()/26), (int)(.85*this.getHeight()));
+        g.drawString("Puntaje: ", (int)(this.getWidth()/26), (int)(.85*this.getHeight()));
+        g.setColor(new Color(255,255,70));
+        g.drawString("                        " + Integer.toString(this.puntaje), (int)(this.getWidth()/26), (int)(.85*this.getHeight()));
+        g.setColor(Color.LIGHT_GRAY);
         g.drawString("Vidas Restantes: ", (int)(this.getWidth()/2)-(int)(2*this.getHeight()), (int)(.85*this.getHeight()));
 
         pintarVidasRestantes(g);
