@@ -12,13 +12,13 @@ public class PacMan implements ImageObserver {
 				  coorX,
 				coorY;
 
-	private Image pacManAbierto,
+	private Image pacManAbierto1,
+				  pacManAbierto2,
 				  pacManCerrado,
 				  pacManTemp;
 	private String direccionPacman, 
 				direccionTmp;
-	private boolean abiertoCerrado,
-			peticionSubirBajar,
+	private boolean peticionSubirBajar,
 			peticionIzqDer,
 			peticionIzqDerDir,
 			peticionSubirBajarDir;
@@ -35,11 +35,11 @@ public class PacMan implements ImageObserver {
 		this.anchoPista = anchoPista;
 		this.altoPista = altoPista;
 		this.matrizPista = matrizPista;
-		this.pacManAbierto = new ImageIcon("pac-man-3d-arr.png").getImage();
-		this.pacManCerrado = new ImageIcon("PacManIconCerrado-3d-arr.png").getImage();
+		this.pacManAbierto1 = new ImageIcon("PacMan2-izq.png").getImage();
+		this.pacManAbierto2 = new ImageIcon("PacMan3-izq.png").getImage();
+		this.pacManCerrado = new ImageIcon("PacMan1.png").getImage();
 		this.direccionPacman = "";
-		this.abiertoCerrado = true;
-		this.direccionTmp = "der";
+		this.direccionTmp = "izq";
 		this.coorX = 1;
 		this.peticionIzqDer = false;
 		this.peticionIzqDerDir = false;
@@ -49,7 +49,7 @@ public class PacMan implements ImageObserver {
 		this.coorYTemp = 1.0;
 		this.coorY = 1;
 		this.velocidad = 3;
-		this.pacManTemp = this.pacManAbierto;
+		this.pacManTemp = this.pacManAbierto1;
 	}
 
 	public void setXPac(int xPac){
@@ -81,10 +81,13 @@ public class PacMan implements ImageObserver {
 	}
 
 	public void pintaPacman(Graphics g, int contador) {
-		this.pacManAbierto = new ImageIcon("pac-man-3d-"+direccionTmp+".png").getImage();
-		this.pacManCerrado = new ImageIcon("PacManIconCerrado-3d-"+direccionTmp+".png").getImage();
+		this.pacManAbierto1 = new ImageIcon("PacMan2-"+direccionTmp+".png").getImage();
+		this.pacManAbierto2 = new ImageIcon("PacMan3-"+direccionTmp+".png").getImage();
+		this.pacManCerrado = new ImageIcon("PacMan1.png").getImage();
 
-		if(contador/60.0%.4 < .2) this.pacManTemp = this.pacManAbierto;
+		if(contador/60.0%.6 < .15) this.pacManTemp = this.pacManAbierto1;
+		if(contador/60.0%.6 < .3) this.pacManTemp = this.pacManAbierto2;
+		if(contador/60.0%.6 < .45) this.pacManTemp = this.pacManAbierto2;
 		else this.pacManTemp = this.pacManCerrado;
 		g.drawImage(this.pacManTemp, xPac - (int)(.25*this.anchoPista/52), yPac - (int)(.3*this.anchoPista/52), (int)(1.5*this.anchoPista/52), (int)(1.5*this.anchoPista/52), this);
 	
