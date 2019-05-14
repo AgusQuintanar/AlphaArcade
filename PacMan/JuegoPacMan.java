@@ -60,7 +60,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.pista = new Pista(this.ancho, this.alto);
 		this.matrizPista = pista.getPista();
 
-		this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
+		this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.9928*(this.alto/31)-.3*.9928*(this.alto/31)+.9928*this.alto/62), this.ancho, this.alto, this.matrizPista);
 
 		this.coorXPacMan = this.pacman.getCoorX();
 		this.coorYPacMan = this.pacman.getCoorY();
