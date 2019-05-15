@@ -42,14 +42,14 @@ public class PacMan implements ImageObserver {
 		this.pacManCerrado = new ImageIcon("PacMan1.png").getImage();
 		this.direccionPacman = "";
 		this.direccionTmp = "izq";
-		this.coorX = 1;
+		this.coorX = 14;
 		this.peticionIzqDer = false;
 		this.peticionIzqDerDir = false;
 		this.peticionSubirBajar = false;
 		this.peticionSubirBajarDir = false;
-		this.coorXTemp = 1.0;
-		this.coorYTemp = 1.0;
-		this.coorY = 1;
+		this.coorXTemp = 14.0;
+		this.coorYTemp = 14.0;
+		this.coorY = 14;
 		this.velocidad = 3;
 		this.pacManTemp = this.pacManAbierto1;
 	}
@@ -105,9 +105,11 @@ public class PacMan implements ImageObserver {
 		else this.pacManTemp = this.pacManCerrado;
 		//else this.pacManTemp = this.pacManAbierto2;
 		double ajusteY = 0.0;
-		if (this.coorYTemp < 14) ajusteY = (this.anchoPista/52)/(20-(this.coorYTemp/3));
-		g.drawImage(this.pacManTemp, xPac - (int)(.375*this.anchoPista/52), yPac - (int)(-ajusteY + .65*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
-		g.setColor(Color.RED);
+		if (this.coorYTemp < 14) ajusteY = 3*(this.anchoPista/52)/(20-(this.coorYTemp/3));
+		double ajusteX = 1.0;
+		if (this.coorXTemp > 26) ajusteX = 1.5;
+		g.drawImage(this.pacManTemp, xPac - (int)(.2*ajusteX*this.anchoPista/52), yPac - (int)(-ajusteY + .6*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
+		//g.setColor(Color.RED);
 		//g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
 	}
 
