@@ -175,25 +175,25 @@ public class Fantasma implements ImageObserver {
             y2 = 0;
 
         if (this.direccionFantasma == "izq"){
-            x1 = this.xF + (int)(.185*1.15*this.anchoPista/52) - (int)(.235*1.15*this.anchoPista/52);
-            x2 = x1 + (int)(this.anchoPista/75);
-            y1 = y2 = this.yF + (int)(1.15*this.anchoPista/155);
+            x1 = this.xF + (int)(.0655*1.15*this.anchoPista/52) - (int)(.195*1.15*this.anchoPista/52);
+            x2 = x1 + (int)(this.anchoPista/63.25);
+            y1 = y2 = this.yF + (int)(1.15*this.anchoPista/165);
         }
         else if (this.direccionFantasma == "der"){
-            x1 = this.xF + (int)(.185*1.15*this.anchoPista/52);
-            x2 = x1 + (int)(this.anchoPista/75);
+            x1 = this.xF + (int)(.0655*1.15*this.anchoPista/52);
+            x2 = x1 + (int)(this.anchoPista/63.25);
             y1 = y2 = this.yF + (int)(1.15*this.anchoPista/165);
         }
         else if (this.direccionFantasma == "arr"){
-            x1 = this.xF + (int)(.07*1.15*this.anchoPista/52);
-            x2 = x1 + (int)(1.15*this.anchoPista/75);
+            x1 = this.xF + (int)(.05*this.anchoPista/52) - (int)(.085*1.15*this.anchoPista/52);
+            x2 = x1 + (int)(1.15*this.anchoPista/72.175);
             y1 = y2 = this.yF + (int)(1.15*this.anchoPista/240);
     
         }
         else if (this.direccionFantasma == "aba"){
-            x1 = this.xF + (int)(.07*1.15*this.anchoPista/52);
-            x2 = x1 + (int)(1.15*this.anchoPista/75);
-            y1 = y2 = this.yF + (int)(1.15*this.anchoPista/125);
+            x1 = this.xF + (int)(.05*this.anchoPista/52) - (int)(.085*1.15*this.anchoPista/52);
+            x2 = x1 + (int)(1.15*this.anchoPista/72.175);
+            y1 = y2 = this.yF + (int)(1.15*this.anchoPista/120);
         }
 
 

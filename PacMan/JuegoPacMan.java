@@ -199,8 +199,8 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 				this.jugar = false;
 
 				this.direccionPacMan = "der"; //ver si poner un setter mejor
-				this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
-	}
+				this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.993*(this.alto/31)-.3*.993*(this.alto/31)+.993*this.alto/62), this.ancho, this.alto, this.matrizPista);
+			}
 
 	private void tick() {
 		this.contador++;
