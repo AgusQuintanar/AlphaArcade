@@ -219,7 +219,10 @@ public class Fantasma implements ImageObserver {
             }
         }
 
-        g.drawImage(fantasmaImgTemp, this.xF - (int)(.485*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.95*this.anchoPista/52), (int)(1.9*this.anchoPista/52), this);
+        double ajusteX = 0.0;
+        if (this.coorXFTemp < 26) ajusteX = 3*(this.anchoPista/52)/(26-(this.coorXFTemp/3));
+        
+        g.drawImage(fantasmaImgTemp, this.xF - (int)(-ajusteX + .485*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.95*this.anchoPista/52), (int)(1.9*this.anchoPista/52), this);
 
 
         if (!modoHuidaActivado || !this.volverALaCasa) pintarOjos(g);
@@ -234,24 +237,27 @@ public class Fantasma implements ImageObserver {
             x2 = 0,
             y2 = 0;
 
+        double ajusteX = 0.0;
+        if (this.coorXFTemp < 26) ajusteX = 2.5*(this.anchoPista/52)/(26-(this.coorXFTemp/3));
+
         if (this.direccionFantasma == "izq"){
-            x1 = this.xF + (int)(.0655*1.15*this.anchoPista/52) - (int)(.195*1.15*this.anchoPista/52);
+            x1 = this.xF + (int)(.9*ajusteX+.0655*1.15*this.anchoPista/52) - (int)(.195*1.15*this.anchoPista/52);
             x2 = x1 + (int)(this.anchoPista/63.25);
             y1 = y2 = this.yF + (int)(1.15*this.anchoPista/165);
         }
         else if (this.direccionFantasma == "der"){
-            x1 = this.xF + (int)(.0655*1.15*this.anchoPista/52);
+            x1 = this.xF + (int)(ajusteX+.0655*1.15*this.anchoPista/52);
             x2 = x1 + (int)(this.anchoPista/63.25);
             y1 = y2 = this.yF + (int)(1.15*this.anchoPista/165);
         }
         else if (this.direccionFantasma == "arr"){
-            x1 = this.xF + (int)(.05*this.anchoPista/52) - (int)(.085*1.15*this.anchoPista/52);
+            x1 = this.xF + (int)(ajusteX+.05*this.anchoPista/52) - (int)(.085*1.15*this.anchoPista/52);
             x2 = x1 + (int)(1.15*this.anchoPista/72.175);
             y1 = y2 = this.yF + (int)(1.15*this.anchoPista/240);
     
         }
         else if (this.direccionFantasma == "aba"){
-            x1 = this.xF + (int)(.05*this.anchoPista/52) - (int)(.085*1.15*this.anchoPista/52);
+            x1 = this.xF + (int)(ajusteX+.05*this.anchoPista/52) - (int)(.085*1.15*this.anchoPista/52);
             x2 = x1 + (int)(1.15*this.anchoPista/72.175);
             y1 = y2 = this.yF + (int)(1.15*this.anchoPista/120);
         }
