@@ -94,14 +94,14 @@ public class PacMan implements ImageObserver {
 			else if (this.matrizPista[this.coorY][this.coorX-1] == 1 && this.direccionPacman == "izq") this.pacManTemp = this.pacManAbierto1;
 			else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionPacman == "arr") this.pacManTemp = this.pacManAbierto1;
 			else if (this.matrizPista[this.coorY+1][this.coorX] == 1 && this.direccionPacman == "aba") this.pacManTemp = this.pacManAbierto1;
-			else if(contador%20 < 5) this.pacManTemp = this.pacManAbierto1;
-			else if(contador%20 < 10) this.pacManTemp = this.pacManAbierto2;
-			else if(contador%20 < 15) this.pacManTemp = this.pacManAbierto1;
+			else if(contador%24 < 6) this.pacManTemp = this.pacManAbierto1;
+			else if(contador%24 < 12) this.pacManTemp = this.pacManAbierto2;
+			else if(contador%24 < 18) this.pacManTemp = this.pacManAbierto1;
 			else this.pacManTemp = this.pacManCerrado;
 		}
-		else if(contador%20 < 5) this.pacManTemp = this.pacManAbierto1;
-		else if(contador%20 < 10) this.pacManTemp = this.pacManAbierto2;
-		else if(contador%20 < 15) this.pacManTemp = this.pacManAbierto1;
+		else if(contador%24 < 6) this.pacManTemp = this.pacManAbierto1;
+		else if(contador%24 < 12) this.pacManTemp = this.pacManAbierto2;
+		else if(contador%24 < 18) this.pacManTemp = this.pacManAbierto1;
 		else this.pacManTemp = this.pacManCerrado;
 		//else this.pacManTemp = this.pacManAbierto2;
 		double ajusteY = 0.0;
