@@ -14,8 +14,7 @@ import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-
-public class JuegoPacMan extends JPanel implements KeyListener{
+public class JuegoPacMan extends JPanel implements KeyListener {
 	private Pista pista;
 	private PacMan pacman;
 	private FantasmaBlinky fantasmaBlinky;
@@ -23,46 +22,39 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 	private FantasmaClyde fantasmaClyde;
 	private FantasmaInky fantasmaInky;
 	private TableroPacMan tableroPacMan;
-	private Thread hiloTick,
-				   hiloRender;
+	private Thread hiloTick, hiloRender;
 
 	private boolean pellet,
-					jugar,
-					pausa;
-	
-	private double ancho, 
-					alto;
-	
-	private int contador,
-				vidas,
-				coorXPacMan,
-				coorYPacMan,
-				puntaje,
-				puntosRestantes;
-	private long tiempoDeInicio,
-				 cronometro;
-				
-	private String direccionPresionada,
-				   direccionPacMan;
-	private int[][] matrizPista;
+					jugar, 
+					pausa,
+					miniInterrupcion;
 
+	private double ancho, alto;
+
+	private int contador, vidas, coorXPacMan, coorYPacMan, puntaje, puntosRestantes, fantasmasComidos;
+	private long tiempoDeInicio, cronometro;
+
+	private String direccionPresionada, direccionPacMan;
+	private int[][] matrizPista;
 
 	public JuegoPacMan(double ancho, TableroPacMan tableroPacMan) {
 		super();
 		int anchoOriginal = 1890, altoOriginal = 1131;
 		double proporcionAncho = ancho / anchoOriginal; // Considerando un ancho del 100%
-		//System.out.println(ancho + " " + alto);
+		// System.out.println(ancho + " " + alto);
 		this.ancho = (int) (anchoOriginal * proporcionAncho);
 		this.alto = (int) (altoOriginal * proporcionAncho);
-		//System.out.println(proporcionAncho);
-		//System.out.println(("ancho: " + this.ancho) + " alto: " + this.alto);
+		// System.out.println(proporcionAncho);
+		// System.out.println(("ancho: " + this.ancho) + " alto: " + this.alto);
 		this.setPreferredSize(new Dimension((int) this.ancho, (int) this.alto));
 		this.setBackground(Color.BLACK);
 
 		this.pista = new Pista(this.ancho, this.alto);
 		this.matrizPista = pista.getPista();
 
-		this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.993*(this.alto/31)-.3*.993*(this.alto/31)+.993*this.alto/62), this.ancho, this.alto, this.matrizPista);
+		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
+				(int) ((17) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista);
 
 		this.coorXPacMan = this.pacman.getCoorX();
 		this.coorYPacMan = this.pacman.getCoorY();
@@ -71,8 +63,8 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.tableroPacMan = tableroPacMan;
 		this.tableroPacMan.setBackground(Color.BLACK);
 
-		//System.out.println(this.ancho + ", " + this.alto);
-		
+		// System.out.println(this.ancho + ", " + this.alto);
+
 		this.setFocusable(true);
 		this.addKeyListener(this);
 		this.contador = 0;
@@ -80,39 +72,48 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.puntosRestantes = 1;
 
 		this.direccionPresionada = "";
-		
-		this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-		this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-		this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-		this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
+
+		this.fantasmaBlinky = new FantasmaBlinky((int) (this.ancho / 2 - this.ancho / 104),
+				(int) ((11) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
+		this.fantasmaPinky = new FantasmaPinky((int) (this.ancho / 2 - this.ancho / 104),
+				(int) ((14) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
+		this.fantasmaClyde = new FantasmaClyde((int) (this.ancho / 2 - this.ancho / 104 + this.ancho / 26),
+				(int) ((14) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
+		this.fantasmaInky = new FantasmaInky((int) (this.ancho / 2 - this.ancho / 104 - this.ancho / 26),
+				(int) ((14) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
 
 		this.cronometro = 0;
 
 		this.pellet = false;
+		this.fantasmasComidos = 0;
 
 		this.vidas = 3;
 		this.jugar = false;
 		this.pausa = false;
 
-		this.hiloTick = new Thread(new Runnable(){
+		this.hiloTick = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				long lastTime = System.nanoTime();
 				final double amountOfTicks = 60.0;
-				double ns = 1000000000 / amountOfTicks, 
-					delta = 0.0;
+				double ns = 1000000000 / amountOfTicks, delta = 0.0;
 				int fps = 0;
 				long timer = System.currentTimeMillis();
-	
+
 				while (vidas >= 0 && puntosRestantes > 0) {
-					cronometro = (timer - tiempoDeInicio)/1000;
+					cronometro = (timer - tiempoDeInicio) / 1000;
 					long now = System.nanoTime();
 					delta += (now - lastTime) / ns;
 					lastTime = now;
 					while (delta >= 1) {
-						if(!pausa) tick();
+						if (!pausa && !miniInterrupcion)
+							tick();
 						fps++;
-						delta--;	
+						delta--;
 					}
 					if (System.currentTimeMillis() - timer > 1000) {
 						timer += 1000;
@@ -122,47 +123,45 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 			}
 		});
 
-		this.hiloRender = new Thread(new Runnable(){
+		this.hiloRender = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				long lastTime = System.nanoTime();
 				final double amountOfTicks = 60.0;
-				double ns = 1000000000 / amountOfTicks, 
-					delta = 0.0;
+				double ns = 1000000000 / amountOfTicks, delta = 0.0;
 				int fps = 0;
 				long timer = System.currentTimeMillis();
 
 				while (vidas >= 0 && puntosRestantes > 0) {
 					synchronized (hiloTick) {
-						cronometro = (timer - tiempoDeInicio)/1000;
+						cronometro = (timer - tiempoDeInicio) / 1000;
 
 						long now = System.nanoTime();
 						delta += (now - lastTime) / ns;
 						lastTime = now;
 						while (delta >= 1) {
-							if(!pausa) render();
+							if (!pausa && !miniInterrupcion)
+								render();
 							fps++;
-							delta--;	
+							delta--;
 						}
 						if (System.currentTimeMillis() - timer > 1000) {
 							timer += 1000;
 							fps = 0;
 						}
-					}		
+					}
 				}
-				if (puntosRestantes <= 0){
+				if (puntosRestantes <= 0) {
 					System.out.println("Haz ganado");
 				}
-				if (vidas == 0){
+				if (vidas == 0) {
 					System.out.println("Haz perdido");
 				}
-				
-			}	
+
+			}
 		});
-	
 
 	}
-
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -172,14 +171,14 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.fantasmaBlinky.pintaFantasma(g, this.contador);
 		this.fantasmaPinky.pintaFantasma(g, this.contador);
 		this.fantasmaClyde.pintaFantasma(g, this.contador);
-		this.fantasmaInky.pintaFantasma(g, this.contador);		
+		this.fantasmaInky.pintaFantasma(g, this.contador);
 	}
 
-	public void contarPuntosRestantes(){
+	public void contarPuntosRestantes() {
 		this.puntosRestantes = 1;
-		for (int i=0; i<this.matrizPista.length - 1; i++){
-			for (int j=0; j<this.matrizPista[i].length - 1; j++){
-				if (this.matrizPista[i][j] == 0){
+		for (int i = 0; i < this.matrizPista.length - 1; i++) {
+			for (int j = 0; j < this.matrizPista[i].length - 1; j++) {
+				if (this.matrizPista[i][j] == 0) {
 					this.puntosRestantes += 1;
 				}
 			}
@@ -188,19 +187,30 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 	}
 
 	public void reinicioDePosiciones(boolean muerte) {
-		if (muerte) this.vidas -= 1;
+		if (muerte)
+			this.vidas -= 1;
 		System.out.println("Alcanzado por fantasma");
-				this.fantasmaBlinky = new FantasmaBlinky((int)(this.ancho/2-this.ancho/104), (int)((11)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
-				this.fantasmaPinky = new FantasmaPinky((int)(this.ancho/2-this.ancho/104), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
-				this.fantasmaClyde = new FantasmaClyde((int)(this.ancho/2-this.ancho/104+this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
-				this.fantasmaInky = new FantasmaInky((int)(this.ancho/2-this.ancho/104-this.ancho/26), (int)((14)*.9928*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
-				this.tiempoDeInicio = System.currentTimeMillis();
+		this.fantasmaBlinky = new FantasmaBlinky((int) (this.ancho / 2 - this.ancho / 104),
+				(int) ((11) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
+		this.fantasmaPinky = new FantasmaPinky((int) (this.ancho / 2 - this.ancho / 104),
+				(int) ((14) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
+		this.fantasmaClyde = new FantasmaClyde((int) (this.ancho / 2 - this.ancho / 104 + this.ancho / 26),
+				(int) ((14) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
+		this.fantasmaInky = new FantasmaInky((int) (this.ancho / 2 - this.ancho / 104 - this.ancho / 26),
+				(int) ((14) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
+		this.tiempoDeInicio = System.currentTimeMillis();
 
-				this.jugar = false;
+		this.jugar = false;
 
-				this.direccionPacMan = "der"; //ver si poner un setter mejor
-				this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.993*(this.alto/31)-.3*.993*(this.alto/31)+.993*this.alto/62), this.ancho, this.alto, this.matrizPista);
-			}
+		this.direccionPacMan = "der"; // ver si poner un setter mejor
+		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
+				(int) ((17) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
+				this.ancho, this.alto, this.matrizPista);
+	}
 
 	private void tick() {
 		this.contador++;
@@ -214,27 +224,59 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.tableroPacMan.setVidasRestantes(this.vidas);
 
 		String puntoComido = this.pacman.comerPuntitos(this.matrizPista);
-		if (puntoComido == "pellet"){
+		if (puntoComido == "pellet") {
 			this.pellet = true;
 			this.puntaje += 50;
-		}
-		else if (puntoComido == "punto"){
+			this.fantasmasComidos = 0;
+		} else if (puntoComido == "punto") {
 			this.puntaje += 10;
 		}
-		
-		boolean blinky = false,
-				pinky = false,
-				inky = false,
-				clyde = false;
 
-		blinky = this.fantasmaBlinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
-		pinky = this.fantasmaPinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
-		inky = this.fantasmaInky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp(), this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
-		clyde = this.fantasmaClyde.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan, this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+		String blinky = "", pinky = "", inky = "", clyde = "";
+
+		blinky = this.fantasmaBlinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan,
+				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+		pinky = this.fantasmaPinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan,
+				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+		inky = this.fantasmaInky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan,
+				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp(),
+				this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
+		clyde = this.fantasmaClyde.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan,
+				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
 		this.pellet = false;
 
-		if (blinky || pinky || inky || clyde) reinicioDePosiciones(true);
-			
+		if (blinky == "tocado" || pinky == "tocado" || inky == "tocado" || clyde == "tocado")
+			reinicioDePosiciones(true);
+
+		if (blinky == "comido") {
+			generarPuntajePorFantasmaComido(this.fantasmaBlinky);
+		}
+		if (clyde == "comido") {
+			generarPuntajePorFantasmaComido(this.fantasmaClyde);
+		}
+		if (pinky == "comido") {
+			generarPuntajePorFantasmaComido(this.fantasmaPinky);
+		}
+		if (inky == "comido") {
+			generarPuntajePorFantasmaComido(this.fantasmaInky);	
+		}
+	}
+
+	public void generarPuntajePorFantasmaComido(Fantasma fantasma) {
+		this.miniInterrupcion = true;
+		int cont = 0;
+		while (cont < 3500){
+			cont++;
+		}
+		this.miniInterrupcion = false; 
+		this.fantasmasComidos += 1;
+		this.puntaje += Math.pow(2, this.fantasmasComidos)*100;
+		System.out.println();
+		fantasma.setPuntajePorFantasmaComido((int) Math.pow(2, this.fantasmasComidos) * 100);
+		fantasma.setMostrarPuntaje(true);
+		fantasma.setTiempoComidoInicial(this.cronometro);
+		fantasma.setXFComido(fantasma.getXF());
+		fantasma.setYFComido(fantasma.getYF());
 	}
 
 	private void render() {

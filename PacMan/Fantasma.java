@@ -1,10 +1,16 @@
+
 // Agustin Quintanar y Julio Arath Rosales
 // A01636142 y A01660738
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 
@@ -29,7 +35,10 @@ public class Fantasma implements ImageObserver {
                     contador,
                     esquinaXDispersion,
                     esquinaYDispersion,
-                    tiempoInicialSalidaCasa;
+                    tiempoInicialSalidaCasa,
+                    puntajePorFantasmaComido,
+                    xFComido,
+                    yFComido;
             
     protected double anchoPista,
                    altoPista,
@@ -49,14 +58,18 @@ public class Fantasma implements ImageObserver {
                     paredArribaAbajo,
                     modoHuidaActivado,
                     volverALaCasa,
-                    salioFantasma;
+                    salioFantasma,
+                    fantasmaComido,
+                    mostrarPuntaje;
  
     protected long tiempoFantasma,
                    tiempoInicialFantasma,
                    tiempoHuida,
-                   tiempoInicialHuida;
+                   tiempoInicialHuida,
+                   tiempoComidoInicial;
 
     private Image ojo;
+    private Font fuenteFantasma;
 
     public Fantasma (int xFInicial, int yFInicial, double anchoPista, double altoPista, int[][] matrizPista, String fantasmaImg, String direccionPacMan, double velocidad){
         ////System.out.println("xFROJO Y YFROJO: " + xF +", " +yF);
@@ -100,15 +113,53 @@ public class Fantasma implements ImageObserver {
         this.esquinaXDispersion = 0;
         this.esquinaYDispersion = 0;
         this.tiempoInicialSalidaCasa = 6;
+        this.fantasmaComido = false;
+        this.mostrarPuntaje = false;
+        this.puntajePorFantasmaComido = 0;
+        this.tiempoComidoInicial = 0;
+        this.xFComido = 0;
+        this.yFComido = 0;
+        try {
+            this.fuenteFantasma = Font.createFont(Font.TRUETYPE_FONT, new File("LuckiestGuy-Regular.ttf")).deriveFont((float)(altoPista/40)*1f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(this.fuenteFantasma);
+       } catch (IOException|FontFormatException e) {
+            System.out.println("Fuente no encontrada");
+       }
     }
 
-    public void setXF (int xF){
+    public void setXF(int xF) {
         this.xF = xF;
     }
 
-    public void setYF (int yF){
+    public void setYF(int yF) {
         this.yF = yF;
     }
+
+    public int getXF() {
+        return this.xF;
+    }
+
+    public int getYF() {
+        return this.yF;
+    }
+
+    public void setXFComido(int xFComido) {
+        this.xFComido = xFComido;
+    }
+
+    public void setYFComido(int yFComido) {
+        this.yFComido = yFComido;
+    }
+
+    public void setPuntajePorFantasmaComido(int puntaje) {
+        this.puntajePorFantasmaComido = puntaje;
+    }
+
+    public void setMostrarPuntaje(boolean mostrar) {
+        this.mostrarPuntaje = mostrar;
+    } 
+
     public int getCoorXF() {
         return this.coorXF;
     }
@@ -129,10 +180,19 @@ public class Fantasma implements ImageObserver {
         return this.modoHuidaActivado;
     }
 
+    public void setTiempoComidoInicial(long cronometro) {
+        this.tiempoComidoInicial = cronometro;
+    }
+
     public void pintaFantasma(Graphics g, int contador){
+        g.setFont(this.fuenteFantasma);
         //g.fillOval((int)(this.PacManXCoor*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104), (int)((this.PacManYCoor*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62)), 25, 25);
-        g.setColor(Color.BLUE);
+        g.setColor(Color.WHITE);
         Image fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();;
+
+        if (this.mostrarPuntaje){
+            g.drawString(Integer.toString(this.puntajePorFantasmaComido), this.xFComido, this.yFComido + (int)(this.anchoPista/52/3));
+        }
 
         if (!this.volverALaCasa){
             fantasmaImgTemp = new ImageIcon("ojosFantasma.png").getImage();
@@ -380,12 +440,6 @@ public class Fantasma implements ImageObserver {
         this.modoHuidaActivado = false;
         this.volverALaCasa = false;
 
-        // if (this.coorXF == 25 && this.coorYF >= 11){
-        //     this.yF += velocidad;
-        //     this.coorXF = 25;
-        //     this.coorYF = (int)((this.yF + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31)) + .02);
-        // }
-     
         if (this.coorXF == 25 && this.coorYF == 11){
             this.volverALaCasa = true;
             return true;
@@ -393,8 +447,6 @@ public class Fantasma implements ImageObserver {
         else {
             this.agregarACaminoX = 0;
             this.agregarACaminoY = 0;
-            generarRuta(25, 13, "arr");
-            movimientoXY();
             generarRuta(25, 13, "arr");
             movimientoXY();
             generarRuta(25, 13, "arr");
@@ -442,12 +494,15 @@ public class Fantasma implements ImageObserver {
         return this.volverALaCasa;
     }
 
-
-    public boolean comportamientoFantasma(long cronometro, int PacManXCoor, int PacManYCoor, String direccionPacMan, boolean pellet, double PacManXCoorTemp, double PacManYCoorTemp) {
+    public String comportamientoFantasma(long cronometro, int PacManXCoor, int PacManYCoor, String direccionPacMan, boolean pellet, double PacManXCoorTemp, double PacManYCoorTemp) {
         this.PacManXCoor = PacManXCoor;
         this.PacManYCoor = PacManYCoor;
         this.direccionPacMan = direccionPacMan;
         this.tiempoFantasma = cronometro - this.tiempoInicialFantasma;
+
+        if (cronometro - this.tiempoComidoInicial == 2){
+            this.mostrarPuntaje = false;
+        }
 
         if (pellet){
             this.tiempoInicialHuida = cronometro;	
@@ -485,7 +540,7 @@ public class Fantasma implements ImageObserver {
 				if (this.salioFantasma && this.volverALaCasa) this.modoPersecusion(this.PacManXCoor, this.PacManYCoor, this.direccionPacMan);
             }
             if (Math.abs(this.coorXFTemp - PacManXCoorTemp) < 1 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < 1 ) fantasma = true;
-            if(fantasma) return true;
+            if(fantasma) return "tocado";
 
 		} else {
             
@@ -493,7 +548,10 @@ public class Fantasma implements ImageObserver {
 
 			if (this.salioFantasma && this.volverALaCasa) this.modoHuida(this.PacManXCoor, this.PacManXCoor, this.direccionPacMan, this.contador);
 
-            if (Math.abs(this.coorXFTemp - PacManXCoorTemp) < 1 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < 1 ) fantasma = true;
+            if (!this.fantasmaComido && Math.abs(this.coorXFTemp - PacManXCoorTemp) < 1 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < 1 ){
+                fantasma = true;
+                this.fantasmaComido = true;
+            } 
 
 			if (fantasma || !this.volverALaCasa) {
                 boolean volvioACasa = this.volverALaCasa();
@@ -505,13 +563,17 @@ public class Fantasma implements ImageObserver {
 					this.tiempoFantasma = 0;
                     this.salioFantasma = false;
                     this.tiempoHuida = 0;
+                    this.fantasmaComido = false;
 				}	
             }
+
+            if (fantasma) return "comido";
+
             if (this.tiempoHuida == 15 && this.volverALaCasa){
                 this.modoHuidaActivado = false;
             }
         }
-        return false;
+        return "";
     }
 
 
