@@ -25,7 +25,7 @@ public class TableroPacMan extends JPanel {
         this.setBackground(Color.BLACK);
         this.puntaje = 0;
         this.vidasRestantes = 3;
-        this.iconoPacMan = new ImageIcon("pac-man-3d-der.png").getImage();
+        this.iconoPacMan = new ImageIcon("PacMan2-izq.png").getImage();
         try {
             this.fuenteTablero = Font.createFont(Font.TRUETYPE_FONT, new File("LuckiestGuy-Regular.ttf")).deriveFont((float)alto*1f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -60,8 +60,8 @@ public class TableroPacMan extends JPanel {
     }
 
     public void pintarVidasRestantes(Graphics g) {
-        for (int i=0; i<this.vidasRestantes; i++){
-            g.drawImage(this.iconoPacMan, (int)(this.getWidth()/1.33) + (int)(1.1*i*this.getHeight()) , (int)(.065*this.getHeight()) , (int)(.85*this.getHeight()), (int)(.85*this.getHeight()), this);
+        for (int i=0; i<this.vidasRestantes-1; i++){
+            g.drawImage(this.iconoPacMan, (int)(this.getWidth()/1.33) + (int)(1.1*i*this.getHeight()) , (int)(.06*this.getHeight()) , (int)(.8*this.getHeight()), (int)(.9*this.getHeight()), this);
 
         }
     }

@@ -31,10 +31,20 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 
 	private double ancho, alto;
 
-	private int contador, vidas, coorXPacMan, coorYPacMan, puntaje, puntosRestantes, fantasmasComidos;
-	private long tiempoDeInicio, cronometro;
+	private int contador, 
+				vidas, 
+				coorXPacMan, 
+				coorYPacMan, 
+				puntaje, 
+				puntosRestantes, 
+				fantasmasComidos,
+				nivel;
 
-	private String direccionPresionada, direccionPacMan;
+	private long tiempoDeInicio, 
+				 cronometro;
+
+	private String direccionPresionada, 
+				   direccionPacMan;
 	private int[][] matrizPista;
 
 	public JuegoPacMan(double ancho, TableroPacMan tableroPacMan) {
@@ -92,6 +102,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.fantasmasComidos = 0;
 
 		this.vidas = 3;
+		this.nivel = 1;
 		this.jugar = false;
 		this.pausa = false;
 
@@ -104,7 +115,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 				int fps = 0;
 				long timer = System.currentTimeMillis();
 
-				while (vidas >= 0 && puntosRestantes > 0) {
+				while (vidas > 0) {
 					cronometro = (timer - tiempoDeInicio) / 1000;
 					long now = System.nanoTime();
 					delta += (now - lastTime) / ns;
@@ -119,7 +130,18 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 						timer += 1000;
 						fps = 0;
 					}
+
+					if (puntosRestantes == 0){
+						nivel += 1;
+						System.out.println("Haz pasado al nivel: " + nivel);
+						pista = new Pista(ancho, alto);
+						matrizPista = pista.getPista();
+						contarPuntosRestantes();
+						reinicioDePosiciones(false);
+					}
 				}
+				System.out.println("Game Over");
+				
 			}
 		});
 
@@ -132,7 +154,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 				int fps = 0;
 				long timer = System.currentTimeMillis();
 
-				while (vidas >= 0 && puntosRestantes > 0) {
+				while (vidas >= 0) {
 					synchronized (hiloTick) {
 						cronometro = (timer - tiempoDeInicio) / 1000;
 
@@ -151,12 +173,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 						}
 					}
 				}
-				if (puntosRestantes <= 0) {
-					System.out.println("Haz ganado");
-				}
-				if (vidas == 0) {
-					System.out.println("Haz perdido");
-				}
+				
 
 			}
 		});
@@ -189,7 +206,6 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	public void reinicioDePosiciones(boolean muerte) {
 		if (muerte)
 			this.vidas -= 1;
-		System.out.println("Alcanzado por fantasma");
 		this.fantasmaBlinky = new FantasmaBlinky((int) (this.ancho / 2 - this.ancho / 104),
 				(int) ((11) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
 				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
