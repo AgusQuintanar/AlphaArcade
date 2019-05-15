@@ -40,16 +40,16 @@ public class PacMan implements ImageObserver {
 		this.pacManAbierto1 = new ImageIcon("PacMan2-izq.png").getImage();
 		this.pacManAbierto2 = new ImageIcon("PacMan3-izq.png").getImage();
 		this.pacManCerrado = new ImageIcon("PacMan1.png").getImage();
-		this.direccionPacman = "";
+		this.direccionPacman = "izq";
 		this.direccionTmp = "izq";
-		this.coorX = 14;
+		this.coorX = 26;
 		this.peticionIzqDer = false;
 		this.peticionIzqDerDir = false;
 		this.peticionSubirBajar = false;
 		this.peticionSubirBajarDir = false;
-		this.coorXTemp = 14.0;
-		this.coorYTemp = 14.0;
-		this.coorY = 14;
+		this.coorXTemp = 26;
+		this.coorYTemp = 23;
+		this.coorY = 23;
 		this.velocidad = 3;
 		this.pacManTemp = this.pacManAbierto1;
 	}

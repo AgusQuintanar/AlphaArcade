@@ -63,7 +63,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.matrizPista = pista.getPista();
 
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
-				(int) ((17) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
+				(int) ((23) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
 				this.ancho, this.alto, this.matrizPista);
 
 		this.coorXPacMan = this.pacman.getCoorX();
@@ -81,7 +81,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.puntaje = 0;
 		this.puntosRestantes = 1;
 
-		this.direccionPresionada = "";
+		this.direccionPresionada = "izq";
 
 		this.fantasmaBlinky = new FantasmaBlinky((int) (this.ancho / 2 - this.ancho / 104),
 				(int) ((11) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
@@ -204,8 +204,8 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	}
 
 	public void reinicioDePosiciones(boolean muerte) {
-		if (muerte)
-			this.vidas -= 1;
+		if (muerte) this.vidas -= 1;
+
 		this.fantasmaBlinky = new FantasmaBlinky((int) (this.ancho / 2 - this.ancho / 104),
 				(int) ((11) * .9928 * (this.alto / 31) - .3 * .985 * (this.alto / 31) + .985 * this.alto / 62),
 				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 3);
@@ -220,11 +220,10 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
 		this.tiempoDeInicio = System.currentTimeMillis();
 
-		this.jugar = false;
+		this.direccionPresionada = "izq";
 
-		this.direccionPacMan = "der"; // ver si poner un setter mejor
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
-				(int) ((17) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
+				(int) ((23) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
 				this.ancho, this.alto, this.matrizPista);
 	}
 
@@ -261,8 +260,9 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
 		this.pellet = false;
 
-		if (blinky == "tocado" || pinky == "tocado" || inky == "tocado" || clyde == "tocado")
+		if (blinky == "tocado" || pinky == "tocado" || inky == "tocado" || clyde == "tocado"){
 			reinicioDePosiciones(true);
+		}
 
 		if (blinky == "comido") {
 			generarPuntajePorFantasmaComido(this.fantasmaBlinky);
