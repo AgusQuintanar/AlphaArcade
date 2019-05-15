@@ -132,23 +132,20 @@ public class Fantasma implements ImageObserver {
     public void pintaFantasma(Graphics g, int contador){
         //g.fillOval((int)(this.PacManXCoor*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104), (int)((this.PacManYCoor*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62)), 25, 25);
         g.setColor(Color.BLUE);
-        Image fantasmaImgTemp;
+        Image fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();;
 
         if (!this.volverALaCasa){
             fantasmaImgTemp = new ImageIcon("ojosFantasma.png").getImage();
-            g.drawImage(fantasmaImgTemp, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
         }
 
         else if (!this.modoHuidaActivado){
             if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"1.png").getImage();
 		    else fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();
-            g.drawImage(fantasmaImgTemp, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
         } 
         else if (this.modoHuidaActivado){
             if (tiempoHuida < 10){
                 if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado1.png").getImage();
 		        else fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado2.png").getImage();
-                g.drawImage(fantasmaImgTemp, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
             }
             else {
                 if(contador/60.0%.6 < .3) {
@@ -159,9 +156,12 @@ public class Fantasma implements ImageObserver {
                     if(contador/60.0%.3 < .45) fantasmaImgTemp = new ImageIcon("fantasmaBlanco1.png").getImage();
                     else fantasmaImgTemp = new ImageIcon("fantasmaBlanco2.png").getImage();
                 }
-                g.drawImage(fantasmaImgTemp, this.xF - (int)(.375*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
             }
         }
+
+        g.drawImage(fantasmaImgTemp, this.xF - (int)(.485*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.95*this.anchoPista/52), (int)(1.9*this.anchoPista/52), this);
+
+
         if (!modoHuidaActivado || !this.volverALaCasa) pintarOjos(g);
         //g.fillRect(this.xF, this.yF, (int)(this.anchoPista/52), (int)(this.anchoPista/52));
 
@@ -175,30 +175,30 @@ public class Fantasma implements ImageObserver {
             y2 = 0;
 
         if (this.direccionFantasma == "izq"){
-            x1 = this.xF + (int)(.185*this.anchoPista/52) - (int)(.235*this.anchoPista/52);
+            x1 = this.xF + (int)(.185*1.15*this.anchoPista/52) - (int)(.235*1.15*this.anchoPista/52);
             x2 = x1 + (int)(this.anchoPista/75);
-            y1 = y2 = this.yF + (int)(this.anchoPista/155);
+            y1 = y2 = this.yF + (int)(1.15*this.anchoPista/155);
         }
         else if (this.direccionFantasma == "der"){
-            x1 = this.xF + (int)(.185*this.anchoPista/52);
+            x1 = this.xF + (int)(.185*1.15*this.anchoPista/52);
             x2 = x1 + (int)(this.anchoPista/75);
-            y1 = y2 = this.yF + (int)(this.anchoPista/165);
+            y1 = y2 = this.yF + (int)(1.15*this.anchoPista/165);
         }
         else if (this.direccionFantasma == "arr"){
-            x1 = this.xF + (int)(.07*this.anchoPista/52);
-            x2 = x1 + (int)(this.anchoPista/75);
-            y1 = y2 = this.yF + (int)(this.anchoPista/240);
+            x1 = this.xF + (int)(.07*1.15*this.anchoPista/52);
+            x2 = x1 + (int)(1.15*this.anchoPista/75);
+            y1 = y2 = this.yF + (int)(1.15*this.anchoPista/240);
     
         }
         else if (this.direccionFantasma == "aba"){
-            x1 = this.xF + (int)(.07*this.anchoPista/52);
-            x2 = x1 + (int)(this.anchoPista/75);
-            y1 = y2 = this.yF + (int)(this.anchoPista/125);
+            x1 = this.xF + (int)(.07*1.15*this.anchoPista/52);
+            x2 = x1 + (int)(1.15*this.anchoPista/75);
+            y1 = y2 = this.yF + (int)(1.15*this.anchoPista/125);
         }
 
 
-        g.drawImage(this.ojo, x1, y1, (int)(.275*this.anchoPista/52), (int)(.32*this.anchoPista/52), this);
-        g.drawImage(this.ojo, x2, y2, (int)(.275*this.anchoPista/52), (int)(.32*this.anchoPista/52), this);
+        g.drawImage(this.ojo, x1, y1, (int)(.275*1.25*this.anchoPista/52), (int)(.32*1.25*this.anchoPista/52), this);
+        g.drawImage(this.ojo, x2, y2, (int)(.275*1.25*this.anchoPista/52), (int)(.32*1.25*this.anchoPista/52), this);
 
 }
 
@@ -320,7 +320,7 @@ public class Fantasma implements ImageObserver {
      }
      
      public void modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, int contador) {
-        this.velocidad = 3/2;
+        this.velocidad = 2;
         this.modoHuidaActivado = true;
         this.contador = contador; 
         if (this.coorXF <= PacManXCoor) this.puntoXHuida = this.coorXF - this.caminoX;
@@ -349,7 +349,7 @@ public class Fantasma implements ImageObserver {
 
         if (!salir){
             if (this.matrizPista[this.coorYF - 1][this.coorXF] == 1) this.paredArribaAbajo = true;
-            else if (this.matrizPista[this.coorYF + 1][this.coorXF] == 1) this.paredArribaAbajo = false;
+            else if (this.matrizPista[this.coorYF+2][this.coorXF] == 1 && this.coorYFTemp%1  > .75) this.paredArribaAbajo = false;
 
             if (this.paredArribaAbajo) this.direccionFantasma = "aba";
             else this.direccionFantasma = "arr";
@@ -484,7 +484,7 @@ public class Fantasma implements ImageObserver {
 			else {
 				if (this.salioFantasma && this.volverALaCasa) this.modoPersecusion(this.PacManXCoor, this.PacManYCoor, this.direccionPacMan);
             }
-            if (Math.abs(this.coorXFTemp - PacManXCoorTemp) < .3 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < .3 ) fantasma = true;
+            if (Math.abs(this.coorXFTemp - PacManXCoorTemp) < 1 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < 1 ) fantasma = true;
             if(fantasma) return true;
 
 		} else {
@@ -493,7 +493,7 @@ public class Fantasma implements ImageObserver {
 
 			if (this.salioFantasma && this.volverALaCasa) this.modoHuida(this.PacManXCoor, this.PacManXCoor, this.direccionPacMan, this.contador);
 
-            if (Math.abs(this.coorXFTemp - PacManXCoorTemp) < .3 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < .3 ) fantasma = true;
+            if (Math.abs(this.coorXFTemp - PacManXCoorTemp) < 1 && Math.abs(this.coorYFTemp - PacManYCoorTemp) < 1 ) fantasma = true;
 
 			if (fantasma || !this.volverALaCasa) {
                 boolean volvioACasa = this.volverALaCasa();

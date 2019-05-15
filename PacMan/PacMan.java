@@ -1,6 +1,8 @@
+
 // Agustin Quintanar y Julio Arath Rosales
 // A01636142 y A01630738
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
@@ -84,13 +86,29 @@ public class PacMan implements ImageObserver {
 		this.pacManAbierto1 = new ImageIcon("PacMan2-"+direccionTmp+".png").getImage();
 		this.pacManAbierto2 = new ImageIcon("PacMan3-"+direccionTmp+".png").getImage();
 		this.pacManCerrado = new ImageIcon("PacMan1.png").getImage();
+		//System.out.println("contador: " + contador);
 
-		if(contador/60.0%.6 < .15) this.pacManTemp = this.pacManAbierto1;
-		if(contador/60.0%.6 < .3) this.pacManTemp = this.pacManAbierto2;
-		if(contador/60.0%.6 < .45) this.pacManTemp = this.pacManAbierto2;
+		//System.out.println("CoorTemp: x " + this.coorXTemp + ", " + this.coorYTemp);
+		if (this.coorX > 0 && this.coorX < 51){
+			if (this.matrizPista[this.coorY][this.coorX+1] == 1 && this.direccionPacman == "der") this.pacManTemp = this.pacManAbierto1;
+			else if (this.matrizPista[this.coorY][this.coorX-1] == 1 && this.direccionPacman == "izq") this.pacManTemp = this.pacManAbierto1;
+			else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionPacman == "arr") this.pacManTemp = this.pacManAbierto1;
+			else if (this.matrizPista[this.coorY+1][this.coorX] == 1 && this.direccionPacman == "aba") this.pacManTemp = this.pacManAbierto1;
+			else if(contador%24 < 6) this.pacManTemp = this.pacManAbierto1;
+			else if(contador%24 < 12) this.pacManTemp = this.pacManAbierto2;
+			else if(contador%24 < 18) this.pacManTemp = this.pacManAbierto1;
+			else this.pacManTemp = this.pacManCerrado;
+		}
+		else if(contador%24 < 6) this.pacManTemp = this.pacManAbierto1;
+		else if(contador%24 < 12) this.pacManTemp = this.pacManAbierto2;
+		else if(contador%24 < 18) this.pacManTemp = this.pacManAbierto1;
 		else this.pacManTemp = this.pacManCerrado;
-		g.drawImage(this.pacManTemp, xPac - (int)(.25*this.anchoPista/52), yPac - (int)(.3*this.anchoPista/52), (int)(1.5*this.anchoPista/52), (int)(1.5*this.anchoPista/52), this);
-	
+		//else this.pacManTemp = this.pacManAbierto2;
+		double ajusteY = 0.0;
+		if (this.coorYTemp < 14) ajusteY = (this.anchoPista/52)/(20-(this.coorYTemp/3));
+		g.drawImage(this.pacManTemp, xPac - (int)(.375*this.anchoPista/52), yPac - (int)(-ajusteY + .65*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
+		g.setColor(Color.RED);
+		//g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
 	}
 
 	public void moverPacMan(String direccionPresionada) {
@@ -118,7 +136,7 @@ public class PacMan implements ImageObserver {
 	}
 
 	public void movimientoX(int coorX, int coorY){
-		this.coorXTemp = (this.xPac + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
+		this.coorXTemp = (this.xPac + .33*.99*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
 		coorX = (int) coorXTemp;
 		if(this.direccionTmp == "izq" && this.coorXTemp%1 > .15) coorX += 1;
 		
@@ -165,7 +183,7 @@ public class PacMan implements ImageObserver {
 	
 
 	public void movimientoY (int coorX, int coorY){
-		this.coorYTemp = (this.yPac + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31));
+		this.coorYTemp = (this.yPac + .39*.9928*(this.altoPista/31) -.99*this.altoPista/62) / (.99*(this.altoPista/31));
 		coorY = (int) coorYTemp;
 		if(this.direccionTmp == "arr"  && this.coorYTemp%1 > .15) coorY += 1;
 		

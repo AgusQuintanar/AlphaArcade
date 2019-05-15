@@ -1,3 +1,4 @@
+
 // Agustin Quintanar y Julio Arath Rosales
 // A01636142 y A01630738
 
@@ -5,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -60,7 +62,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 		this.pista = new Pista(this.ancho, this.alto);
 		this.matrizPista = pista.getPista();
 
-		this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.985*(this.alto/31)-.3*.985*(this.alto/31)+.985*this.alto/62), this.ancho, this.alto, this.matrizPista);
+		this.pacman = new PacMan((int) (this.ancho/2-this.ancho/104), (int)((17)*.993*(this.alto/31)-.3*.993*(this.alto/31)+.993*this.alto/62), this.ancho, this.alto, this.matrizPista);
 
 		this.coorXPacMan = this.pacman.getCoorX();
 		this.coorYPacMan = this.pacman.getCoorY();
@@ -236,6 +238,7 @@ public class JuegoPacMan extends JPanel implements KeyListener{
 	}
 
 	private void render() {
+		Toolkit.getDefaultToolkit().sync();
 		this.repaint();
 		this.tableroPacMan.repaint();
 	}
