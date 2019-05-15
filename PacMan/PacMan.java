@@ -89,19 +89,24 @@ public class PacMan implements ImageObserver {
 		//System.out.println("contador: " + contador);
 
 		//System.out.println("CoorTemp: x " + this.coorXTemp + ", " + this.coorYTemp);
-
-		if (this.matrizPista[this.coorY][this.coorX+1] == 1 && this.direccionPacman == "der") this.pacManTemp = this.pacManAbierto1;
-		else if (this.matrizPista[this.coorY][this.coorX-1] == 1 && this.direccionPacman == "izq") this.pacManTemp = this.pacManAbierto1;
-		else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionPacman == "arr") this.pacManTemp = this.pacManAbierto1;
-		else if (this.matrizPista[this.coorY+1][this.coorX] == 1 && this.direccionPacman == "aba") this.pacManTemp = this.pacManAbierto1;
-		else if(contador%16 < 4) this.pacManTemp = this.pacManAbierto1;
-		else if(contador%16 < 8) this.pacManTemp = this.pacManAbierto2;
-		else if(contador%16 < 12) this.pacManTemp = this.pacManAbierto1;
+		if (this.coorX > 0 && this.coorX < 51){
+			if (this.matrizPista[this.coorY][this.coorX+1] == 1 && this.direccionPacman == "der") this.pacManTemp = this.pacManAbierto1;
+			else if (this.matrizPista[this.coorY][this.coorX-1] == 1 && this.direccionPacman == "izq") this.pacManTemp = this.pacManAbierto1;
+			else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionPacman == "arr") this.pacManTemp = this.pacManAbierto1;
+			else if (this.matrizPista[this.coorY+1][this.coorX] == 1 && this.direccionPacman == "aba") this.pacManTemp = this.pacManAbierto1;
+			else if(contador%20 < 5) this.pacManTemp = this.pacManAbierto1;
+			else if(contador%20 < 10) this.pacManTemp = this.pacManAbierto2;
+			else if(contador%20 < 15) this.pacManTemp = this.pacManAbierto1;
+			else this.pacManTemp = this.pacManCerrado;
+		}
+		else if(contador%20 < 5) this.pacManTemp = this.pacManAbierto1;
+		else if(contador%20 < 10) this.pacManTemp = this.pacManAbierto2;
+		else if(contador%20 < 15) this.pacManTemp = this.pacManAbierto1;
 		else this.pacManTemp = this.pacManCerrado;
 		//else this.pacManTemp = this.pacManAbierto2;
 		double ajusteY = 0.0;
-		//if (this.coorYTemp > 14) ajusteY = (this.anchoPista/52)/(20-(this.coorYTemp/3));
-		g.drawImage(this.pacManTemp, xPac - (int)(.375*this.anchoPista/52), yPac - (int)(ajusteY + .475*this.anchoPista/52), (int)(1.75*this.anchoPista/52), (int)(1.75*this.anchoPista/52), this);
+		if (this.coorYTemp < 14) ajusteY = (this.anchoPista/52)/(20-(this.coorYTemp/3));
+		g.drawImage(this.pacManTemp, xPac - (int)(.375*this.anchoPista/52), yPac - (int)(-ajusteY + .65*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
 		g.setColor(Color.RED);
 		//g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
 	}
