@@ -82,6 +82,10 @@ public class PacMan implements ImageObserver {
 		return this.direccionPacman;
 	}
 
+	public void setVelocidad(double velocidad) {
+		this.velocidad = velocidad;
+	}
+
 	public void pintaPacman(Graphics g, int contador) {
 		this.pacManAbierto1 = new ImageIcon("PacMan2-"+direccionTmp+".png").getImage();
 		this.pacManAbierto2 = new ImageIcon("PacMan3-"+direccionTmp+".png").getImage();
@@ -113,7 +117,25 @@ public class PacMan implements ImageObserver {
 		//g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
 	}
 
-	public void moverPacMan(String direccionPresionada) {
+	public void manejoVelocidades(double velocidadGlobal, boolean modoHuidaFantasmas) {
+		if (coorX > 0 && coorY > 0 && coorX < 51 && coorYTemp < 30){
+			if (this.matrizPista[this.coorY][this.coorX] == 0 && modoHuidaFantasmas) {
+				this.velocidad = velocidadGlobal*.79;
+			}
+			else if (this.matrizPista[this.coorY][this.coorX] != 0 && modoHuidaFantasmas) {
+				this.velocidad = velocidadGlobal*.9;
+			}
+			else if (this.matrizPista[this.coorY][this.coorX] == 0) {
+				this.velocidad = velocidadGlobal*.71;
+			}
+			else{
+				this.velocidad = velocidadGlobal*.8;
+			}
+		}
+	}
+
+	public void moverPacMan(String direccionPresionada, double velocidadGlobal, boolean modoHuidaFantasmas) {
+		manejoVelocidades(velocidadGlobal, modoHuidaFantasmas);
 		this.direccionPacman = direccionPresionada;
 		movimientoY(this.coorX, this.coorY);
 		movimientoX(this.coorX, this.coorY);
@@ -138,9 +160,9 @@ public class PacMan implements ImageObserver {
 	}
 
 	public void movimientoX(int coorX, int coorY){
-		this.coorXTemp = (this.xPac + .33*.99*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
+		this.coorXTemp = (this.xPac + .33*.99*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + (.02*this.velocidad/3);
 		coorX = (int) coorXTemp;
-		if(this.direccionTmp == "izq" && this.coorXTemp%1 > .15) coorX += 1;
+		if(this.direccionTmp == "izq" && this.coorXTemp%1 > .25) coorX += 1;
 		
 		if ((this.direccionPacman == "arr" || this.direccionPacman == "aba") && (this.direccionTmp == "der" || this.direccionTmp == "izq")){
 			this.peticionSubirBajar = true;
@@ -150,27 +172,27 @@ public class PacMan implements ImageObserver {
 		}
 		
 		if (this.peticionSubirBajar && coorX< 51 && coorX > 0 && coorY > 0){
-			if (this.peticionSubirBajarDir && this.matrizPista[coorY - 1][coorX] != 1 && coorXTemp%1 < .2){
-                if (Math.abs((int)coorXTemp - coorXTemp) < 0.15){
+			if (this.peticionSubirBajarDir && this.matrizPista[coorY - 1][coorX] != 1 && coorXTemp%1 < 0.25){
+                if (Math.abs((int)coorXTemp - coorXTemp) < 0.25){
 					this.setXPac((int)(((int)coorXTemp)*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104));
 					this.direccionPacman = "arr";
 					this.peticionSubirBajar = false;
                 }
-                else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.15){
+                else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.25){
 					this.setXPac((int)(((int)coorXTemp+1)*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104));
 					this.direccionPacman = "arr";
 					this.peticionSubirBajar = false;
                 }
               
 			 }
-			 else if (!this.peticionSubirBajarDir && this.matrizPista[coorY + 1][coorX] != 1 && coorXTemp%1 < .2){
+			 else if (!this.peticionSubirBajarDir && this.matrizPista[coorY + 1][coorX] != 1 && coorXTemp%1 < 0.25){
 
-                if (Math.abs((int)coorXTemp - coorXTemp) < 0.15){
+                if (Math.abs((int)coorXTemp - coorXTemp) < 0.25){
 					this.setXPac((int)(((int)coorXTemp)*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104));
 					this.direccionPacman = "aba";
 					this.peticionSubirBajar = false;
                 }
-                else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.15){
+                else if (Math.abs((int)coorXTemp+1 - coorXTemp) < 0.25){
 					this.setXPac((int)(((int)coorXTemp+1)*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104));
 					this.direccionPacman = "aba";
 					this.peticionSubirBajar = false;
@@ -185,9 +207,9 @@ public class PacMan implements ImageObserver {
 	
 
 	public void movimientoY (int coorX, int coorY){
-		this.coorYTemp = (this.yPac + .39*.9928*(this.altoPista/31) -.99*this.altoPista/62) / (.99*(this.altoPista/31));
+		this.coorYTemp = (this.yPac + .39*.9928*(this.altoPista/31) -.99*this.altoPista/62) / (.99*(this.altoPista/31)) + (.02*this.velocidad/3);
 		coorY = (int) coorYTemp;
-		if(this.direccionTmp == "arr"  && this.coorYTemp%1 > .15) coorY += 1;
+		if(this.direccionTmp == "arr"  && this.coorYTemp%1 > .25) coorY += 1;
 		
 		if ((this.direccionPacman == "izq" || this.direccionPacman == "der") && (this.direccionTmp == "arr" || this.direccionTmp == "aba")){
 			this.peticionIzqDer = true; 
@@ -196,27 +218,27 @@ public class PacMan implements ImageObserver {
 			this.direccionPacman = this.direccionTmp;
 		}
 
-		if (this.peticionIzqDer && coorY > 0  && coorY < 30 && coorYTemp%1 < .2){
+		if (this.peticionIzqDer && coorY > 0  && coorY < 30 && coorYTemp%1 < 0.25){
 			if (this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX +1] != 1 && coorX < 50){
-				if (Math.abs((int)coorYTemp - coorYTemp) < .15){
+				if (Math.abs((int)coorYTemp - coorYTemp) < .25){
 					this.setYPac((int)(((int)coorYTemp)*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62));
 					this.direccionPacman = "der";
 					this.peticionIzqDer = false;
 				}
-				else if (Math.abs((int)coorYTemp+1 - coorYTemp) < .15){
+				else if (Math.abs((int)coorYTemp+1 - coorYTemp) < .25){
 					this.setYPac((int)(((int)coorYTemp+1)*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62));
 					this.direccionPacman = "der";
 					this.peticionIzqDer = false;
 				}
 			
 			 }
-			 else if (!this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX-1] != 1 && coorX > 1 && coorYTemp%1 < .2){
-				if (Math.abs((int)coorYTemp - coorYTemp) < .15){
+			 else if (!this.peticionIzqDerDir && this.matrizPista[coorY][this.coorX-1] != 1 && coorX > 1 && coorYTemp%1 < 0.25){
+				if (Math.abs((int)coorYTemp - coorYTemp) < .25){
 					this.setYPac((int)(((int)coorYTemp)*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62));
 					this.direccionPacman = "izq";
 					this.peticionIzqDer = false;
 				}
-				else if (Math.abs((int)coorYTemp+1 - coorYTemp) < .15){
+				else if (Math.abs((int)coorYTemp+1 - coorYTemp) < .25){
 					this.setYPac((int)(((int)coorYTemp+1)*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62));
 					this.direccionPacman = "izq";
 					this.peticionIzqDer = false;
@@ -257,10 +279,10 @@ public class PacMan implements ImageObserver {
 				this.xPac += this.velocidad;
 			}	
 			else if (this.direccionPacman == "izq" && this.matrizPista[this.coorY][this.coorX - 1] != 1 ){
-				this.xPac -= this.velocidad;
+				this.xPac -= this.velocidad*.9;
 			}
 			else if (this.direccionPacman == "arr" && this.matrizPista[this.coorY - 1][this.coorX] != 1 ){
-				this.yPac -= this.velocidad;
+				this.yPac -= this.velocidad*.9;
 			}
 				
 			else if (this.direccionPacman == "aba" && this.matrizPista[this.coorY + 1][this.coorX] != 1 ){

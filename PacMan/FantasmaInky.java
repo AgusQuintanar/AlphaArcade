@@ -40,9 +40,9 @@ public class FantasmaInky extends Fantasma {
        
     }
 
-    public String comportamientoFantasma(long cronometro, int PacManXCoor, int PacManYCoor, String direccionPacMan, boolean pellet,double PacManXCoorTemp, double PacManYCoorTemp, int coorXFBlinky, int coorYFBlinky) {
+    public String comportamientoFantasma(long cronometro, int PacManXCoor, int PacManYCoor, String direccionPacMan, boolean pellet,double PacManXCoorTemp, double PacManYCoorTemp, double velocidadGlobal, int coorXFBlinky, int coorYFBlinky) {
         this.coorXFBlinky = coorXFBlinky;
         this.coorYFBlinky = coorYFBlinky;
-        return super.comportamientoFantasma(cronometro, PacManXCoor, PacManYCoor, direccionPacMan, pellet, PacManXCoorTemp, PacManYCoorTemp);
+        return super.comportamientoFantasma(cronometro, PacManXCoor, PacManYCoor, direccionPacMan, pellet, PacManXCoorTemp, PacManYCoorTemp, velocidadGlobal);
     }
 }

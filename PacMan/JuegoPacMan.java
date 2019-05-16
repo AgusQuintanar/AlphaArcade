@@ -29,7 +29,9 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 					pausa,
 					miniInterrupcion;
 
-	private double ancho, alto;
+	private double ancho,
+				   alto,
+				   velocidadGlobal;
 
 	private int contador, 
 				vidas, 
@@ -39,6 +41,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 				puntosRestantes, 
 				fantasmasComidos,
 				nivel;
+				
 
 	private long tiempoDeInicio, 
 				 cronometro;
@@ -72,6 +75,8 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 
 		this.tableroPacMan = tableroPacMan;
 		this.tableroPacMan.setBackground(Color.BLACK);
+
+		this.velocidadGlobal = 4;
 
 		// System.out.println(this.ancho + ", " + this.alto);
 
@@ -229,7 +234,8 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 
 	private void tick() {
 		this.contador++;
-		this.pacman.moverPacMan(this.direccionPresionada);
+
+		this.pacman.moverPacMan(this.direccionPresionada, this.velocidadGlobal, (this.fantasmaBlinky.getModoHuidaActivado() || this.fantasmaPinky.getModoHuidaActivado() || this.fantasmaClyde.getModoHuidaActivado() || this.fantasmaInky.getModoHuidaActivado()));
 		this.coorXPacMan = this.pacman.getCoorX();
 		this.coorYPacMan = this.pacman.getCoorY();
 		this.direccionPacMan = this.pacman.getDireccionPacMan();
@@ -250,14 +256,14 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		String blinky = "", pinky = "", inky = "", clyde = "";
 
 		blinky = this.fantasmaBlinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan,
-				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp(), this.velocidadGlobal);
 		pinky = this.fantasmaPinky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan,
-				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp(), this.velocidadGlobal);
 		inky = this.fantasmaInky.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan,
-				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp(),
+				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp(), this.velocidadGlobal,
 				this.fantasmaBlinky.getCoorXF(), this.fantasmaBlinky.getCoorYF());
 		clyde = this.fantasmaClyde.comportamientoFantasma(this.cronometro, this.coorXPacMan, this.coorYPacMan,
-				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp());
+				this.direccionPacMan, this.pellet, this.pacman.getCoorXTemp(), this.pacman.getCoorYTemp(), this.velocidadGlobal);
 		this.pellet = false;
 
 		if (blinky == "tocado" || pinky == "tocado" || inky == "tocado" || clyde == "tocado"){
