@@ -126,7 +126,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 					delta += (now - lastTime) / ns;
 					lastTime = now;
 					while (delta >= 1) {
-						if (!pausa && !miniInterrupcion)
+						if (!pausa && cronometro > 2)
 							tick();
 						fps++;
 						delta--;
@@ -167,7 +167,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 						delta += (now - lastTime) / ns;
 						lastTime = now;
 						while (delta >= 1) {
-							if (!pausa && !miniInterrupcion)
+							if (!pausa && cronometro > 2)
 								render();
 							fps++;
 							delta--;
@@ -230,6 +230,8 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
 				(int) ((23) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
 				this.ancho, this.alto, this.matrizPista);
+
+		render();
 	}
 
 	private void tick() {
@@ -329,14 +331,11 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 			this.hiloTick.start();
 			this.hiloRender.start();
 		}
-		else if (e.getKeyCode() == KeyEvent.VK_P && !this.pausa){
-			System.out.println("Pausa activada");
-			this.pausa = true;
+		else if (e.getKeyCode() == KeyEvent.VK_P){
+			
+			this.pausa = !this.pausa;
 		}
-		else if (e.getKeyCode() == KeyEvent.VK_P && this.pausa){
-			System.out.println("Pausa desactivada");
-			this.pausa = false;
-		}
+	
 	}
 
 	@Override
