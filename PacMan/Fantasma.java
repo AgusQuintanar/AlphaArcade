@@ -278,8 +278,8 @@ public class Fantasma implements ImageObserver {
         this.coorXPeticionPasada = this.coorXF;
         this.coorYPeticionPasada = this.coorYF;
 
-        this.coorXFTemp = (this.xF + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
-        this.coorYFTemp = (this.yF + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31)) + .02;
+        this.coorXFTemp = (this.xF + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) +  (.02*this.velocidad/3);
+        this.coorYFTemp = (this.yF + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31)) +  (.02*this.velocidad/3);
 
         this.coorXF = (int) this.coorXFTemp;
         this.coorYF = (int) this.coorYFTemp;
@@ -379,14 +379,13 @@ public class Fantasma implements ImageObserver {
 
      }
      public void modoPersecusion(int PacManXCoor, int PacManYCoor, String direccionPacMan) {
-        this.velocidad = 3;
         this.modoHuidaActivado = false;
         generarRuta(PacManXCoor, PacManYCoor, direccionPacMan);
         movimientoXY();
+        
      }
      
      public void modoHuida(int PacManXCoor, int PacManYCoor, String direccionPacMan, int contador) {
-        this.velocidad = 2;
         this.modoHuidaActivado = true;
         this.contador = contador; 
         if (this.coorXF <= PacManXCoor) this.puntoXHuida = this.coorXF - this.caminoX;
@@ -396,18 +395,15 @@ public class Fantasma implements ImageObserver {
         generarRuta(this.puntoXHuida, this.puntoYHuida, direccionPacMan);
         movimientoXY();
      }
-
      public void modoDispersion() {
-        this.velocidad = 3;
         this.modoHuidaActivado = false;
         generarRuta(this.esquinaXDispersion, this.esquinaYDispersion, this.direccionPacMan);
         movimientoXY();
     }
 
     public boolean salirDeLaCasa(boolean salir){
-        this.velocidad = 3;
-        this.coorXFTemp = (this.xF + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) + .02;
-        this.coorYFTemp = (this.yF + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31)) + .02;
+        this.coorXFTemp = (this.xF + .33*.9928*(this.anchoPista/52) -.9928*this.anchoPista/104) / (.9928*(this.anchoPista/52)) +  (.02*this.velocidad/3);
+        this.coorYFTemp = (this.yF + .39*.9928*(this.altoPista/31) -.985*this.altoPista/62) / (.985*(this.altoPista/31)) +  (.02*this.velocidad/3);
         this.coorXF = (int) this.coorXFTemp;
         this.coorYF = (int) this.coorYFTemp;
         if (this.direccionFantasma == "izq" && this.coorXFTemp%1 > .15) this.coorXF += 1;
@@ -442,7 +438,6 @@ public class Fantasma implements ImageObserver {
     }
 
     public boolean volverALaCasa() {
-        this.velocidad = 3;
         this.modoHuidaActivado = false;
         this.volverALaCasa = false;
 
@@ -487,9 +482,9 @@ public class Fantasma implements ImageObserver {
 		else {
 			if (this.direccionFantasma == "der" && this.matrizPista[this.coorYF][this.coorXF + 1] != 1) this.xF += this.velocidad;
 
-			else if ( this.direccionFantasma == "izq" && this.matrizPista[this.coorYF][this.coorXF - 1] != 1) this.xF -= this.velocidad;
+			else if ( this.direccionFantasma == "izq" && this.matrizPista[this.coorYF][this.coorXF - 1] != 1) this.xF -= this.velocidad*.9;
                
-			else if (this.direccionFantasma == "arr" && this.matrizPista[this.coorYF - 1][this.coorXF] != 1 ) this.yF -= this.velocidad;
+			else if (this.direccionFantasma == "arr" && this.matrizPista[this.coorYF - 1][this.coorXF] != 1 ) this.yF -= this.velocidad*.9;
                 
 			else if (this.direccionFantasma == "aba" && this.matrizPista[this.coorYF + 1][this.coorXF] != 1 ) this.yF += this.velocidad;
 		}
@@ -500,11 +495,24 @@ public class Fantasma implements ImageObserver {
         return this.volverALaCasa;
     }
 
-    public String comportamientoFantasma(long cronometro, int PacManXCoor, int PacManYCoor, String direccionPacMan, boolean pellet, double PacManXCoorTemp, double PacManYCoorTemp) {
+
+    public void manejoVelocidades(double velocidadGlobal) {
+        if (this.modoHuidaActivado){
+            this.velocidad = velocidadGlobal * .5;
+        }
+        else {
+            this.velocidad = velocidadGlobal * .75;
+        }
+    }
+
+
+    public String comportamientoFantasma(long cronometro, int PacManXCoor, int PacManYCoor, String direccionPacMan, boolean pellet, double PacManXCoorTemp, double PacManYCoorTemp, double velocidadGlobal) {
         this.PacManXCoor = PacManXCoor;
         this.PacManYCoor = PacManYCoor;
         this.direccionPacMan = direccionPacMan;
         this.tiempoFantasma = cronometro - this.tiempoInicialFantasma;
+
+        manejoVelocidades(velocidadGlobal);
 
         if (cronometro - this.tiempoComidoInicial == 2){
             this.mostrarPuntaje = false;
