@@ -261,7 +261,6 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	}
 
 	public void correrJuego() {
-		
 
 		this.pacman.moverPacMan(this.direccionPresionada, this.velocidadGlobal, (this.fantasmaBlinky.getModoHuidaActivado() || this.fantasmaPinky.getModoHuidaActivado() || this.fantasmaClyde.getModoHuidaActivado() || this.fantasmaInky.getModoHuidaActivado()));
 		this.coorXPacMan = this.pacman.getCoorX();
