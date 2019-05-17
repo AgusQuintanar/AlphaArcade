@@ -27,13 +27,14 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	private boolean pellet,
 					jugar, 
 					pausa,
-					miniInterrupcion;
+					pacManMuerto;
 
 	private double ancho,
 				   alto,
 				   velocidadGlobal;
 
-	private int contador, 
+	private int contador,
+				contadorMuertePacManInicial, 
 				vidas, 
 				coorXPacMan, 
 				coorYPacMan, 
@@ -77,6 +78,9 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.tableroPacMan.setBackground(Color.BLACK);
 
 		this.velocidadGlobal = 4;
+
+		this.contadorMuertePacManInicial = 0;
+		this.pacManMuerto = false;
 
 		// System.out.println(this.ancho + ", " + this.alto);
 
@@ -126,7 +130,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 					delta += (now - lastTime) / ns;
 					lastTime = now;
 					while (delta >= 1) {
-						if (!pausa && cronometro > 2)
+						if (!pausa && cronometro > 1)
 							tick();
 						fps++;
 						delta--;
@@ -167,7 +171,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 						delta += (now - lastTime) / ns;
 						lastTime = now;
 						while (delta >= 1) {
-							if (!pausa && cronometro > 2)
+							if (!pausa && cronometro > 1)
 								render();
 							fps++;
 							delta--;
@@ -207,6 +211,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		}
 		this.puntosRestantes -= 1;
 	}
+	
 
 	public void reinicioDePosiciones(boolean muerte) {
 		if (muerte) this.vidas -= 1;
@@ -236,6 +241,27 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 
 	private void tick() {
 		this.contador++;
+		if(this.pacManMuerto){
+			animarMuertePacMan();
+		}
+		else {
+			correrJuego();
+		}
+
+		
+
+	}
+
+	public void animarMuertePacMan() {
+		System.out.println(this.contador - this.contadorMuertePacManInicial);
+		if (this.contador - this.contadorMuertePacManInicial == 300){
+			this.pacManMuerto = false;
+			reinicioDePosiciones(true);
+		} 
+	}
+
+	public void correrJuego() {
+		
 
 		this.pacman.moverPacMan(this.direccionPresionada, this.velocidadGlobal, (this.fantasmaBlinky.getModoHuidaActivado() || this.fantasmaPinky.getModoHuidaActivado() || this.fantasmaClyde.getModoHuidaActivado() || this.fantasmaInky.getModoHuidaActivado()));
 		this.coorXPacMan = this.pacman.getCoorX();
@@ -269,7 +295,8 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.pellet = false;
 
 		if (blinky == "tocado" || pinky == "tocado" || inky == "tocado" || clyde == "tocado"){
-			reinicioDePosiciones(true);
+			this.pacManMuerto = true;
+			this.contadorMuertePacManInicial = this.contador;
 		}
 
 		if (blinky == "comido") {
@@ -287,15 +314,9 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	}
 
 	public void generarPuntajePorFantasmaComido(Fantasma fantasma) {
-		this.miniInterrupcion = true;
-		int cont = 0;
-		while (cont < 3500){
-			cont++;
-		}
-		this.miniInterrupcion = false; 
+
 		this.fantasmasComidos += 1;
 		this.puntaje += Math.pow(2, this.fantasmasComidos)*100;
-		System.out.println();
 		fantasma.setPuntajePorFantasmaComido((int) Math.pow(2, this.fantasmasComidos) * 100);
 		fantasma.setMostrarPuntaje(true);
 		fantasma.setTiempoComidoInicial(this.cronometro);
@@ -304,7 +325,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	}
 
 	private void render() {
-		Toolkit.getDefaultToolkit().sync();
+		Toolkit.getDefaultToolkit().sync(); //Para disminuir el lag
 		this.repaint();
 		this.tableroPacMan.repaint();
 	}

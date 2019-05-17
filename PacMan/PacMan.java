@@ -23,7 +23,8 @@ public class PacMan implements ImageObserver {
 	private boolean peticionSubirBajar,
 			peticionIzqDer,
 			peticionIzqDerDir,
-			peticionSubirBajarDir;
+			peticionSubirBajarDir,
+			muerto;
 	private double anchoPista, 
 					altoPista,
 					coorXTemp,
@@ -52,6 +53,7 @@ public class PacMan implements ImageObserver {
 		this.coorY = 23;
 		this.velocidad = 3;
 		this.pacManTemp = this.pacManAbierto1;
+		this.muerto = false;
 	}
 
 	public void setXPac(int xPac){
@@ -93,7 +95,8 @@ public class PacMan implements ImageObserver {
 		//System.out.println("contador: " + contador);
 
 		//System.out.println("CoorTemp: x " + this.coorXTemp + ", " + this.coorYTemp);
-		if (this.coorX > 0 && this.coorX < 51){
+		if (this.muerto) animacionMuerto(g, contador);
+		else if (this.coorX > 0 && this.coorX < 51){
 			if (this.matrizPista[this.coorY][this.coorX+1] == 1 && this.direccionPacman == "der") this.pacManTemp = this.pacManAbierto1;
 			else if (this.matrizPista[this.coorY][this.coorX-1] == 1 && this.direccionPacman == "izq") this.pacManTemp = this.pacManAbierto1;
 			else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionPacman == "arr") this.pacManTemp = this.pacManAbierto1;
@@ -115,6 +118,11 @@ public class PacMan implements ImageObserver {
 		g.drawImage(this.pacManTemp, xPac - (int)(.2*ajusteX*this.anchoPista/52), yPac - (int)(-ajusteY + .6*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
 		//g.setColor(Color.RED);
 		//g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
+	}
+
+	public void animarMuerte() {
+		this.muerto = true;
+		
 	}
 
 	public void manejoVelocidades(double velocidadGlobal, boolean modoHuidaFantasmas) {

@@ -395,7 +395,6 @@ public class Fantasma implements ImageObserver {
         generarRuta(this.puntoXHuida, this.puntoYHuida, direccionPacMan);
         movimientoXY();
      }
-
      public void modoDispersion() {
         this.modoHuidaActivado = false;
         generarRuta(this.esquinaXDispersion, this.esquinaYDispersion, this.direccionPacMan);
