@@ -33,8 +33,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 				   alto,
 				   velocidadGlobal;
 
-	private int contador,
-				contadorMuertePacManInicial, 
+	private int contador, 
 				vidas, 
 				coorXPacMan, 
 				coorYPacMan, 
@@ -79,7 +78,6 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 
 		this.velocidadGlobal = 4;
 
-		this.contadorMuertePacManInicial = 0;
 		this.pacManMuerto = false;
 
 		// System.out.println(this.ancho + ", " + this.alto);
@@ -182,8 +180,6 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 						}
 					}
 				}
-				
-
 			}
 		});
 
@@ -201,7 +197,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	}
 
 	public void contarPuntosRestantes() {
-		this.puntosRestantes = 1;
+		this.puntosRestantes = 1; //Inicia en 1 para que no se detenga el juego si es 0. Ver si poner mejor variable temporal
 		for (int i = 0; i < this.matrizPista.length - 1; i++) {
 			for (int j = 0; j < this.matrizPista[i].length - 1; j++) {
 				if (this.matrizPista[i][j] == 0) {
@@ -242,22 +238,12 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	private void tick() {
 		this.contador++;
 		if(this.pacManMuerto){
-			animarMuertePacMan();
+			this.pacManMuerto = this.pacman.getMuerte();
+			if (!this.pacManMuerto) reinicioDePosiciones(true);
 		}
 		else {
 			correrJuego();
 		}
-
-		
-
-	}
-
-	public void animarMuertePacMan() {
-		System.out.println(this.contador - this.contadorMuertePacManInicial);
-		if (this.contador - this.contadorMuertePacManInicial == 300){
-			this.pacManMuerto = false;
-			reinicioDePosiciones(true);
-		} 
 	}
 
 	public void correrJuego() {
@@ -295,7 +281,12 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 
 		if (blinky == "tocado" || pinky == "tocado" || inky == "tocado" || clyde == "tocado"){
 			this.pacManMuerto = true;
-			this.contadorMuertePacManInicial = this.contador;
+			this.pacman.setMuerto(true);
+			this.pacman.setContadorMuertePacManInicial(this.contador);
+			this.fantasmaBlinky.setFantasmaVisible(false);
+			this.fantasmaClyde.setFantasmaVisible(false);
+			this.fantasmaInky.setFantasmaVisible(false);
+			this.fantasmaPinky.setFantasmaVisible(false);
 		}
 
 		if (blinky == "comido") {
@@ -328,9 +319,6 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.repaint();
 		this.tableroPacMan.repaint();
 	}
-
-	
-
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -344,15 +332,14 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		else if (e.getKeyCode() == KeyEvent.VK_DOWN)
 			this.direccionPresionada = "aba";
 
-		else if (e.getKeyCode() == KeyEvent.VK_ENTER && !this.jugar){
+		else if (e.getKeyCode() == KeyEvent.VK_ENTER && !this.jugar){ //Iniciar el juego
 			this.jugar = true;
 			System.out.println("Jugar activado");
 			this.tiempoDeInicio = System.currentTimeMillis();
 			this.hiloTick.start();
 			this.hiloRender.start();
 		}
-		else if (e.getKeyCode() == KeyEvent.VK_P){
-			
+		else if (e.getKeyCode() == KeyEvent.VK_P){ // Activar/Desactivar pausa
 			this.pausa = !this.pausa;
 		}
 	

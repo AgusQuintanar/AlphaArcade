@@ -60,7 +60,8 @@ public class Fantasma implements ImageObserver {
                     volverALaCasa,
                     salioFantasma,
                     fantasmaComido,
-                    mostrarPuntaje;
+                    mostrarPuntaje,
+                    fantasmaVisible;
  
     protected long tiempoFantasma,
                    tiempoInicialFantasma,
@@ -119,6 +120,7 @@ public class Fantasma implements ImageObserver {
         this.tiempoComidoInicial = 0;
         this.xFComido = 0;
         this.yFComido = 0;
+        this.fantasmaVisible = true;
         try {
             this.fuenteFantasma = Font.createFont(Font.TRUETYPE_FONT, new File("LuckiestGuy-Regular.ttf")).deriveFont((float)(altoPista/40)*1f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -184,50 +186,55 @@ public class Fantasma implements ImageObserver {
         this.tiempoComidoInicial = cronometro;
     }
 
+    public void setFantasmaVisible(boolean visible) {
+        this.fantasmaVisible = visible;
+    }
+
     public void pintaFantasma(Graphics g, int contador){
-        g.setFont(this.fuenteFantasma);
-        //g.fillOval((int)(this.PacManXCoor*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104), (int)((this.PacManYCoor*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62)), 25, 25);
-        g.setColor(Color.WHITE);
-        Image fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();;
+        if (this.fantasmaVisible) {
+            g.setFont(this.fuenteFantasma);
+            //g.fillOval((int)(this.PacManXCoor*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104), (int)((this.PacManYCoor*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62)), 25, 25);
+            g.setColor(Color.WHITE);
+            Image fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();;
 
-        if (this.mostrarPuntaje){
-            g.drawString(Integer.toString(this.puntajePorFantasmaComido), this.xFComido, this.yFComido + (int)(this.anchoPista/52/3));
-        }
-
-        if (!this.volverALaCasa){
-            fantasmaImgTemp = new ImageIcon("ojosFantasma.png").getImage();
-        }
-
-        else if (!this.modoHuidaActivado){
-            if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"1.png").getImage();
-		    else fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();
-        } 
-        else if (this.modoHuidaActivado){
-            if (tiempoHuida < 10){
-                if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado1.png").getImage();
-		        else fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado2.png").getImage();
+            if (this.mostrarPuntaje){
+                g.drawString(Integer.toString(this.puntajePorFantasmaComido), this.xFComido, this.yFComido + (int)(this.anchoPista/52/3));
             }
-            else {
-                if(contador/60.0%.6 < .3) {
+
+            if (!this.volverALaCasa){
+                fantasmaImgTemp = new ImageIcon("ojosFantasma.png").getImage();
+            }
+
+            else if (!this.modoHuidaActivado){
+                if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"1.png").getImage();
+                else fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();
+            } 
+            else if (this.modoHuidaActivado){
+                if (tiempoHuida < 10){
                     if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado1.png").getImage();
-                    else fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado2.png").getImage(); 
+                    else fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado2.png").getImage();
                 }
                 else {
-                    if(contador/60.0%.3 < .45) fantasmaImgTemp = new ImageIcon("fantasmaBlanco1.png").getImage();
-                    else fantasmaImgTemp = new ImageIcon("fantasmaBlanco2.png").getImage();
+                    if(contador/60.0%.6 < .3) {
+                        if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado1.png").getImage();
+                        else fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado2.png").getImage(); 
+                    }
+                    else {
+                        if(contador/60.0%.3 < .45) fantasmaImgTemp = new ImageIcon("fantasmaBlanco1.png").getImage();
+                        else fantasmaImgTemp = new ImageIcon("fantasmaBlanco2.png").getImage();
+                    }
                 }
             }
+
+            double ajusteX = 0.0;
+            if (this.coorXFTemp < 26) ajusteX = 3*(this.anchoPista/52)/(26-(this.coorXFTemp/3));
+            
+            g.drawImage(fantasmaImgTemp, this.xF - (int)(-ajusteX + .485*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.95*this.anchoPista/52), (int)(1.9*this.anchoPista/52), this);
+
+
+            if (!modoHuidaActivado || !this.volverALaCasa) pintarOjos(g);
+            //g.fillRect(this.xF, this.yF, (int)(this.anchoPista/52), (int)(this.anchoPista/52));
         }
-
-        double ajusteX = 0.0;
-        if (this.coorXFTemp < 26) ajusteX = 3*(this.anchoPista/52)/(26-(this.coorXFTemp/3));
-        
-        g.drawImage(fantasmaImgTemp, this.xF - (int)(-ajusteX + .485*this.anchoPista/52), this.yF - (int)(.375*this.anchoPista/52), (int)(1.95*this.anchoPista/52), (int)(1.9*this.anchoPista/52), this);
-
-
-        if (!modoHuidaActivado || !this.volverALaCasa) pintarOjos(g);
-        //g.fillRect(this.xF, this.yF, (int)(this.anchoPista/52), (int)(this.anchoPista/52));
-
     }
 
     public void pintarOjos(Graphics g){

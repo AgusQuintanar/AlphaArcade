@@ -12,7 +12,8 @@ public class PacMan implements ImageObserver {
 	private int xPac,
 				  yPac,
 				  coorX,
-				coorY;
+				coorY,
+				contadorMuertePacManInicial;
 
 	private Image pacManAbierto1,
 				  pacManAbierto2,
@@ -54,6 +55,7 @@ public class PacMan implements ImageObserver {
 		this.velocidad = 3;
 		this.pacManTemp = this.pacManAbierto1;
 		this.muerto = false;
+		this.contadorMuertePacManInicial = 0;
 	}
 
 	public void setXPac(int xPac){
@@ -88,20 +90,32 @@ public class PacMan implements ImageObserver {
 		this.velocidad = velocidad;
 	}
 
+	public void setMuerto(boolean muerto) {
+		this.muerto = muerto;
+	}
+
+	public boolean getMuerte() {
+		return this.muerto;
+	}
+
+	public void setContadorMuertePacManInicial(int contador) {
+		this.contadorMuertePacManInicial = contador;
+	}
+
 	public void pintaPacman(Graphics g, int contador) {
-		this.pacManAbierto1 = new ImageIcon("PacMan2-"+direccionTmp+".png").getImage();
+		this.pacManAbierto1 = new ImageIcon("PacMan2-"+direccionTmp+".png").getImage(); //Se pueden cambiar por variables temporales
 		this.pacManAbierto2 = new ImageIcon("PacMan3-"+direccionTmp+".png").getImage();
 		this.pacManCerrado = new ImageIcon("PacMan1.png").getImage();
 		//System.out.println("contador: " + contador);
 
 		//System.out.println("CoorTemp: x " + this.coorXTemp + ", " + this.coorYTemp);
-		if (this.muerto) animacionMuerto(g, contador);
+		if (this.muerto) this.muerto = animarMuerte(g, contador);
 		else if (this.coorX > 0 && this.coorX < 51){
 			if (this.matrizPista[this.coorY][this.coorX+1] == 1 && this.direccionPacman == "der") this.pacManTemp = this.pacManAbierto1;
 			else if (this.matrizPista[this.coorY][this.coorX-1] == 1 && this.direccionPacman == "izq") this.pacManTemp = this.pacManAbierto1;
 			else if (this.matrizPista[this.coorY-1][this.coorX] == 1 && this.direccionPacman == "arr") this.pacManTemp = this.pacManAbierto1;
 			else if (this.matrizPista[this.coorY+1][this.coorX] == 1 && this.direccionPacman == "aba") this.pacManTemp = this.pacManAbierto1;
-			else if(contador%24 < 6) this.pacManTemp = this.pacManAbierto1;
+			else if(contador%24 < 6) this.pacManTemp = this.pacManAbierto1; // Se puede simplificar este bloque
 			else if(contador%24 < 12) this.pacManTemp = this.pacManAbierto2;
 			else if(contador%24 < 18) this.pacManTemp = this.pacManAbierto1;
 			else this.pacManTemp = this.pacManCerrado;
@@ -115,15 +129,20 @@ public class PacMan implements ImageObserver {
 		if (this.coorYTemp < 14) ajusteY = 3*(this.anchoPista/52)/(20-(this.coorYTemp/3));
 		double ajusteX = 1.0;
 		if (this.coorXTemp > 26) ajusteX = 1.5;
-		g.drawImage(this.pacManTemp, xPac - (int)(.2*ajusteX*this.anchoPista/52), yPac - (int)(-ajusteY + .6*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
+		if (!this.muerto) g.drawImage(this.pacManTemp, xPac - (int)(.2*ajusteX*this.anchoPista/52), yPac - (int)(-ajusteY + .6*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
 		//g.setColor(Color.RED);
 		//g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
 	}
 
-	public void animarMuerte() {
-		this.muerto = true;
-		
+	public boolean animarMuerte(Graphics g, int contador) {
+		System.out.println(contador - this.contadorMuertePacManInicial);
+		if (contador - this.contadorMuertePacManInicial < 200){
+			g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
+			return true;
+		}
+		return false; //Indica que pacman ya revivio
 	}
+	
 
 	public void manejoVelocidades(double velocidadGlobal, boolean modoHuidaFantasmas) {
 		if (coorX > 0 && coorY > 0 && coorX < 51 && coorYTemp < 30){
