@@ -32,6 +32,7 @@ public class PacMan implements ImageObserver {
 					coorYTemp,
 					velocidad;
 	private int[][] matrizPista;
+	private int[] arrayAnimacionMuerte;
 				  
 	public PacMan(int xPac, int yPac, double anchoPista, double altoPista, int[][] matrizPista) {
 		this.xPac = xPac;
@@ -56,6 +57,7 @@ public class PacMan implements ImageObserver {
 		this.pacManTemp = this.pacManAbierto1;
 		this.muerto = false;
 		this.contadorMuertePacManInicial = 0;
+		this.arrayAnimacionMuerte = new int[] {0,1,2,3,4,5,6,-1,-1,7,8,9,10,11,12,8,9,10,11,13,-1};
 	}
 
 	public void setXPac(int xPac){
@@ -129,15 +131,15 @@ public class PacMan implements ImageObserver {
 		if (this.coorYTemp < 14) ajusteY = 3*(this.anchoPista/52)/(20-(this.coorYTemp/3));
 		double ajusteX = 1.0;
 		if (this.coorXTemp > 26) ajusteX = 1.5;
-		if (!this.muerto) g.drawImage(this.pacManTemp, xPac - (int)(.2*ajusteX*this.anchoPista/52), yPac - (int)(-ajusteY + .6*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
+		g.drawImage(this.pacManTemp, xPac - (int)(.2*ajusteX*this.anchoPista/52), yPac - (int)(-ajusteY + .6*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
 		//g.setColor(Color.RED);
 		//g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
 	}
 
 	public boolean animarMuerte(Graphics g, int contador) {
 		System.out.println(contador - this.contadorMuertePacManInicial);
-		if (contador - this.contadorMuertePacManInicial < 200){
-			g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
+		if (contador - this.contadorMuertePacManInicial < 105){
+			this.pacManTemp = new ImageIcon("PacMan-muerto"+this.arrayAnimacionMuerte[(contador - this.contadorMuertePacManInicial)/5]+".png").getImage();
 			return true;
 		}
 		return false; //Indica que pacman ya revivio
