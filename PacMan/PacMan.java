@@ -131,7 +131,9 @@ public class PacMan implements ImageObserver {
 		if (this.coorYTemp < 14) ajusteY = 3*(this.anchoPista/52)/(20-(this.coorYTemp/3));
 		double ajusteX = 1.0;
 		if (this.coorXTemp > 26) ajusteX = 1.5;
-		g.drawImage(this.pacManTemp, xPac - (int)(.2*ajusteX*this.anchoPista/52), yPac - (int)(-ajusteY + .6*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
+		if (!this.muerto) g.drawImage(this.pacManTemp, xPac - (int)(.2*ajusteX*this.anchoPista/52), yPac - (int)(-ajusteY + .6*this.anchoPista/52), (int)(1.725*this.anchoPista/52), (int)(1.95*this.anchoPista/52), this);
+		else g.drawImage(this.pacManTemp, xPac - (int)(1.4*.2*ajusteX*this.anchoPista/52), yPac - (int)(.85*(ajusteY + .6*this.anchoPista/52)), (int)(1.1*1.725*this.anchoPista/52), (int)(1.125*1.95*this.anchoPista/52), this);
+
 		//g.setColor(Color.RED);
 		//g.fillRect(xPac, yPac,(int)(this.anchoPista/52) , (int)(this.anchoPista/52));
 	}
