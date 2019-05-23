@@ -34,7 +34,8 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 				   velocidadGlobal;
 
 	private int contador, 
-				vidas, 
+				vidas,
+				vidasAgregadas, 
 				coorXPacMan, 
 				coorYPacMan, 
 				puntaje, 
@@ -109,6 +110,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.fantasmasComidos = 0;
 
 		this.vidas = 3;
+		this.vidasAgregadas = 0;
 		this.nivel = 1;
 		this.jugar = false;
 		this.pausa = false;
@@ -253,6 +255,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.coorYPacMan = this.pacman.getCoorY();
 		this.direccionPacMan = this.pacman.getDireccionPacMan();
 		contarPuntosRestantes();
+		generarVidasPor10000Puntos();
 
 		this.tableroPacMan.setPuntaje(this.puntaje);
 		this.tableroPacMan.setVidasRestantes(this.vidas);
@@ -300,6 +303,13 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		}
 		if (inky == "comido") {
 			generarPuntajePorFantasmaComido(this.fantasmaInky);	
+		}
+	}
+
+	public void generarVidasPor10000Puntos() {
+		if (this.puntaje/10000 > this.vidasAgregadas) {
+			this.vidas += 1;
+			this.vidasAgregadas += 1;
 		}
 	}
 
