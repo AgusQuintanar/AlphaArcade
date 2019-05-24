@@ -31,16 +31,19 @@ public class Frutas {
     }
 
     public int pintaFruta(Graphics g, int puntosComidos, int contador, int xPacMan, int yPacMan, int nivel, ImageObserver io) {
-        
+        //System.out.println("prueba 1");
+        //System.out.println("puntos comidos: " + puntosComidos);
+       
         int nivelTemp = 0;
         if (nivel < 13) nivelTemp = nivel - 1;
         else nivelTemp = 12;
-        
+        System.out.println("fruta"+this.arrayNivelesFruta[nivelTemp]+".png");
         this.imagenFruta = new ImageIcon("fruta"+this.arrayNivelesFruta[nivelTemp]+".png").getImage();
 
         if(!this.mostrarPuntaje) generarFruta(puntosComidos, contador);
         int puntosAgregados = checarColisionConPacMan(xPacMan, yPacMan, contador, nivelTemp);
 
+        if(this.mostrarFruta) System.out.println("mostrando fruta");
         if(this.mostrarFruta) g.drawImage(this.imagenFruta, x, y, (int) (this.anchoPista/52), (int)(this.altoPista/31), io);
         else if (this.mostrarPuntaje)  g.drawString(Integer.toString(this.arrayNivelesPuntuacionFruta[nivelTemp]), this.x, this.y + (int)(this.anchoPista/52/3));
 
@@ -49,16 +52,21 @@ public class Frutas {
     }
 
     public void generarFruta(int puntosComidos, int contador) {
-        if (puntosComidos == 70 || puntosComidos == 190){
+        
+        if ((puntosComidos == 70 || puntosComidos == 190) && !this.mostrarFruta){
+            System.out.println("prueba 2");
             this.contadorInicial = contador;
             this.mostrarFruta = true;
+            System.out.println("contador: " + contador);
+            System.out.println("tiempo restante: " + (contador - contadorInicial));
         }
 
-        if (contador - this.contadorInicial == 500) this.mostrarFruta = false;
+        if ((contador - this.contadorInicial == 500) && this.mostrarFruta) this.mostrarFruta = false;
     }
 
     public int checarColisionConPacMan(int xPacMan, int yPacMan, int contador, int nivel) {
         if (Math.abs(this.x-xPacMan) < .3 && Math.abs(this.y-yPacMan) < .3){
+            System.out.println("prueba 3");
             this.mostrarFruta = false;
             this.mostrarPuntaje = true;
             this.contadorInicial = contador;
