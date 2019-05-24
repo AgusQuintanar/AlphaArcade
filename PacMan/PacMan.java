@@ -76,6 +76,14 @@ public class PacMan implements ImageObserver {
 		return this.coorY;
 	}
 
+	public int getXPac() {
+		return this.xPac;
+	}
+
+	public int getYPac() {
+		return this.yPac;
+	}
+
 	public double getCoorXTemp() {
 		return this.coorXTemp;
 	}
