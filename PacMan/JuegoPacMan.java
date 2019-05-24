@@ -199,7 +199,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.fantasmaPinky.pintaFantasma(g, this.contador);
 		this.fantasmaClyde.pintaFantasma(g, this.contador);
 		this.fantasmaInky.pintaFantasma(g, this.contador);
-		this.puntaje += this.frutas.pintaFruta(g, 550-this.puntosRestantes, this.contador, this.pacman.getXPac(), this.pacman.getYPac(), this.nivel, this);
+		this.puntaje += this.frutas.pintaFruta(g, 550-this.puntosRestantes, this.contador, this.pacman.getXPac(), this.pacman.getYPac(), this.nivel);
 	}
 
 	public void contarPuntosRestantes() {
