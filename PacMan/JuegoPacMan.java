@@ -22,6 +22,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 	private FantasmaClyde fantasmaClyde;
 	private FantasmaInky fantasmaInky;
 	private TableroPacMan tableroPacMan;
+	private Frutas frutas;
 	private Thread hiloTick, hiloRender;
 
 	private boolean pellet,
@@ -69,6 +70,8 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
 				(int) ((23) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
 				this.ancho, this.alto, this.matrizPista);
+
+		this.frutas = new Frutas(this.ancho, this.alto);
 
 		this.coorXPacMan = this.pacman.getCoorX();
 		this.coorYPacMan = this.pacman.getCoorY();
@@ -196,6 +199,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.fantasmaPinky.pintaFantasma(g, this.contador);
 		this.fantasmaClyde.pintaFantasma(g, this.contador);
 		this.fantasmaInky.pintaFantasma(g, this.contador);
+		this.frutas.pintaFruta(g, 500-this.puntosRestantes, this.contador, this.pacman.getXPac(), this.pacman.getYPac(), this.nivel, this);
 	}
 
 	public void contarPuntosRestantes() {
