@@ -45,12 +45,12 @@ public class Frutas implements ImageObserver {
         System.out.println("../Imagenes/Frutas/fruta"+this.arrayNivelesFruta[nivelTemp]+".png");
         this.imagenFruta = new ImageIcon("../Imagenes/Frutas/fruta"+this.arrayNivelesFruta[nivelTemp]+".png").getImage();
 
-        if(!this.mostrarPuntaje) generarFruta(puntosComidos, contador);
+        generarFruta(puntosComidos, contador);
         int puntosAgregados = checarColisionConPacMan(xPacMan, yPacMan, contador, nivelTemp);
 
         if(this.mostrarFruta) System.out.println("mostrando fruta");
-        if(this.mostrarFruta) g.drawImage(this.imagenFruta, x, y, (int) (this.anchoPista/52), (int)(this.altoPista/31), this);
-        else if (this.mostrarPuntaje)  g.drawString(Integer.toString(this.arrayNivelesPuntuacionFruta[nivelTemp]), this.x, this.y + (int)(this.anchoPista/52/3));
+        if(this.mostrarFruta) g.drawImage(this.imagenFruta, x, y-(int)(this.altoPista/62/2), (int) (1.5*this.anchoPista/52), (int)(1.5*this.altoPista/31), this);
+        else if (this.mostrarPuntaje)  g.drawString(Integer.toString(this.arrayNivelesPuntuacionFruta[nivelTemp]), this.x, this.y + (int)(this.anchoPista/52/3) + (int)(this.altoPista/62));
 
         return puntosAgregados;
     }
@@ -65,18 +65,18 @@ public class Frutas implements ImageObserver {
             System.out.println("tiempo restante: " + (contador - contadorInicial));
         }
 
-        if ((contador - this.contadorInicial == 500) && this.mostrarFruta) this.mostrarFruta = false;
+        if ((contador - this.contadorInicial == 750) && this.mostrarFruta) this.mostrarFruta = false;
     }
 
     public int checarColisionConPacMan(int xPacMan, int yPacMan, int contador, int nivel) {
-        if (Math.abs(this.x-xPacMan) < .3 && Math.abs(this.y-yPacMan) < .3){
+        if (Math.abs(this.x-xPacMan) < 5 && Math.abs(this.y-yPacMan) < .3){
             System.out.println("prueba 3");
             this.mostrarFruta = false;
             this.mostrarPuntaje = true;
             this.contadorInicial = contador;
         }
 
-        if (contador - this.contadorInicial == 200){
+        if (contador - this.contadorInicial == 100){
             this.mostrarPuntaje = false;
             return this.arrayNivelesPuntuacionFruta[nivel];
         } 
