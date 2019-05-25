@@ -40,9 +40,9 @@ public class PacMan implements ImageObserver {
 		this.anchoPista = anchoPista;
 		this.altoPista = altoPista;
 		this.matrizPista = matrizPista;
-		this.pacManAbierto1 = new ImageIcon("PacMan2-izq.png").getImage();
-		this.pacManAbierto2 = new ImageIcon("PacMan3-izq.png").getImage();
-		this.pacManCerrado = new ImageIcon("PacMan1.png").getImage();
+		this.pacManAbierto1 = new ImageIcon("../Imagenes/PacMan/PacMan2-izq.png").getImage();
+		this.pacManAbierto2 = new ImageIcon("../Imagenes/PacMan/PacMan3-izq.png").getImage();
+		this.pacManCerrado = new ImageIcon("../Imagenes/PacMan/PacMan1.png").getImage();
 		this.direccionPacman = "izq";
 		this.direccionTmp = "izq";
 		this.coorX = 26;
@@ -113,9 +113,9 @@ public class PacMan implements ImageObserver {
 	}
 
 	public void pintaPacman(Graphics g, int contador) {
-		this.pacManAbierto1 = new ImageIcon("PacMan2-"+direccionTmp+".png").getImage(); //Se pueden cambiar por variables temporales
-		this.pacManAbierto2 = new ImageIcon("PacMan3-"+direccionTmp+".png").getImage();
-		this.pacManCerrado = new ImageIcon("PacMan1.png").getImage();
+		this.pacManAbierto1 = new ImageIcon("../Imagenes/PacMan/PacMan2-"+direccionTmp+".png").getImage(); //Se pueden cambiar por variables temporales
+		this.pacManAbierto2 = new ImageIcon("../Imagenes/PacMan/PacMan3-"+direccionTmp+".png").getImage();
+		this.pacManCerrado = new ImageIcon("../Imagenes/PacMan/PacMan1.png").getImage();
 		//System.out.println("contador: " + contador);
 
 		//System.out.println("CoorTemp: x " + this.coorXTemp + ", " + this.coorYTemp);
@@ -149,7 +149,7 @@ public class PacMan implements ImageObserver {
 	public boolean animarMuerte(Graphics g, int contador) {
 		System.out.println(contador - this.contadorMuertePacManInicial);
 		if (contador - this.contadorMuertePacManInicial < 105){
-			this.pacManTemp = new ImageIcon("PacMan-muerto"+this.arrayAnimacionMuerte[(contador - this.contadorMuertePacManInicial)/5]+".png").getImage();
+			this.pacManTemp = new ImageIcon("../Imagenes/PacMan/PacMan-muerto"+this.arrayAnimacionMuerte[(contador - this.contadorMuertePacManInicial)/5]+".png").getImage();
 			return true;
 		}
 		return false; //Indica que pacman ya revivio

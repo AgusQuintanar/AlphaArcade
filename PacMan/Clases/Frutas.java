@@ -26,7 +26,7 @@ public class Frutas implements ImageObserver {
         System.out.println(altoPista);
         this.anchoPista = anchoPista;
         this.altoPista = altoPista;
-        this.imagenFruta = new ImageIcon("fruta1.png").getImage();
+        this.imagenFruta = new ImageIcon("../Imagenes/Frutas/fruta1.png").getImage();
         this.arrayNivelesFruta = new int[]{1,2,3,3,4,4,5,5,6,6,7,7,8};
         this.arrayNivelesPuntuacionFruta = new int[]{100,300,500,500,700,700,1000,1000,2000,2000,3000,3000,5000};
         this.x = (int)(this.anchoPista / 2 - this.anchoPista / 104);
@@ -42,8 +42,8 @@ public class Frutas implements ImageObserver {
         int nivelTemp = 0;
         if (nivel < 13) nivelTemp = nivel - 1;
         else nivelTemp = 12;
-        System.out.println("fruta"+this.arrayNivelesFruta[nivelTemp]+".png");
-        this.imagenFruta = new ImageIcon("fruta"+this.arrayNivelesFruta[nivelTemp]+".png").getImage();
+        System.out.println("../Imagenes/Frutas/fruta"+this.arrayNivelesFruta[nivelTemp]+".png");
+        this.imagenFruta = new ImageIcon("../Imagenes/Frutas/fruta"+this.arrayNivelesFruta[nivelTemp]+".png").getImage();
 
         if(!this.mostrarPuntaje) generarFruta(puntosComidos, contador);
         int puntosAgregados = checarColisionConPacMan(xPacMan, yPacMan, contador, nivelTemp);

@@ -13,7 +13,7 @@ public class Pista implements ImageObserver {
     public Pista(double ancho, double alto) {
         this.ancho = ancho;
         this.alto = alto;
-        this.pista = new ImageIcon("PistaPacMan.png").getImage();
+        this.pista = new ImageIcon("../Imagenes/Pista/PistaPacMan.png").getImage();
         this.matrizPista = new int[][] {
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 			{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
