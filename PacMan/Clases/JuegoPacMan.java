@@ -192,14 +192,15 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.setFont(this.fantasmaBlinky.getFuente());
 		this.pista.pintaPista(g);
 		this.pista.pintarPuntitos(g, this.contador, this.matrizPista);
+		this.puntaje += this.frutas.pintaFruta(g, 550-this.puntosRestantes, this.contador, this.pacman.getXPac(), this.pacman.getYPac(), this.nivel);
 		this.pacman.pintaPacman(g, this.contador);
 		this.fantasmaBlinky.pintaFantasma(g, this.contador);
 		this.fantasmaPinky.pintaFantasma(g, this.contador);
 		this.fantasmaClyde.pintaFantasma(g, this.contador);
 		this.fantasmaInky.pintaFantasma(g, this.contador);
-		this.puntaje += this.frutas.pintaFruta(g, 550-this.puntosRestantes, this.contador, this.pacman.getXPac(), this.pacman.getYPac(), this.nivel);
 	}
 
 	public void contarPuntosRestantes() {
@@ -232,7 +233,11 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 				this.ancho, this.alto, this.matrizPista, this.direccionPacMan, 2.5);
 		this.tiempoDeInicio = System.currentTimeMillis();
 
+		this.contador = 0;
+		
 		this.direccionPresionada = "izq";
+
+		this.frutas = new Frutas(this.ancho, this.alto);
 
 		this.pacman = new PacMan((int) (this.ancho / 2 - this.ancho / 104),
 				(int) ((23) * .993 * (this.alto / 31) - .3 * .993 * (this.alto / 31) + .993 * this.alto / 62),
@@ -245,6 +250,7 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 		this.contador++;
 		if(this.pacManMuerto){
 			this.pacManMuerto = this.pacman.getMuerte();
+			render();
 			if (!this.pacManMuerto) reinicioDePosiciones(true);
 		}
 		else {

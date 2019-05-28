@@ -109,7 +109,7 @@ public class Fantasma implements ImageObserver {
         this.tiempoInicialHuida = 0;
         this.contador = 0;
         this.volverALaCasa = true;
-        this.ojo = new ImageIcon("ojoFantasma.png").getImage();
+        this.ojo = new ImageIcon("../Imagenes/Fantasmas/ojoFantasma.png").getImage();
         this.salioFantasma = false;
         this.esquinaXDispersion = 0;
         this.esquinaYDispersion = 0;
@@ -122,7 +122,7 @@ public class Fantasma implements ImageObserver {
         this.yFComido = 0;
         this.fantasmaVisible = true;
         try {
-            this.fuenteFantasma = Font.createFont(Font.TRUETYPE_FONT, new File("LuckiestGuy-Regular.ttf")).deriveFont((float)(altoPista/40)*1f);
+            this.fuenteFantasma = Font.createFont(Font.TRUETYPE_FONT, new File("../Fuentes/LuckiestGuy-Regular.ttf")).deriveFont((float)(altoPista/40)*1f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(this.fuenteFantasma);
        } catch (IOException|FontFormatException e) {
@@ -190,38 +190,42 @@ public class Fantasma implements ImageObserver {
         this.fantasmaVisible = visible;
     }
 
+    public Font getFuente() {
+        return this.fuenteFantasma;
+    }
+
     public void pintaFantasma(Graphics g, int contador){
         if (this.fantasmaVisible) {
             g.setFont(this.fuenteFantasma);
             //g.fillOval((int)(this.PacManXCoor*.9928*(this.anchoPista/52)-.3*.9928*(this.anchoPista/52)+.9928*this.anchoPista/104), (int)((this.PacManYCoor*.9928*(this.altoPista/31)-.3*.9928*(this.altoPista/31)+.9928*this.altoPista/62)), 25, 25);
             g.setColor(Color.WHITE);
-            Image fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();;
+            Image fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/"+this.fantasmaImg+"2.png").getImage();;
 
             if (this.mostrarPuntaje){
                 g.drawString(Integer.toString(this.puntajePorFantasmaComido), this.xFComido, this.yFComido + (int)(this.anchoPista/52/3));
             }
 
             if (!this.volverALaCasa){
-                fantasmaImgTemp = new ImageIcon("ojosFantasma.png").getImage();
+                fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/ojosFantasma.png").getImage();
             }
 
             else if (!this.modoHuidaActivado){
-                if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"1.png").getImage();
-                else fantasmaImgTemp = new ImageIcon(this.fantasmaImg+"2.png").getImage();
+                if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/"+this.fantasmaImg+"1.png").getImage();
+                else fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/"+this.fantasmaImg+"2.png").getImage();
             } 
             else if (this.modoHuidaActivado){
                 if (tiempoHuida < 10){
-                    if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado1.png").getImage();
-                    else fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado2.png").getImage();
+                    if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/fantasmaAzulAsustado1.png").getImage();
+                    else fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/fantasmaAzulAsustado2.png").getImage();
                 }
                 else {
                     if(contador/60.0%.6 < .3) {
-                        if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado1.png").getImage();
-                        else fantasmaImgTemp = new ImageIcon("fantasmaAzulAsustado2.png").getImage(); 
+                        if(contador/60.0%.3 < .15) fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/fantasmaAzulAsustado1.png").getImage();
+                        else fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/fantasmaAzulAsustado2.png").getImage(); 
                     }
                     else {
-                        if(contador/60.0%.3 < .45) fantasmaImgTemp = new ImageIcon("fantasmaBlanco1.png").getImage();
-                        else fantasmaImgTemp = new ImageIcon("fantasmaBlanco2.png").getImage();
+                        if(contador/60.0%.3 < .45) fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/fantasmaBlanco1.png").getImage();
+                        else fantasmaImgTemp = new ImageIcon("../Imagenes/Fantasmas/fantasmaBlanco2.png").getImage();
                     }
                 }
             }

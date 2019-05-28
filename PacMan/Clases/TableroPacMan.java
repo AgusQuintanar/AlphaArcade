@@ -25,9 +25,9 @@ public class TableroPacMan extends JPanel {
         this.setBackground(Color.BLACK);
         this.puntaje = 0;
         this.vidasRestantes = 3;
-        this.iconoPacMan = new ImageIcon("PacMan2-izq.png").getImage();
+        this.iconoPacMan = new ImageIcon("../Imagenes/PacMan/PacMan2-izq.png").getImage();
         try {
-            this.fuenteTablero = Font.createFont(Font.TRUETYPE_FONT, new File("LuckiestGuy-Regular.ttf")).deriveFont((float)alto*1f);
+            this.fuenteTablero = Font.createFont(Font.TRUETYPE_FONT, new File("../Fuentes/LuckiestGuy-Regular.ttf")).deriveFont((float)alto*1f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(this.fuenteTablero);
        } catch (IOException|FontFormatException e) {
