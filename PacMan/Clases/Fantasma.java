@@ -190,6 +190,10 @@ public class Fantasma implements ImageObserver {
         this.fantasmaVisible = visible;
     }
 
+    public Font getFuente() {
+        return this.fuenteFantasma;
+    }
+
     public void pintaFantasma(Graphics g, int contador){
         if (this.fantasmaVisible) {
             g.setFont(this.fuenteFantasma);

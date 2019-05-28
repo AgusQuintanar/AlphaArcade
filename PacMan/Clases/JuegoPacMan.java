@@ -192,14 +192,15 @@ public class JuegoPacMan extends JPanel implements KeyListener {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.setFont(this.fantasmaBlinky.getFuente());
 		this.pista.pintaPista(g);
 		this.pista.pintarPuntitos(g, this.contador, this.matrizPista);
+		this.puntaje += this.frutas.pintaFruta(g, 550-this.puntosRestantes, this.contador, this.pacman.getXPac(), this.pacman.getYPac(), this.nivel);
 		this.pacman.pintaPacman(g, this.contador);
 		this.fantasmaBlinky.pintaFantasma(g, this.contador);
 		this.fantasmaPinky.pintaFantasma(g, this.contador);
 		this.fantasmaClyde.pintaFantasma(g, this.contador);
 		this.fantasmaInky.pintaFantasma(g, this.contador);
-		this.puntaje += this.frutas.pintaFruta(g, 550-this.puntosRestantes, this.contador, this.pacman.getXPac(), this.pacman.getYPac(), this.nivel);
 	}
 
 	public void contarPuntosRestantes() {

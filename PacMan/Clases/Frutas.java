@@ -36,19 +36,13 @@ public class Frutas implements ImageObserver {
     }
 
     public int pintaFruta(Graphics g, int puntosComidos, int contador, int xPacMan, int yPacMan, int nivel) {
-        //System.out.println("prueba 1");
-        //System.out.println("puntos comidos: " + puntosComidos);
-        System.out.println(x+", "+y);
         int nivelTemp = 0;
         if (nivel < 13) nivelTemp = nivel - 1;
         else nivelTemp = 12;
-        System.out.println("../Imagenes/Frutas/fruta"+this.arrayNivelesFruta[nivelTemp]+".png");
         this.imagenFruta = new ImageIcon("../Imagenes/Frutas/fruta"+this.arrayNivelesFruta[nivelTemp]+".png").getImage();
 
         generarFruta(puntosComidos, contador);
         int puntosAgregados = checarColisionConPacMan(xPacMan, yPacMan, contador, nivelTemp);
-
-        if(this.mostrarFruta) System.out.println("mostrando fruta");
         if(this.mostrarFruta) g.drawImage(this.imagenFruta, x, y-(int)(this.altoPista/62/2), (int) (1.5*this.anchoPista/52), (int)(1.5*this.altoPista/31), this);
         else if (this.mostrarPuntaje)  g.drawString(Integer.toString(this.arrayNivelesPuntuacionFruta[nivelTemp]), this.x, this.y + (int)(this.anchoPista/52/3) + (int)(this.altoPista/62));
 
@@ -69,7 +63,7 @@ public class Frutas implements ImageObserver {
     }
 
     public int checarColisionConPacMan(int xPacMan, int yPacMan, int contador, int nivel) {
-        if (Math.abs(this.x-xPacMan) < 5 && Math.abs(this.y-yPacMan) < .3){
+        if (Math.abs(this.x-xPacMan) < 5 && Math.abs(this.y-yPacMan) < .3 && this.mostrarFruta){
             System.out.println("prueba 3");
             this.mostrarFruta = false;
             this.mostrarPuntaje = true;
